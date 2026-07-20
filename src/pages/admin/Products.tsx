@@ -21,7 +21,7 @@ interface Product {
   is_featured: boolean;
   is_new: boolean;
   is_active: boolean;
-
+  checkout_url?: string | null;
   categories?: { name: string };
   brands?: { name: string };
 }
@@ -45,7 +45,7 @@ export const Products: React.FC = () => {
     price: 0,
     stock: 0,
     images: [],
-
+    checkout_url: ''
   });
   
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
@@ -266,7 +266,7 @@ export const Products: React.FC = () => {
         is_featured: product.is_featured,
         is_new: product.is_new,
         is_active: product.is_active,
-
+        checkout_url: product.checkout_url || '',
       });
     } else {
       setEditingId(null);
@@ -286,7 +286,7 @@ export const Products: React.FC = () => {
         is_featured: false,
         is_new: false,
         is_active: true,
-
+        checkout_url: '',
       });
     }
     setMainImageFile(null);
@@ -335,7 +335,7 @@ export const Products: React.FC = () => {
         is_featured: formData.is_featured,
         is_new: formData.is_new,
         is_active: formData.is_active,
-
+        checkout_url: formData.checkout_url || null
       };
 
       let savedProduct;
@@ -581,7 +581,17 @@ export const Products: React.FC = () => {
                     />
                   </div>
 
-
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Link de Checkout (Vega Checkout)</label>
+                    <input
+                      type="url"
+                      name="checkout_url"
+                      placeholder="https://pay.vegacheckout.com.br/..."
+                      value={formData.checkout_url || ''}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-green-50/30 text-slate-900"
+                    />
+                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Descrição</label>

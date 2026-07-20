@@ -176,30 +176,24 @@ export const ProductPage: React.FC = () => {
               <button 
                 onClick={async () => {
                 try {
+                  // O loading vai ser adicionado no estado acima. Como não criei o useState para isso ainda, vamos adaptar:
                   const btn = document.getElementById('buy-button');
                   if (btn) {
                     btn.innerHTML = '<div class="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin"></div>';
                     btn.setAttribute('disabled', 'true');
                   }
                   
-                  // Chama a nossa Vercel Function
-                  const response = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                      productId: product.id,
-                      productName: product.name,
-                      productPrice: product.promotional_price || product.price,
-                      productDescription: product.description
-                    })
-                  });
-
-                  const data = await response.json();
-
-                  if (!response.ok) {
-                    throw new Error(data.error || 'Erro desconhecido ao comunicar com a API');
+                  // Se já houver um checkout_url salvo manualmente pelo admin, usa ele direto
+                  if (product.checkout_url) {
+                    window.location.href = product.checkout_url;
+                    return;
                   }
 
+                  const { data, error } = await supabase.functions.invoke('vega-checkout', {
+                    body: { productId: product.id }
+                  });
+
+                  if (error) throw error;
                   if (data?.checkout_url) {
                     window.location.href = data.checkout_url;
                   } else {
