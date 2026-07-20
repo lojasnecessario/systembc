@@ -295,6 +295,7 @@ function MobileActionButton({ icon, label, active = false }: { icon: React.React
       <div className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
         active 
           ? 'border-blue-600 text-blue-600 hover:bg-blue-50' 
+          : 'border-neutral-300 text-neutral-500 hover:bg-neutral-50'
       }`}>
         {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}
       </div>
