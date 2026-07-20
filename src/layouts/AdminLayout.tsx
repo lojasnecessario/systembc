@@ -10,7 +10,6 @@ import {
   LogOut, 
   Menu,
   X,
-  Ticket,
   Image as ImageIcon,
   Activity
 } from 'lucide-react';
