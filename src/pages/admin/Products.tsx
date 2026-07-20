@@ -109,7 +109,7 @@ export const Products: React.FC = () => {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      transformHeader: function(h) {
+      transformHeader: function(h: string) {
         const header = h.trim().toLowerCase();
         // Mapeamento automático de cabeçalhos do Shopify para o nosso formato
         if (header === 'variant sku') return 'sku';
@@ -121,7 +121,7 @@ export const Products: React.FC = () => {
         if (header === 'handle') return 'handle'; // Mantém o handle para usar como fallback de SKU
         return header;
       },
-      complete: async (results) => {
+      complete: async (results: any) => {
         try {
           const rows = results.data as any[];
           let successCount = 0;
@@ -210,7 +210,8 @@ export const Products: React.FC = () => {
           }
         }
       },
-      error: (error) => {
+      error: (error: any) => {
+        console.error("Erro na leitura do CSV:", error);
         alert('Erro ao ler o arquivo CSV: ' + error.message);
         setIsImporting(false);
       }
