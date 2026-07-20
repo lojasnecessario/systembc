@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../utils/upload';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, Search } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, Search, Download, Upload } from 'lucide-react';
+import Papa from 'papaparse';
 
 interface Product {
   id: string;
@@ -50,6 +51,8 @@ export const Products: React.FC = () => {
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchData();
@@ -79,6 +82,95 @@ export const Products: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const downloadCSVTemplate = () => {
+    const csvContent = "sku,name,price,promotional_price,stock,description\nSKU-EXEMPLO,Camiseta Teste,99.90,79.90,10,Uma camiseta de teste super legal";
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "modelo_produtos.csv");
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        try {
+          const rows = results.data as any[];
+          let successCount = 0;
+          
+          for (const row of rows) {
+            if (!row.sku || !row.name) continue; // Pula linhas sem dados essenciais
+
+            const productData = {
+              name: row.name,
+              slug: generateSlug(row.name),
+              sku: row.sku,
+              price: parseFloat(row.price) || 0,
+              promotional_price: row.promotional_price ? parseFloat(row.promotional_price) : null,
+              stock: parseInt(row.stock) || 0,
+              description: row.description || '',
+              is_active: true,
+              order_grid: 1
+            };
+
+            // Verifica se o produto com esse SKU já existe
+            const { data: existingProduct } = await supabase
+              .from('products')
+              .select('id')
+              .eq('sku', row.sku)
+              .single();
+
+            if (existingProduct) {
+              // Atualiza produto existente
+              await supabase
+                .from('products')
+                .update({
+                  price: productData.price,
+                  promotional_price: productData.promotional_price,
+                  stock: productData.stock,
+                  description: productData.description
+                })
+                .eq('id', existingProduct.id);
+            } else {
+              // Insere novo produto
+              await supabase
+                .from('products')
+                .insert([productData]);
+            }
+            successCount++;
+          }
+          
+          alert(`Importação concluída! ${successCount} produtos processados.`);
+          fetchData(); // Recarrega a tabela
+        } catch (error: any) {
+          console.error("Erro na importação:", error);
+          alert("Ocorreu um erro durante a importação. Verifique o console.");
+        } finally {
+          setIsImporting(false);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
+      },
+      error: (error) => {
+        alert('Erro ao ler o arquivo CSV: ' + error.message);
+        setIsImporting(false);
+      }
+    });
   };
 
   const generateSlug = (text: string) => {
@@ -177,7 +269,6 @@ export const Products: React.FC = () => {
       }
 
       const productData = {
-        id: editingId, // Passamos o ID se for edição, nulo se for criação
         name: formData.name,
         slug: formData.slug,
         description: formData.description,
@@ -196,23 +287,29 @@ export const Products: React.FC = () => {
         checkout_url: formData.checkout_url || null
       };
 
-      // Chamar a Edge Function que se comunicará com o Vega e salvará no banco
-      const { data, error } = await supabase.functions.invoke('vega-create-product', {
-        body: productData,
-      });
-
-      if (error) {
-        throw new Error(error.message || 'Erro ao comunicar com a Edge Function');
-      }
-
-      if (data?.error) {
-        throw new Error(data.error);
-      }
+      let savedProduct;
 
       if (editingId) {
+        const { data, error } = await supabase
+          .from('products')
+          .update(productData)
+          .eq('id', editingId)
+          .select()
+          .single();
+
+        if (error) throw error;
+        savedProduct = data;
         await supabase.from('activity_logs').insert([{ action: 'updated_product', entity_type: 'product', entity_id: editingId, details: { name: productData.name } }]);
       } else {
-        await supabase.from('activity_logs').insert([{ action: 'created_product', entity_type: 'product', entity_id: data.product.id, details: { name: productData.name } }]);
+        const { data, error } = await supabase
+          .from('products')
+          .insert([productData])
+          .select()
+          .single();
+
+        if (error) throw error;
+        savedProduct = data;
+        await supabase.from('activity_logs').insert([{ action: 'created_product', entity_type: 'product', entity_id: savedProduct.id, details: { name: productData.name } }]);
       }
 
       await fetchData();
@@ -253,7 +350,7 @@ export const Products: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-slate-900">Produtos</h1>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input 
@@ -264,6 +361,28 @@ export const Products: React.FC = () => {
               className="pl-9 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
             />
           </div>
+          <button 
+            onClick={downloadCSVTemplate}
+            className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors whitespace-nowrap"
+          >
+            <Download size={20} />
+            Modelo CSV
+          </button>
+          <input 
+            type="file"
+            accept=".csv"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <button 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isImporting}
+            className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors whitespace-nowrap"
+          >
+            <Upload size={20} />
+            {isImporting ? 'Importando...' : 'Importar CSV'}
+          </button>
           <button 
             onClick={() => openModal()}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 font-medium transition-colors whitespace-nowrap"

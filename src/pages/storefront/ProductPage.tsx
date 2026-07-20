@@ -163,9 +163,18 @@ export const ProductPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Botão de Comprar Dinâmico */}
-            <button 
-              onClick={async () => {
+            {/* Botão de Comprar Dinâmico ou Esgotado */}
+            {product.stock <= 0 ? (
+              <button 
+                disabled 
+                className="w-full bg-neutral-800 text-neutral-500 text-lg md:text-xl font-black uppercase tracking-widest py-5 rounded-[20px] flex items-center justify-center gap-3 cursor-not-allowed"
+              >
+                <ShoppingCart size={24} />
+                ESGOTADO
+              </button>
+            ) : (
+              <button 
+                onClick={async () => {
                 try {
                   // O loading vai ser adicionado no estado acima. Como não criei o useState para isso ainda, vamos adaptar:
                   const btn = document.getElementById('buy-button');
@@ -207,6 +216,7 @@ export const ProductPage: React.FC = () => {
               <ShoppingCart size={24} />
               Comprar Agora
             </button>
+            )}
 
           </div>
         </div>
