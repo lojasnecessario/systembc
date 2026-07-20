@@ -85,7 +85,9 @@ export const Products: React.FC = () => {
   };
 
   const downloadCSVTemplate = () => {
-    const csvContent = "sku,name,price,promotional_price,stock,description\nSKU-EXEMPLO,Camiseta Teste,99.90,79.90,10,Uma camiseta de teste super legal";
+    // Adicionamos o BOM (\uFEFF) para o Excel reconhecer os acentos (UTF-8) corretamente
+    // E usamos ponto-e-vírgula (;) pois é o padrão do Excel no Brasil para separar colunas
+    const csvContent = "\uFEFFsku;name;price;promotional_price;stock;description\nSKU-EXEMPLO;Camiseta Teste;99,90;79,90;10;Uma camiseta de teste super legal";
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     if (link.download !== undefined) {
@@ -175,7 +177,8 @@ export const Products: React.FC = () => {
           }
           
           if (successCount === 0 && rows.length > 0) {
-            alert("A planilha foi lida, mas nenhum produto foi importado. Verifique se as colunas 'sku' e 'name' existem e estão preenchidas na planilha.");
+            const detectedHeaders = Object.keys(rows[0]).join(' | ');
+            alert(`A planilha foi lida, mas nenhum produto foi importado.\n\nVerifique se as colunas 'sku' e 'name' existem.\nColunas encontradas pelo sistema: [ ${detectedHeaders} ]`);
           } else {
             alert(`Importação concluída! ${successCount} produtos processados.`);
           }
