@@ -107,22 +107,42 @@ export const Products: React.FC = () => {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: function(h) {
+        return h.trim().toLowerCase(); // Transforma "SKU " ou "Sku" em "sku"
+      },
       complete: async (results) => {
         try {
           const rows = results.data as any[];
           let successCount = 0;
           
+          if (rows.length === 0) {
+            alert("O arquivo CSV parece estar vazio ou num formato inválido.");
+            setIsImporting(false);
+            return;
+          }
+
           for (const row of rows) {
             if (!row.sku || !row.name) continue; // Pula linhas sem dados essenciais
 
+            const parseNumber = (val: any) => {
+              if (!val) return null;
+              if (typeof val === 'number') return val;
+              if (typeof val === 'string') {
+                const cleaned = val.replace(',', '.').replace(/[^0-9.-]+/g, '');
+                const num = parseFloat(cleaned);
+                return isNaN(num) ? null : num;
+              }
+              return null;
+            };
+
             const productData = {
-              name: row.name,
-              slug: generateSlug(row.name),
-              sku: row.sku,
-              price: parseFloat(row.price) || 0,
-              promotional_price: row.promotional_price ? parseFloat(row.promotional_price) : null,
-              stock: parseInt(row.stock) || 0,
-              description: row.description || '',
+              name: String(row.name).trim(),
+              slug: generateSlug(String(row.name)),
+              sku: String(row.sku).trim(),
+              price: parseNumber(row.price) || 0,
+              promotional_price: parseNumber(row.promotional_price),
+              stock: parseInt(String(row.stock).replace(/\D/g, ''), 10) || 0,
+              description: row.description ? String(row.description).trim() : '',
               is_active: true,
               order_grid: 1
             };
@@ -154,7 +174,11 @@ export const Products: React.FC = () => {
             successCount++;
           }
           
-          alert(`Importação concluída! ${successCount} produtos processados.`);
+          if (successCount === 0 && rows.length > 0) {
+            alert("A planilha foi lida, mas nenhum produto foi importado. Verifique se as colunas 'sku' e 'name' existem e estão preenchidas na planilha.");
+          } else {
+            alert(`Importação concluída! ${successCount} produtos processados.`);
+          }
           fetchData(); // Recarrega a tabela
         } catch (error: any) {
           console.error("Erro na importação:", error);
