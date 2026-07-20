@@ -28,17 +28,18 @@ export const Footer: React.FC = () => {
               <li><Link to="/" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Início</Link></li>
               <li><a href="#categorias" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Categorias</a></li>
               <li><a href="#produtos" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Produtos</a></li>
+              <li><Link to="/depoimentos" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Avaliações</Link></li>
               <li><a href="#sobre" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Sobre Nós</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-white font-semibold mb-6">Suporte</h4>
+            <h4 className="text-white font-semibold mb-6">Suporte e Políticas</h4>
             <ul className="space-y-4">
-              <li><a href="#" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">FAQ</a></li>
-              <li><a href="#" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Frete e Entregas</a></li>
-              <li><a href="#" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Trocas e Devoluções</a></li>
-              <li><a href="#" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Contato</a></li>
+              <li><Link to="/legal/politica-de-troca-e-devolucao" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Trocas e Devoluções</Link></li>
+              <li><Link to="/legal/politica-de-reembolso" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Política de Reembolso</Link></li>
+              <li><a href="#faq" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">FAQ / Frete</a></li>
+              <li><a href="#contato" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Contato</a></li>
             </ul>
           </div>
 
@@ -63,9 +64,11 @@ export const Footer: React.FC = () => {
           <p className="text-neutral-500 text-xs">
             &copy; {new Date().getFullYear()} Black Core. Todos os direitos reservados.
           </p>
-          <div className="flex gap-6">
-            <a href="#" className="text-neutral-500 hover:text-white text-xs transition-colors">Termos de Serviço</a>
-            <a href="#" className="text-neutral-500 hover:text-white text-xs transition-colors">Política de Privacidade</a>
+          <div className="flex flex-wrap gap-4 md:gap-6 justify-center">
+            <Link to="/legal/termos-de-uso" className="text-neutral-500 hover:text-white text-xs transition-colors">Termos de Serviço</Link>
+            <Link to="/legal/politica-de-privacidade" className="text-neutral-500 hover:text-white text-xs transition-colors">Política de Privacidade</Link>
+            <Link to="/legal/politica-de-cookies" className="text-neutral-500 hover:text-white text-xs transition-colors">Política de Cookies</Link>
+            <Link to="/legal/aviso-de-seguranca" className="text-neutral-500 hover:text-white text-xs transition-colors">Aviso de Segurança</Link>
           </div>
         </div>
       </div>

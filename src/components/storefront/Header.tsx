@@ -49,6 +49,10 @@ export const Header: React.FC = () => {
             />
           </div>
 
+          <Link to="/depoimentos" className="hidden xl:block text-white hover:text-green-400 font-bold uppercase text-sm tracking-wider transition-colors">
+            Avaliações
+          </Link>
+
           <Link to="/" className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-black uppercase tracking-wider text-xs px-5 py-3 rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]">
             <Crown size={16} />
             Seja VIP
@@ -92,6 +96,7 @@ export const Header: React.FC = () => {
         }`}
       >
         <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Início</Link>
+        <Link to="/depoimentos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Avaliações</Link>
         <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Login / Criar</Link>
         <a href="#categorias" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Categorias</a>
         <a href="#produtos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Produtos</a>

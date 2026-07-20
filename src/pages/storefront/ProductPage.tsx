@@ -163,26 +163,50 @@ export const ProductPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Botão de Comprar */}
-            {product.checkout_url ? (
-              <a 
-                href={product.checkout_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-green-500 hover:bg-green-400 text-black text-lg md:text-xl font-black uppercase tracking-widest py-5 rounded-[20px] transition-all duration-300 shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:shadow-[0_0_50px_rgba(34,197,94,0.5)] hover:-translate-y-1 flex items-center justify-center gap-3"
-              >
-                <ShoppingCart size={24} />
-                Comprar Agora
-              </a>
-            ) : (
-              <button 
-                disabled 
-                className="w-full bg-neutral-800 text-neutral-500 text-lg md:text-xl font-black uppercase tracking-widest py-5 rounded-[20px] flex items-center justify-center gap-3 cursor-not-allowed"
-              >
-                <ShoppingCart size={24} />
-                Indisponível
-              </button>
-            )}
+            {/* Botão de Comprar Dinâmico */}
+            <button 
+              onClick={async () => {
+                try {
+                  // O loading vai ser adicionado no estado acima. Como não criei o useState para isso ainda, vamos adaptar:
+                  const btn = document.getElementById('buy-button');
+                  if (btn) {
+                    btn.innerHTML = '<div class="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin"></div>';
+                    btn.setAttribute('disabled', 'true');
+                  }
+                  
+                  // Se já houver um checkout_url salvo manualmente pelo admin, usa ele direto
+                  if (product.checkout_url) {
+                    window.location.href = product.checkout_url;
+                    return;
+                  }
+
+                  const { data, error } = await supabase.functions.invoke('vega-checkout', {
+                    body: { productId: product.id }
+                  });
+
+                  if (error) throw error;
+                  if (data?.checkout_url) {
+                    window.location.href = data.checkout_url;
+                  } else {
+                    alert('Erro ao gerar link de pagamento. Tente novamente mais tarde.');
+                  }
+                } catch (err) {
+                  console.error('Erro no checkout:', err);
+                  alert('Erro ao se comunicar com o sistema de pagamento.');
+                } finally {
+                  const btn = document.getElementById('buy-button');
+                  if (btn) {
+                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Comprar Agora';
+                    btn.removeAttribute('disabled');
+                  }
+                }
+              }}
+              id="buy-button"
+              className="w-full bg-green-500 hover:bg-green-400 disabled:opacity-50 disabled:cursor-not-allowed text-black text-lg md:text-xl font-black uppercase tracking-widest py-5 rounded-[20px] transition-all duration-300 shadow-[0_0_30px_rgba(34,197,94,0.3)] hover:shadow-[0_0_50px_rgba(34,197,94,0.5)] hover:-translate-y-1 flex items-center justify-center gap-3"
+            >
+              <ShoppingCart size={24} />
+              Comprar Agora
+            </button>
 
           </div>
         </div>

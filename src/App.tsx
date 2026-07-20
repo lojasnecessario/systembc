@@ -10,6 +10,9 @@ import { StoreLayout } from './layouts/StoreLayout';
 import { Home } from './pages/storefront/Home';
 import { CategoryPage } from './pages/storefront/CategoryPage';
 import { ProductPage } from './pages/storefront/ProductPage';
+import { GoogleReviews } from './pages/storefront/GoogleReviews';
+import { Testimonials } from './pages/storefront/Testimonials';
+import { LegalPage } from './pages/storefront/LegalPage';
 
 // Admin Pages
 import { Login } from './pages/admin/Login';
@@ -40,7 +43,11 @@ function App() {
           <Route index element={<Home />} />
           <Route path="categoria/:slug" element={<CategoryPage />} />
           <Route path="produto/:slug" element={<ProductPage />} />
+          <Route path="depoimentos" element={<Testimonials />} />
+          <Route path="legal/:slug" element={<LegalPage />} />
         </Route>
+
+        <Route path="/google" element={<GoogleReviews />} />
 
         {/* Admin Login */}
         <Route path="/admin/login" element={<Login />} />
