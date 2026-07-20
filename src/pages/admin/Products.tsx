@@ -229,7 +229,13 @@ export const Products: React.FC = () => {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else if (name === 'price' || name === 'promotional_price' || name === 'stock' || name === 'order_grid') {
-      setFormData(prev => ({ ...prev, [name]: value === '' ? null : Number(value) }));
+      let numericValue: number | null = null;
+      if (value !== '') {
+        const cleaned = value.replace(',', '.').replace(/[^0-9.-]+/g, '');
+        numericValue = parseFloat(cleaned);
+        if (isNaN(numericValue)) numericValue = null;
+      }
+      setFormData(prev => ({ ...prev, [name]: value === '' ? '' : (numericValue !== null ? value : prev[name as keyof typeof prev]) }));
     } else {
       setFormData(prev => {
         const newData = { ...prev, [name]: value };
@@ -319,9 +325,9 @@ export const Products: React.FC = () => {
         description: formData.description,
         category_id: formData.category_id || null,
         brand_id: formData.brand_id || null,
-        price: formData.price,
-        promotional_price: formData.promotional_price,
-        stock: formData.stock,
+        price: typeof formData.price === 'string' ? parseFloat(formData.price.replace(',', '.').replace(/[^0-9.-]+/g, '')) || 0 : formData.price || 0,
+        promotional_price: typeof formData.promotional_price === 'string' && formData.promotional_price ? parseFloat(formData.promotional_price.replace(',', '.').replace(/[^0-9.-]+/g, '')) : formData.promotional_price || null,
+        stock: typeof formData.stock === 'string' ? parseInt(formData.stock.replace(/[^0-9-]/g, ''), 10) || 0 : formData.stock || 0,
         sku: formData.sku,
         main_image: finalMainImage,
         images: finalGallery,
@@ -602,9 +608,9 @@ export const Products: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">Preço Normal (R$)</label>
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="decimal"
                         name="price"
-                        step="0.01"
                         required
                         value={formData.price ?? ''}
                         onChange={handleChange}
@@ -614,9 +620,9 @@ export const Products: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">Preço Promocional (Opcional)</label>
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="decimal"
                         name="promotional_price"
-                        step="0.01"
                         value={formData.promotional_price ?? ''}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -628,7 +634,8 @@ export const Products: React.FC = () => {
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">Estoque (un)</label>
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         name="stock"
                         required
                         value={formData.stock ?? ''}
