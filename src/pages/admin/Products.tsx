@@ -565,7 +565,7 @@ export const Products: React.FC = () => {
                       required
                       value={formData.name || ''}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900"
                     />
                   </div>
 
@@ -577,7 +577,7 @@ export const Products: React.FC = () => {
                       required
                       value={formData.slug || ''}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-slate-900"
                     />
                   </div>
 
@@ -589,7 +589,7 @@ export const Products: React.FC = () => {
                       placeholder="https://pay.vegacheckout.com.br/..."
                       value={formData.checkout_url || ''}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-green-50/30"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-green-50/30 text-slate-900"
                     />
                   </div>
 
@@ -600,7 +600,7 @@ export const Products: React.FC = () => {
                       rows={5}
                       value={formData.description || ''}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y text-slate-900"
                     />
                   </div>
 
@@ -614,7 +614,7 @@ export const Products: React.FC = () => {
                         required
                         value={formData.price ?? ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900"
                       />
                     </div>
                     <div>
@@ -625,7 +625,7 @@ export const Products: React.FC = () => {
                         name="promotional_price"
                         value={formData.promotional_price ?? ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900"
                       />
                     </div>
                   </div>
@@ -640,7 +640,7 @@ export const Products: React.FC = () => {
                         required
                         value={formData.stock ?? ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900"
                       />
                     </div>
                     <div>
@@ -650,7 +650,7 @@ export const Products: React.FC = () => {
                         name="sku"
                         value={formData.sku ?? ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900"
                       />
                     </div>
                   </div>
@@ -667,7 +667,7 @@ export const Products: React.FC = () => {
                         name="category_id"
                         value={formData.category_id || ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
                       >
                         <option value="">Sem categoria</option>
                         {categories.map(c => (
@@ -682,7 +682,7 @@ export const Products: React.FC = () => {
                         name="brand_id"
                         value={formData.brand_id || ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
                       >
                         <option value="">Sem marca</option>
                         {brands.map(b => (
@@ -698,7 +698,7 @@ export const Products: React.FC = () => {
                         name="order_grid"
                         value={formData.order_grid || 0}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-slate-900"
                       />
                     </div>
                   </div>
