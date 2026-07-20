@@ -4,6 +4,7 @@ import { StoreAdvantages } from '../../components/storefront/StoreAdvantages';
 import { CategoryList } from '../../components/storefront/CategoryList';
 import { ProductGridSection } from '../../components/storefront/ProductGridSection';
 import { AboutSection } from '../../components/storefront/AboutSection';
+import { FeaturedProducts } from '../../components/storefront/FeaturedProducts';
 import { supabase } from '../../lib/supabase';
 
 export const Home: React.FC = () => {
@@ -65,6 +66,9 @@ export const Home: React.FC = () => {
       
       {/* Seção Sobre Nós */}
       <AboutSection />
+      
+      {/* Produtos em Destaque */}
+      <FeaturedProducts />
       
     </div>
   );
