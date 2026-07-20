@@ -605,7 +605,7 @@ export const Products: React.FC = () => {
                         name="price"
                         step="0.01"
                         required
-                        value={formData.price || ''}
+                        value={formData.price ?? ''}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -616,7 +616,7 @@ export const Products: React.FC = () => {
                         type="number"
                         name="promotional_price"
                         step="0.01"
-                        value={formData.promotional_price || ''}
+                        value={formData.promotional_price ?? ''}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -630,7 +630,7 @@ export const Products: React.FC = () => {
                         type="number"
                         name="stock"
                         required
-                        value={formData.stock || 0}
+                        value={formData.stock ?? ''}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -640,7 +640,7 @@ export const Products: React.FC = () => {
                       <input
                         type="text"
                         name="sku"
-                        value={formData.sku || ''}
+                        value={formData.sku ?? ''}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
