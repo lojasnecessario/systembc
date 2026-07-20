@@ -110,7 +110,16 @@ export const Products: React.FC = () => {
       header: true,
       skipEmptyLines: true,
       transformHeader: function(h) {
-        return h.trim().toLowerCase(); // Transforma "SKU " ou "Sku" em "sku"
+        const header = h.trim().toLowerCase();
+        // Mapeamento automático de cabeçalhos do Shopify para o nosso formato
+        if (header === 'variant sku') return 'sku';
+        if (header === 'title') return 'name';
+        if (header === 'variant price') return 'price';
+        if (header === 'variant compare at price') return 'promotional_price';
+        if (header === 'variant inventory qty') return 'stock';
+        if (header === 'body (html)') return 'description';
+        if (header === 'handle') return 'handle'; // Mantém o handle para usar como fallback de SKU
+        return header;
       },
       complete: async (results) => {
         try {
@@ -124,7 +133,13 @@ export const Products: React.FC = () => {
           }
 
           for (const row of rows) {
-            if (!row.sku || !row.name) continue; // Pula linhas sem dados essenciais
+            // Shopify às vezes deixa a coluna name (Title) vazia em linhas de variantes/imagens adicionais.
+            // O fallback para SKU será o 'handle' do Shopify caso a pessoa não tenha cadastrado SKU lá.
+            const rowSku = row.sku || row.handle;
+            if (!rowSku) continue; // Pula se realmente não tiver identificador
+
+            // Pula se não for a linha principal do produto (Shopify) e não tiver nome
+            if (!row.name && !row.sku) continue; 
 
             const parseNumber = (val: any) => {
               if (!val) return null;
@@ -137,13 +152,15 @@ export const Products: React.FC = () => {
               return null;
             };
 
+            const finalName = String(row.name || row.handle).trim();
+
             const productData = {
-              name: String(row.name).trim(),
-              slug: generateSlug(String(row.name)),
-              sku: String(row.sku).trim(),
+              name: finalName,
+              slug: generateSlug(finalName),
+              sku: String(rowSku).trim(),
               price: parseNumber(row.price) || 0,
               promotional_price: parseNumber(row.promotional_price),
-              stock: parseInt(String(row.stock).replace(/\D/g, ''), 10) || 0,
+              stock: parseInt(String(row.stock || '0').replace(/[^0-9-]/g, ''), 10) || 0,
               description: row.description ? String(row.description).trim() : '',
               is_active: true,
               order_grid: 1
@@ -178,7 +195,7 @@ export const Products: React.FC = () => {
           
           if (successCount === 0 && rows.length > 0) {
             const detectedHeaders = Object.keys(rows[0]).join(' | ');
-            alert(`A planilha foi lida, mas nenhum produto foi importado.\n\nVerifique se as colunas 'sku' e 'name' existem.\nColunas encontradas pelo sistema: [ ${detectedHeaders} ]`);
+            alert(`A planilha foi lida, mas nenhum produto foi importado.\n\nVerifique se o arquivo possui um cabeçalho válido do Shopify ou do nosso modelo.\nColunas encontradas pelo sistema: [ ${detectedHeaders} ]`);
           } else {
             alert(`Importação concluída! ${successCount} produtos processados.`);
           }
