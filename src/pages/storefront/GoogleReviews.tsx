@@ -295,9 +295,8 @@ function MobileActionButton({ icon, label, active = false }: { icon: React.React
       <div className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
         active 
           ? 'border-blue-600 text-blue-600 hover:bg-blue-50' 
-          : 'border-neutral-300 text-neutral-500 hover:bg-neutral-50'
       }`}>
-        {React.cloneElement(icon as React.ReactElement, { className: 'w-5 h-5' })}
+        {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}
       </div>
       <span className={`text-[11px] font-bold tracking-wide ${active ? 'text-blue-600' : 'text-neutral-500'}`}>
         {label}
@@ -310,7 +309,7 @@ function InfoItem({ icon, text }: { icon: React.ReactNode, text: React.ReactNode
   return (
     <div className="flex items-start gap-4 px-5 py-4 border-b border-neutral-100 hover:bg-neutral-50 transition-colors cursor-pointer">
       <div className="text-blue-600 shrink-0 mt-0.5">
-        {React.cloneElement(icon as React.ReactElement, { className: 'w-5 h-5' })}
+        {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}
       </div>
       <div className="text-sm text-neutral-700 leading-snug">
         {text}
