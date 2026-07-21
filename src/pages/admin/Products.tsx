@@ -528,7 +528,6 @@ export const Products: React.FC = () => {
             Novo Produto
           </button>
         </div>
-        </div>
       </div>
 
       {selectedProducts.length > 0 && (
