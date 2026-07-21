@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Manrope', 'sans-serif'],
+        heading: ['"Chakra Petch"', 'sans-serif'],
+      },
       animation: {
         'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
       },

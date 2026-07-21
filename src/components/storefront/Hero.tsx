@@ -1,82 +1,83 @@
 import React, { useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Hero: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let animationFrameId: number;
-
-    const updateVideoProgress = () => {
-      if (!videoRef.current || !containerRef.current) return;
-      
-      const { top, height } = containerRef.current.getBoundingClientRect();
-      
-      // O progresso vai de 0 (quando o topo do container está no topo da tela)
-      // até 1 (quando o fundo do container está no topo da tela)
-      let progress = -top / height;
-      
-      // Garante que o progresso fique entre 0 e 1
-      progress = Math.max(0, Math.min(1, progress));
-      
-      const duration = videoRef.current.duration;
-      if (duration && !isNaN(duration)) {
-        videoRef.current.currentTime = progress * duration;
-      }
-    };
-
     const handleScroll = () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
+      // Scrub de Vídeo
+      if (videoRef.current && !Number.isNaN(videoRef.current.duration)) {
+        // A cada 40 pixels de rolagem, avança 1 segundo de vídeo (bem mais rápido)
+        const scrollFactor = 40; 
+        let targetTime = window.scrollY / scrollFactor;
+        
+        // Limita o tempo do vídeo para não passar da duração total
+        if (targetTime > videoRef.current.duration) {
+          targetTime = videoRef.current.duration;
+        }
+        
+        // Se a duração for válida, aplica o tempo usando requestAnimationFrame para ficar fluido
+        requestAnimationFrame(() => {
+          if (videoRef.current) {
+            videoRef.current.currentTime = targetTime;
+          }
+        });
       }
-      animationFrameId = requestAnimationFrame(updateVideoProgress);
     };
-
+    
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    if (videoRef.current) {
-      videoRef.current.addEventListener('loadedmetadata', updateVideoProgress);
-    }
-    
-    // Chamada inicial para garantir o frame correto na montagem
-    updateVideoProgress();
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      if (videoRef.current) {
-        videoRef.current.removeEventListener('loadedmetadata', updateVideoProgress);
-      }
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-screen overflow-hidden bg-black">
-      <video
-        ref={videoRef}
-        src="/hero_video.mp4"
-        className="absolute inset-0 w-full h-full object-cover"
-        muted
-        playsInline
-        preload="auto"
-      />
+    <div className="relative w-full h-[600px] md:h-[700px] bg-[#0a0d0a] overflow-hidden group flex items-center">
       
-      {/* Overlay gradient e textos */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 pointer-events-none" />
+      {/* Background Video (Scrub-on-Scroll) */}
+      <div className="absolute top-0 left-0 w-full h-[120%] z-0">
+        <video 
+          ref={videoRef}
+          muted 
+          playsInline
+          className="w-full h-full object-cover opacity-50"
+        >
+          <source src="/videomov.mp4" type="video/mp4" />
+        </video>
+      </div>
       
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 px-4">
-        <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-4 text-center drop-shadow-2xl">
-          ELEVE SEU <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">JOGO</span>
-        </h1>
-        <p className="text-lg md:text-2xl text-slate-200 font-light mb-8 max-w-2xl text-center drop-shadow-md">
-          Desbrave novas realidades. Rolagem para continuar sua jornada.
-        </p>
-        
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-pulse">
-          <span className="text-xs uppercase tracking-[0.2em] text-white/70 mb-3 font-semibold">Scroll</span>
-          <div className="w-px h-16 bg-gradient-to-b from-white/80 to-transparent" />
+      {/* Overlay Escuro para Legibilidade */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0a0d0a] via-[#0a0d0a]/80 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0d0a]/50 via-transparent to-[#0a0d0a] pointer-events-none z-10" />
+      
+      {/* Conteúdo do Banner */}
+      <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-[120px]">
+        <div className="max-w-xl">
+          <span className="text-[#33e36a] font-bold text-sm md:text-base uppercase tracking-wider mb-2 block drop-shadow-md">
+            PACOTE AVENTURA
+          </span>
+          <h1 className="text-4xl md:text-6xl font-heading font-black text-[#eef4ea] uppercase leading-tight mb-4 drop-shadow-xl">
+            Três jogos de <br/> aventura com um <br/> super desconto
+          </h1>
+          <p className="text-[#8b977f] text-sm md:text-base mb-8 max-w-md uppercase font-semibold drop-shadow-md">
+            Red Dead Redemption 2, Cyberpunk 2077 e GTA V. Garanta agora o seu pacote aventura com entrega especial incluída.
+          </p>
+          <Link 
+            to="/categoria/pacotes" 
+            className="inline-block bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] font-black uppercase text-lg px-8 py-4 rounded-xl transition-colors shadow-[0_0_20px_rgba(51,227,106,0.3)] hover:shadow-[0_0_30px_rgba(51,227,106,0.5)]"
+          >
+            Compre Agora
+          </Link>
         </div>
       </div>
+
+      {/* Navegação do Slider (Desktop) */}
+      <button className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-30">
+        <ChevronLeft size={28} />
+      </button>
+      <button className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-30">
+        <ChevronRight size={28} />
+      </button>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, Search, X, LogIn, Crown } from 'lucide-react';
+import { ShoppingCart, Menu, Search, X, User, MessageCircle } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,91 +15,120 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header 
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 border-b ${
-        isScrolled 
-          ? 'bg-[#0f0f0f] border-white/10 py-3' 
-          : 'bg-[#141414] border-transparent py-4'
-      }`}
-    >
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 flex items-center justify-between">
-        
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group relative z-50 mr-8">
-          <div className="w-8 h-8 md:w-10 md:h-10 bg-green-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.5)] group-hover:scale-105 transition-transform duration-300">
-            <span className="text-black font-black text-xl md:text-2xl leading-none">B</span>
-          </div>
-          <span className="text-xl md:text-2xl font-black tracking-tighter text-white group-hover:text-green-400 transition-colors uppercase">
-            Black Core
-          </span>
-        </Link>
-
-        {/* Desktop Navigation & Actions */}
-        <div className="hidden lg:flex items-center justify-end flex-1 gap-6">
+    <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 bg-[#0a0d0a]`}>
+      {/* Top Header Row */}
+      <div className={`border-b border-[#1b241a] transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}>
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 flex items-center justify-between">
           
-          {/* Barra de Busca (Estilo reference) */}
-          <div className="flex-1 max-w-lg relative mr-4">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <Search size={18} className="text-neutral-500" />
+          {/* Mobile: Hamburger */}
+          <div className="lg:hidden flex items-center">
+            <button 
+              className="text-[#8b977f] hover:text-[#eef4ea] p-2 -ml-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Logo (Centered on mobile, Left on desktop) */}
+          <Link to="/" className="flex items-center lg:mr-8 group relative z-50">
+            {/* Logo placeholder imitating xgamestore logo */}
+            <div className="flex items-center">
+              <span className="text-xl md:text-2xl font-heading font-black tracking-tighter text-[#33e36a] italic">
+                BLACK<span className="text-[#eef4ea]">CORE</span>
+              </span>
             </div>
-            <input 
-              type="text" 
-              placeholder="Buscar jogo na Black Core..."
-              className="w-full bg-[#1e1e1e] border border-white/5 text-white text-sm rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-green-500/50 transition-colors placeholder:text-neutral-500"
-            />
+          </Link>
+
+          {/* Desktop Search Bar */}
+          <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+            <div className="flex w-full relative group">
+              <input 
+                type="text" 
+                placeholder="Qual produto você busca"
+                className="w-full bg-[#141A12] border border-[#1b241a] border-r-0 text-[#eef4ea] text-sm rounded-l-md py-3 pl-4 pr-4 focus:outline-none focus:border-[#33e36a] transition-colors placeholder:text-[#6b7563]"
+              />
+              <button className="bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] px-6 font-bold flex items-center gap-2 rounded-r-md transition-colors whitespace-nowrap">
+                <Search size={18} />
+                Buscar
+              </button>
+            </div>
           </div>
 
-          <Link to="/depoimentos" className="hidden xl:block text-white hover:text-green-400 font-bold uppercase text-sm tracking-wider transition-colors">
-            Avaliações
-          </Link>
+          {/* Right Actions */}
+          <div className="flex items-center gap-2 md:gap-6">
+            {/* Mobile Search Icon */}
+            <button className="lg:hidden text-[#8b977f] hover:text-[#eef4ea] p-2">
+              <Search size={22} />
+            </button>
 
-          <Link to="/" className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black font-black uppercase tracking-wider text-xs px-5 py-3 rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(34,197,94,0.3)] hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]">
-            <Crown size={16} />
-            Seja VIP
-          </Link>
+            {/* Desktop Account */}
+            <Link to="/admin/login" className="hidden lg:flex items-center gap-3 text-[#8b977f] hover:text-[#eef4ea] transition-colors">
+              <User size={24} />
+              <div className="flex flex-col">
+                <span className="text-[10px] leading-tight">Entrar</span>
+                <span className="text-sm font-bold leading-tight text-[#eef4ea]">Minha conta</span>
+              </div>
+            </Link>
 
-          <Link to="/admin/login" className="flex items-center gap-2 bg-transparent border border-white/10 hover:border-white/30 text-white font-semibold text-sm px-5 py-3 rounded-full transition-colors">
-            <LogIn size={16} className="text-green-500" />
-            Login / Criar
-          </Link>
+            {/* Desktop & Mobile Cart */}
+            <button className="flex items-center gap-3 text-[#8b977f] hover:text-[#eef4ea] transition-colors group relative p-2 lg:p-0">
+              <ShoppingCart size={24} />
+              <div className="hidden lg:flex flex-col text-left">
+                <span className="text-[10px] leading-tight">Carrinho</span>
+                <span className="text-sm font-bold leading-tight text-[#eef4ea]">R$0,00</span>
+              </div>
+              {/* Notifier dot for mobile/desktop */}
+              <span className="absolute top-1 lg:-top-1 right-1 lg:-right-1 w-2.5 h-2.5 bg-[#33e36a] rounded-full border-2 border-[#0a0d0a]"></span>
+            </button>
 
-          <button className="flex items-center gap-2 bg-transparent border border-white/10 hover:border-white/30 text-white font-semibold text-sm px-5 py-3 rounded-full transition-colors relative group">
-            <ShoppingCart size={18} />
-            Carrinho
-            <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
-          </button>
-        </div>
-
-        {/* Mobile Actions */}
-        <div className="flex items-center gap-4 z-50 lg:hidden">
-          <button className="text-neutral-300 hover:text-green-400 p-2">
-            <Search size={22} />
-          </button>
-          <button className="text-neutral-300 hover:text-green-400 p-2 relative">
-            <ShoppingCart size={22} />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
-          </button>
-          
-          <button 
-            className="text-neutral-300 hover:text-white p-2 ml-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-          </button>
+            {/* Desktop WhatsApp Button */}
+            <a href="https://wa.me/5516991484745" target="_blank" rel="noopener noreferrer" className="hidden lg:flex items-center gap-2 bg-[#0f130e] border border-[#1b241a] hover:border-[#33e36a] text-[#8b977f] hover:text-[#33e36a] px-4 py-2 rounded-md transition-colors">
+              <MessageCircle size={20} className="text-[#33e36a]" />
+              <div className="flex flex-col text-left">
+                <span className="text-[10px] leading-tight">Fale conosco</span>
+                <span className="text-sm font-bold leading-tight text-[#eef4ea]">WhatsApp</span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Desktop Sub Navigation Row */}
+      <div className="hidden lg:block border-b border-[#1b241a] bg-[#0a0d0a]">
+        <div className="max-w-[1400px] mx-auto px-8 flex items-center h-12">
+          <nav className="flex items-center gap-8 h-full">
+            <div className="flex items-center gap-2 h-full text-[#8b977f] border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#eef4ea] cursor-pointer transition-colors">
+              <Menu size={18} />
+            </div>
+            {['XBOX ONE / SERIES', 'PRÉ-VENDAS', 'PACOTES', 'PROMOÇÕES', 'DEPOIMENTOS', 'GRUPOS DE DESCONTO'].map((item, index) => (
+              <a 
+                key={index}
+                href="#"
+                className="h-full flex items-center text-xs font-bold text-[#eef4ea] uppercase border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#33e36a] transition-colors whitespace-nowrap"
+              >
+                {item === 'PROMOÇÕES' && <span className="text-orange-500 mr-1">🔥</span>}
+                {item === 'DEPOIMENTOS' && <span className="text-yellow-400 mr-1">☆</span>}
+                {item}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
       <div 
-        className={`fixed inset-0 bg-[#111111] z-40 flex flex-col items-center justify-center gap-8 transition-all duration-500 lg:hidden ${
+        className={`fixed inset-0 bg-[#0a0d0a] z-40 flex flex-col pt-24 px-6 transition-all duration-300 lg:hidden ${
           isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
       >
-        <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Início</Link>
-        <Link to="/depoimentos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Avaliações</Link>
-        <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Login / Criar</Link>
-        <a href="#categorias" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Categorias</a>
-        <a href="#produtos" onClick={() => setIsMobileMenuOpen(false)} className="text-3xl font-black uppercase text-white hover:text-green-400 tracking-tighter">Produtos</a>
+        <div className="flex flex-col gap-6">
+          <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Início</Link>
+          <Link to="/depoimentos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Avaliações</Link>
+          <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Login / Criar</Link>
+          <a href="#categorias" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Categorias</a>
+          <a href="#produtos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Produtos</a>
+        </div>
       </div>
     </header>
   );

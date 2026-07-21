@@ -23,6 +23,7 @@ import { Categories } from './pages/admin/Categories';
 import { Brands } from './pages/admin/Brands';
 import { ProductGrids } from './pages/admin/ProductGrids';
 import { Banners } from './pages/admin/Banners';
+import { HighlightsAdmin } from './pages/admin/HighlightsAdmin';
 import { Settings } from './pages/admin/Settings';
 import { Customers } from './pages/admin/Customers';
 import { Orders } from './pages/admin/Orders';
@@ -63,6 +64,7 @@ function App() {
             <Route path="brands" element={<Brands />} />
             <Route path="grids" element={<ProductGrids />} />
             <Route path="banners" element={<Banners />} />
+            <Route path="destaques" element={<HighlightsAdmin />} />
             <Route path="customers" element={<Customers />} />
             <Route path="logs" element={<Logs />} />
             <Route path="settings" element={<Settings />} />

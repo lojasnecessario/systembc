@@ -33,6 +33,7 @@ export const AdminLayout: React.FC = () => {
     { to: '/admin/brands', icon: <Tags size={20} />, label: 'Marcas' },
     { to: '/admin/grids', icon: <Package size={20} />, label: 'Vitrines (Grids)' },
     { to: '/admin/banners', icon: <ImageIcon size={20} />, label: 'Banners' },
+    { to: '/admin/destaques', icon: <ImageIcon size={20} />, label: 'Destaques' },
     { to: '/admin/customers', icon: <Users size={20} />, label: 'Clientes' },
     { to: '/admin/logs', icon: <Activity size={20} />, label: 'Logs de Atividade' },
     { to: '/admin/settings', icon: <Settings size={20} />, label: 'Configurações' },

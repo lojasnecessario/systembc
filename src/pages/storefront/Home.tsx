@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Hero } from '../../components/storefront/Hero';
+import { BrandSlider } from '../../components/storefront/BrandSlider';
 import { StoreAdvantages } from '../../components/storefront/StoreAdvantages';
 import { CategoryList } from '../../components/storefront/CategoryList';
 import { ProductGridSection } from '../../components/storefront/ProductGridSection';
 import { AboutSection } from '../../components/storefront/AboutSection';
+import { HighlightsSection } from '../../components/storefront/HighlightsSection';
 import { FeaturedProducts } from '../../components/storefront/FeaturedProducts';
 import { supabase } from '../../lib/supabase';
 
@@ -51,11 +53,9 @@ export const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full bg-black">
+    <div className="w-full bg-gradient-to-br from-[#06120d] via-black to-[#020604] min-h-screen">
       <Hero />
-      
-      {/* Slider Animado de Vantagens */}
-      <StoreAdvantages />
+      <BrandSlider />
       
       <CategoryList />
       
@@ -67,8 +67,14 @@ export const Home: React.FC = () => {
       {/* Seção Sobre Nós */}
       <AboutSection />
       
+      {/* Seção de Destaques (Promoção) */}
+      <HighlightsSection />
+      
       {/* Produtos em Destaque */}
       <FeaturedProducts />
+      
+      {/* Seção de Vantagens na Última Posição */}
+      <StoreAdvantages />
       
     </div>
   );
