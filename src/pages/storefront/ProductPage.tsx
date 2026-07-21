@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, CheckCircle2, ChevronDown, Clock } from 'lucide-react';
+import { ShoppingCart, CheckCircle2, ChevronDown, Clock, ShieldCheck, Truck, Package } from 'lucide-react';
 
 export const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -223,6 +223,22 @@ export const ProductPage: React.FC = () => {
               Comprar Agora
             </button>
             )}
+
+            {/* Selos de Confiança */}
+            <div className="grid grid-cols-3 gap-3 mt-6">
+              <div className="flex flex-col items-center justify-center p-4 bg-[#111] border border-white/5 rounded-2xl gap-2 text-center transition-all duration-300 hover:bg-white/5 hover:border-white/10">
+                <ShieldCheck className="text-green-500" size={28} />
+                <span className="text-[10px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wide leading-tight">Compra<br/>Segura</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-4 bg-[#111] border border-white/5 rounded-2xl gap-2 text-center transition-all duration-300 hover:bg-white/5 hover:border-white/10">
+                <Truck className="text-green-500" size={28} />
+                <span className="text-[10px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wide leading-tight">Frete<br/>Grátis</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-4 bg-[#111] border border-white/5 rounded-2xl gap-2 text-center transition-all duration-300 hover:bg-white/5 hover:border-white/10">
+                <Package className="text-green-500" size={28} />
+                <span className="text-[10px] sm:text-xs font-bold text-neutral-400 uppercase tracking-wide leading-tight">Produto<br/>Rastreável</span>
+              </div>
+            </div>
 
           </div>
         </div>

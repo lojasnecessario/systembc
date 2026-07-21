@@ -118,6 +118,7 @@ export const Products: React.FC = () => {
         if (header === 'variant compare at price') return 'promotional_price';
         if (header === 'variant inventory qty') return 'stock';
         if (header === 'body (html)') return 'description';
+        if (header === 'image src') return 'main_image';
         if (header === 'handle') return 'handle'; // Mantém o handle para usar como fallback de SKU
         return header;
       },
@@ -154,7 +155,7 @@ export const Products: React.FC = () => {
 
             const finalName = String(row.name || row.handle).trim();
 
-            const productData = {
+            const productData: any = {
               name: finalName,
               slug: generateSlug(finalName),
               sku: String(rowSku).trim(),
@@ -166,6 +167,13 @@ export const Products: React.FC = () => {
               order_grid: 1
             };
 
+            if (row.main_image) {
+              productData.main_image = String(row.main_image).trim();
+            }
+            if (row.images) {
+              productData.images = String(row.images).split(',').map((url: string) => url.trim()).filter(Boolean);
+            }
+
             // Verifica se o produto com esse SKU já existe
             const { data: existingProduct } = await supabase
               .from('products')
@@ -175,14 +183,18 @@ export const Products: React.FC = () => {
 
             if (existingProduct) {
               // Atualiza produto existente
+              const updateData = {
+                price: productData.price,
+                promotional_price: productData.promotional_price,
+                stock: productData.stock,
+                description: productData.description,
+                ...(productData.main_image && { main_image: productData.main_image }),
+                ...(productData.images && { images: productData.images })
+              };
+
               await supabase
                 .from('products')
-                .update({
-                  price: productData.price,
-                  promotional_price: productData.promotional_price,
-                  stock: productData.stock,
-                  description: productData.description
-                })
+                .update(updateData)
                 .eq('id', existingProduct.id);
             } else {
               // Insere novo produto
