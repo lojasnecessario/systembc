@@ -39,7 +39,7 @@ export const AdminLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-slate-50 flex text-slate-900">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
