@@ -34,6 +34,7 @@ export const Products: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   
   // Form state
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -397,6 +398,79 @@ export const Products: React.FC = () => {
     }
   };
 
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedProducts(filteredProducts.map(p => p.id));
+    } else {
+      setSelectedProducts([]);
+    }
+  };
+
+  const handleSelectProduct = (id: string) => {
+    setSelectedProducts(prev => 
+      prev.includes(id) ? prev.filter(pId => pId !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedProducts.length === 0) return;
+    if (!window.confirm(`Tem certeza que deseja excluir ${selectedProducts.length} produtos? Essa ação não pode ser desfeita.`)) return;
+
+    try {
+      setLoading(true);
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .in('id', selectedProducts);
+        
+      if (error) throw error;
+      
+      await supabase.from('activity_logs').insert([{ 
+        action: 'deleted_products_bulk', 
+        entity_type: 'product', 
+        entity_id: 'bulk', 
+        details: { count: selectedProducts.length } 
+      }]);
+      
+      setSelectedProducts([]);
+      await fetchData();
+    } catch (error: any) {
+      console.error('Erro ao excluir produtos em massa:', error);
+      alert(`Erro ao excluir produtos em massa: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBulkStatus = async (isActive: boolean) => {
+    if (selectedProducts.length === 0) return;
+
+    try {
+      setLoading(true);
+      const { error } = await supabase
+        .from('products')
+        .update({ is_active: isActive })
+        .in('id', selectedProducts);
+        
+      if (error) throw error;
+      
+      await supabase.from('activity_logs').insert([{ 
+        action: isActive ? 'activated_products_bulk' : 'deactivated_products_bulk', 
+        entity_type: 'product', 
+        entity_id: 'bulk', 
+        details: { count: selectedProducts.length } 
+      }]);
+      
+      setSelectedProducts([]);
+      await fetchData();
+    } catch (error: any) {
+      console.error(`Erro ao ${isActive ? 'ativar' : 'desativar'} produtos em massa:`, error);
+      alert(`Erro ao ${isActive ? 'ativar' : 'desativar'} produtos em massa: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const removeGalleryImage = (index: number) => {
     const newImages = [...(formData.images || [])];
     newImages.splice(index, 1);
@@ -454,13 +528,54 @@ export const Products: React.FC = () => {
             Novo Produto
           </button>
         </div>
+        </div>
       </div>
+
+      {selectedProducts.length > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in">
+          <div className="flex items-center gap-2 text-blue-700 font-medium">
+            <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">
+              {selectedProducts.length}
+            </span>
+            <span>{selectedProducts.length === 1 ? 'produto selecionado' : 'produtos selecionados'}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handleBulkStatus(true)}
+              className="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              Ativar
+            </button>
+            <button
+              onClick={() => handleBulkStatus(false)}
+              className="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              Desativar
+            </button>
+            <button
+              onClick={handleBulkDelete}
+              className="px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg text-sm font-medium text-red-600 hover:bg-red-100 transition-colors flex items-center gap-1.5"
+            >
+              <Trash2 size={16} />
+              Excluir
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 w-10 text-center">
+                  <input
+                    type="checkbox"
+                    checked={filteredProducts.length > 0 && selectedProducts.length === filteredProducts.length}
+                    onChange={handleSelectAll}
+                    className="w-4 h-4 text-blue-600 rounded cursor-pointer"
+                  />
+                </th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600 w-20">Foto</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Produto</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Categoria</th>
@@ -472,7 +587,7 @@ export const Products: React.FC = () => {
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
                     <div className="flex justify-center mb-2">
                       <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                     </div>
@@ -481,13 +596,21 @@ export const Products: React.FC = () => {
                 </tr>
               ) : filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
                     Nenhum produto encontrado.
                   </td>
                 </tr>
               ) : (
                 filteredProducts.map((product) => (
                   <tr key={product.id} className={`hover:bg-slate-50 transition-colors ${!product.is_active ? 'opacity-60' : ''}`}>
+                    <td className="px-6 py-4 text-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedProducts.includes(product.id)}
+                        onChange={() => handleSelectProduct(product.id)}
+                        className="w-4 h-4 text-blue-600 rounded cursor-pointer"
+                      />
+                    </td>
                     <td className="px-6 py-4">
                       {product.main_image ? (
                         <img src={product.main_image} alt={product.name} className="w-12 h-12 object-cover rounded-lg border border-slate-200" />
