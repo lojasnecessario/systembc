@@ -32,7 +32,7 @@ export const Hero: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[600px] md:h-[700px] bg-[#0a0d0a] overflow-hidden group flex items-center">
+    <div className="relative w-full h-[600px] md:h-[700px] bg-[#0a0d0a] overflow-hidden group flex items-center pb-20 md:pb-32">
       
       {/* Background Video (Scrub-on-Scroll) */}
       <div className="absolute top-0 left-0 w-full h-[120%] z-0">
