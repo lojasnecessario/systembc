@@ -45,7 +45,13 @@ export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
   };
 
   return (
-    <section className="w-full pt-4 pb-6 md:pt-6 md:pb-12 px-4 md:px-8 bg-transparent relative">
+    <section className="w-full pt-6 pb-8 md:pt-10 md:pb-16 px-4 md:px-8 relative border-t border-b border-[#11381b]/50 mt-4 mb-4">
+      {/* Degrades de Fundo (Início e Fim) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#0c3116]/80 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-[300px] bg-gradient-to-t from-[#0c3116]/80 to-transparent" />
+      </div>
+
       <div className="max-w-[1400px] mx-auto relative z-10 group">
         
         {/* Cabeçalho da Seção */}
