@@ -14,10 +14,10 @@ export const HighlightsAdmin: React.FC = () => {
   const [subtitle, setSubtitle] = useState('Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.');
   const [tagText, setTagText] = useState('% COMPRE POR FAIXA DE PREÇO');
   
-  const [cards, setCards] = useState<{image: string, mobileImage: string, link: string, file: File | null, mobileFile: File | null}[]>([
-    { image: '', mobileImage: '', link: '', file: null, mobileFile: null },
-    { image: '', mobileImage: '', link: '', file: null, mobileFile: null },
-    { image: '', mobileImage: '', link: '', file: null, mobileFile: null }
+  const [cards, setCards] = useState<{image: string, mobileImage: string, link: string, file: File | null, mobileFile: File | null, tag: string, title: string, highlight: string, buttonText: string}[]>([
+    { image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' },
+    { image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' },
+    { image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' }
   ]);
 
   useEffect(() => {
@@ -53,18 +53,22 @@ export const HighlightsAdmin: React.FC = () => {
               mobileImage: c.mobileImage || '',
               link: c.link || '',
               file: null,
-              mobileFile: null
+              mobileFile: null,
+              tag: c.tag || '',
+              title: c.title || '',
+              highlight: c.highlight || '',
+              buttonText: c.buttonText || ''
             }));
             while (loadedCards.length < 3) {
-              loadedCards.push({ image: '', mobileImage: '', link: '', file: null, mobileFile: null });
+              loadedCards.push({ image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' });
             }
             setCards(loadedCards.slice(0, 3));
           } else {
             // Legacy migration
             setCards([
-              { image: data.image || '', mobileImage: '', link: data.link || '', file: null, mobileFile: null },
-              { image: '', mobileImage: '', link: '', file: null, mobileFile: null },
-              { image: '', mobileImage: '', link: '', file: null, mobileFile: null }
+              { image: data.image || '', mobileImage: '', link: data.link || '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' },
+              { image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' },
+              { image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' }
             ]);
           }
         } catch (e) {
@@ -78,7 +82,7 @@ export const HighlightsAdmin: React.FC = () => {
     }
   };
 
-  const handleCardChange = (index: number, field: 'link' | 'file' | 'mobileFile', value: any) => {
+  const handleCardChange = (index: number, field: 'link' | 'file' | 'mobileFile' | 'tag' | 'title' | 'highlight' | 'buttonText', value: any) => {
     const newCards = [...cards];
     newCards[index] = { ...newCards[index], [field]: value };
     setCards(newCards);
@@ -114,7 +118,11 @@ export const HighlightsAdmin: React.FC = () => {
         return {
           image: finalImageUrl,
           mobileImage: finalMobileUrl,
-          link: card.link
+          link: card.link,
+          tag: card.tag,
+          title: card.title,
+          highlight: card.highlight,
+          buttonText: card.buttonText
         };
       }));
 
@@ -284,6 +292,48 @@ export const HighlightsAdmin: React.FC = () => {
                         placeholder="/categoria"
                         className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                    </div>
+                    
+                    <div className="pt-2 border-t border-slate-200">
+                      <h5 className="text-xs font-bold text-slate-700 mb-3">Textos Sobrepostos (Opcional)</h5>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Tag (Ex: OFERTAS RELÂMPAGO)</label>
+                          <input
+                            type="text"
+                            value={card.tag}
+                            onChange={(e) => handleCardChange(index, 'tag', e.target.value)}
+                            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Título (Ex: JOGOS DE NO MÁXIMO)</label>
+                          <input
+                            type="text"
+                            value={card.title}
+                            onChange={(e) => handleCardChange(index, 'title', e.target.value)}
+                            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Destaque/Preço (Ex: R$ 29,90)</label>
+                          <input
+                            type="text"
+                            value={card.highlight}
+                            onChange={(e) => handleCardChange(index, 'highlight', e.target.value)}
+                            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-green-600 font-bold"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Botão (Ex: VER JOGOS)</label>
+                          <input
+                            type="text"
+                            value={card.buttonText}
+                            onChange={(e) => handleCardChange(index, 'buttonText', e.target.value)}
+                            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

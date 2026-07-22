@@ -106,8 +106,8 @@ export const HighlightsSection: React.FC = () => {
         <div className={`grid gap-6 md:gap-8 ${gridColsClass}`}>
           {validCards.map((card: any, index: number) => {
             const content = (
-              <div className="rounded-2xl overflow-hidden relative group w-full bg-slate-900 border border-white/10 hover:border-green-500/50 transition-colors duration-500 shadow-lg aspect-[2/1] md:aspect-square md:h-auto">
-                <picture>
+              <div className="rounded-2xl overflow-hidden relative group w-full bg-slate-900 border border-white/10 hover:border-green-500/50 transition-colors duration-500 shadow-lg aspect-[2/1] md:aspect-square md:h-auto flex flex-col justify-end">
+                <picture className="absolute inset-0 w-full h-full">
                   {card.mobileImage && (
                     <source media="(max-width: 767px)" srcSet={card.mobileImage} />
                   )}
@@ -117,7 +117,33 @@ export const HighlightsSection: React.FC = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </picture>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Gradient for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
+                
+                {/* Text Overlay */}
+                <div className="relative z-10 p-5 md:p-8 flex flex-col items-start w-full">
+                  {card.tag && (
+                    <span className="bg-green-500 text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 md:mb-3 shadow-sm">
+                      {card.tag}
+                    </span>
+                  )}
+                  {card.title && (
+                    <h3 className="text-white text-lg md:text-2xl font-black uppercase leading-tight mb-1">
+                      {card.title}
+                    </h3>
+                  )}
+                  {card.highlight && (
+                    <div className="text-green-500 text-3xl md:text-5xl font-black uppercase tracking-tight drop-shadow-md mb-3 md:mb-4">
+                      {card.highlight}
+                    </div>
+                  )}
+                  {card.buttonText && (
+                    <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold text-xs md:text-sm uppercase px-4 py-2 md:px-5 md:py-2.5 rounded hover:bg-white hover:text-black transition-all duration-300">
+                      {card.buttonText} &rarr;
+                    </div>
+                  )}
+                </div>
               </div>
             );
 
