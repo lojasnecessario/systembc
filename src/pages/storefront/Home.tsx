@@ -69,7 +69,6 @@ export const Home: React.FC = () => {
           {/* Degrades de Fundo (Laterais) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
             <div className="absolute top-0 left-0 w-[150px] md:w-[300px] h-full bg-gradient-to-r from-[#0c3116]/90 to-transparent" />
-            <div className="absolute top-0 right-0 w-[150px] md:w-[300px] h-full bg-gradient-to-l from-[#0c3116]/90 to-transparent" />
           </div>
           
           <div className="relative z-10">
