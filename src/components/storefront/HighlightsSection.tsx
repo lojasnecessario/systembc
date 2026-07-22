@@ -69,12 +69,7 @@ export const HighlightsSection: React.FC = () => {
     return null; // Nada para exibir
   }
 
-  // Define the grid columns based on the number of cards
-  const gridColsClass = validCards.length === 1 
-    ? 'grid-cols-1 max-w-3xl mx-auto' 
-    : validCards.length === 2 
-      ? 'grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto'
-      : 'grid-cols-1 md:grid-cols-3';
+  // No longer need gridColsClass for flex layout
 
   return (
     <section className="py-16 md:py-24 bg-[#050505] relative border-t border-white/5">
@@ -102,11 +97,11 @@ export const HighlightsSection: React.FC = () => {
           )}
         </div>
 
-        {/* Banners Grid */}
-        <div className={`grid gap-6 md:gap-8 ${gridColsClass}`}>
+        {/* Banners Flex Container */}
+        <div className="flex flex-col md:flex-row flex-wrap gap-6 md:gap-8 justify-start items-start">
           {validCards.map((card: any, index: number) => {
             const content = (
-              <div className="rounded-2xl overflow-hidden relative group w-full bg-slate-900 border border-white/10 hover:border-green-500/50 transition-colors duration-500 shadow-lg aspect-[2/1] md:aspect-square md:h-auto flex flex-col justify-end">
+              <div className="rounded-2xl overflow-hidden relative group w-full md:w-[240px] lg:w-[280px] xl:w-[320px] shrink-0 bg-slate-900 border border-white/10 hover:border-green-500/50 transition-colors duration-500 shadow-lg aspect-[2/1] md:aspect-square flex flex-col justify-end">
                 <picture className="absolute inset-0 w-full h-full">
                   {card.mobileImage && (
                     <source media="(max-width: 767px)" srcSet={card.mobileImage} />
@@ -122,24 +117,24 @@ export const HighlightsSection: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                 
                 {/* Text Overlay */}
-                <div className="relative z-10 p-5 md:p-8 flex flex-col items-start w-full">
+                <div className="relative z-10 p-5 md:p-6 flex flex-col items-start w-full">
                   {card.tag && (
-                    <span className="bg-green-500 text-white text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 md:mb-3 shadow-sm">
+                    <span className="bg-green-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider mb-2 shadow-sm">
                       {card.tag}
                     </span>
                   )}
                   {card.title && (
-                    <h3 className="text-white text-lg md:text-2xl font-black uppercase leading-tight mb-1">
+                    <h3 className="text-white text-base md:text-lg font-black uppercase leading-tight mb-1">
                       {card.title}
                     </h3>
                   )}
                   {card.highlight && (
-                    <div className="text-green-500 text-3xl md:text-5xl font-black uppercase tracking-tight drop-shadow-md mb-3 md:mb-4">
+                    <div className="text-green-500 text-2xl md:text-3xl font-black uppercase tracking-tight drop-shadow-md mb-2 md:mb-3">
                       {card.highlight}
                     </div>
                   )}
                   {card.buttonText && (
-                    <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold text-xs md:text-sm uppercase px-4 py-2 md:px-5 md:py-2.5 rounded hover:bg-white hover:text-black transition-all duration-300">
+                    <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold text-[10px] md:text-xs uppercase px-3 py-1.5 md:px-4 md:py-2 rounded hover:bg-white hover:text-black transition-all duration-300">
                       {card.buttonText} &rarr;
                     </div>
                   )}
@@ -149,14 +144,14 @@ export const HighlightsSection: React.FC = () => {
 
             if (card.link) {
               return (
-                <Link key={index} to={card.link} className="block w-full">
+                <Link key={index} to={card.link} className="block w-full md:w-auto">
                   {content}
                 </Link>
               );
             }
 
             return (
-              <div key={index} className="block w-full">
+              <div key={index} className="block w-full md:w-auto">
                 {content}
               </div>
             );
