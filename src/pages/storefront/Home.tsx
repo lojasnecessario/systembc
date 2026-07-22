@@ -66,10 +66,10 @@ export const Home: React.FC = () => {
       {/* Vitrines Dinâmicas (Grids) */}
       {grids.length > 0 && (
         <div className="relative border-t border-b border-[#11381b]/50 mt-4 mb-4">
-          {/* Degrades de Fundo (Início e Fim) */}
+          {/* Degrades de Fundo (Laterais) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-            <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#0c3116]/80 to-transparent" />
-            <div className="absolute bottom-0 left-0 w-full h-[300px] bg-gradient-to-t from-[#0c3116]/80 to-transparent" />
+            <div className="absolute top-0 left-0 w-[150px] md:w-[300px] h-full bg-gradient-to-r from-[#0c3116]/90 to-transparent" />
+            <div className="absolute top-0 right-0 w-[150px] md:w-[300px] h-full bg-gradient-to-l from-[#0c3116]/90 to-transparent" />
           </div>
           
           <div className="relative z-10">
