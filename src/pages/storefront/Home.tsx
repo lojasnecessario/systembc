@@ -54,8 +54,12 @@ export const Home: React.FC = () => {
 
   return (
     <div className="w-full bg-gradient-to-br from-[#06120d] via-black to-[#020604] min-h-screen">
-      <Hero />
-      <BrandSlider />
+      <div className="relative">
+        <Hero />
+        <div className="absolute bottom-0 left-0 w-full z-20">
+          <BrandSlider />
+        </div>
+      </div>
       
       <CategoryList />
       
