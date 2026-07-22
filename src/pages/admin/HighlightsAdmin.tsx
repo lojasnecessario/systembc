@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../utils/upload';
-import { Save } from 'lucide-react';
+import { Save, Plus, Trash2 } from 'lucide-react';
 
 const HIGHLIGHT_BANNER_TITLE = '__DESTAQUE_PRINCIPAL__';
 
@@ -13,10 +13,12 @@ export const HighlightsAdmin: React.FC = () => {
   const [title, setTitle] = useState('TEM JOGO PRA TODO BOLSO');
   const [subtitle, setSubtitle] = useState('Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.');
   const [tagText, setTagText] = useState('% COMPRE POR FAIXA DE PREÇO');
-  const [link, setLink] = useState('');
   
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  const [cards, setCards] = useState<{image: string, link: string, file: File | null}[]>([
+    { image: '', link: '', file: null },
+    { image: '', link: '', file: null },
+    { image: '', link: '', file: null }
+  ]);
 
   useEffect(() => {
     fetchHighlightBanner();
@@ -39,18 +41,33 @@ export const HighlightsAdmin: React.FC = () => {
       if (data) {
         setBannerId(data.id);
         
-        // Em subtitle armazenaremos um JSON com os textos auxiliares para não criar nova tabela
         try {
           const parsedData = JSON.parse(data.subtitle || '{}');
           setTitle(parsedData.title || 'TEM JOGO PRA TODO BOLSO');
           setSubtitle(parsedData.subtitle || 'Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.');
           setTagText(parsedData.tagText || '% COMPRE POR FAIXA DE PREÇO');
+          
+          if (parsedData.cards && Array.isArray(parsedData.cards)) {
+            const loadedCards = parsedData.cards.map((c: any) => ({
+              image: c.image || '',
+              link: c.link || '',
+              file: null
+            }));
+            while (loadedCards.length < 3) {
+              loadedCards.push({ image: '', link: '', file: null });
+            }
+            setCards(loadedCards.slice(0, 3));
+          } else {
+            // Legacy migration
+            setCards([
+              { image: data.image || '', link: data.link || '', file: null },
+              { image: '', link: '', file: null },
+              { image: '', link: '', file: null }
+            ]);
+          }
         } catch (e) {
-          // Se não for JSON (migração legada), apenas ignora e usa defaults
+          // Fallback
         }
-        
-        setLink(data.link || '');
-        setCurrentImageUrl(data.image);
       }
     } catch (error) {
       console.error('Error fetching highlight banner:', error);
@@ -59,37 +76,50 @@ export const HighlightsAdmin: React.FC = () => {
     }
   };
 
+  const handleCardChange = (index: number, field: 'link' | 'file', value: any) => {
+    const newCards = [...cards];
+    newCards[index] = { ...newCards[index], [field]: value };
+    setCards(newCards);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!imageFile && !currentImageUrl) {
-      alert("É obrigatório selecionar uma imagem para o destaque.");
+    // Check if at least one card has an image
+    const hasAtLeastOneImage = cards.some(c => c.image || c.file);
+    if (!hasAtLeastOneImage) {
+      alert("É obrigatório ter pelo menos uma imagem para os destaques.");
       return;
     }
     
     setSaving(true);
 
     try {
-      let finalImageUrl = currentImageUrl;
+      const processedCards = await Promise.all(cards.map(async (card) => {
+        let finalImageUrl = card.image;
+        if (card.file) {
+          const uploadedUrl = await uploadImage(card.file);
+          if (uploadedUrl) finalImageUrl = uploadedUrl;
+        }
+        return {
+          image: finalImageUrl,
+          link: card.link
+        };
+      }));
 
-      if (imageFile) {
-        const uploadedUrl = await uploadImage(imageFile);
-        if (uploadedUrl) finalImageUrl = uploadedUrl;
-      }
-
-      // Compacta as configurações textuais no campo subtitle como JSON
       const configData = JSON.stringify({
         title,
         subtitle,
-        tagText
+        tagText,
+        cards: processedCards
       });
 
       const bannerData = {
         title: HIGHLIGHT_BANNER_TITLE,
         subtitle: configData,
-        link,
-        image: finalImageUrl,
-        order_grid: 9999, // Mantém num índice alto
+        link: processedCards[0]?.link || '',
+        image: processedCards[0]?.image || '',
+        order_grid: 9999,
         is_active: true
       };
 
@@ -126,57 +156,13 @@ export const HighlightsAdmin: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Seção de Destaques</h1>
-          <p className="text-slate-500 mt-1">Configure o banner e os textos exibidos abaixo da seção "Sobre Nós".</p>
+          <p className="text-slate-500 mt-1">Configure até 3 banners para a seção de destaques (exibida abaixo de Sobre Nós).</p>
         </div>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
           
-          <div>
-            <h3 className="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Imagem Principal e Link</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 mb-2">Imagem Promocional (Banner)</label>
-                <div className="space-y-3">
-                  {currentImageUrl && !imageFile && (
-                    <div className="relative w-full md:w-2/3 h-48 rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
-                      <img src={currentImageUrl} alt="Destaque" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                  {imageFile && (
-                    <div className="w-full md:w-2/3 h-48 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center border border-blue-200 font-medium">
-                      Nova imagem selecionada
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files.length > 0) {
-                        setImageFile(e.target.files[0]);
-                      }
-                    }}
-                    className="w-full max-w-md text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                  />
-                </div>
-              </div>
-
-              <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 mb-1">Link de Redirecionamento</label>
-                <input
-                  type="text"
-                  value={link}
-                  onChange={(e) => setLink(e.target.value)}
-                  placeholder="Ex: /categoria/promocoes"
-                  className="w-full max-w-2xl px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-xs text-slate-500 mt-1">Para onde o usuário será levado ao clicar no banner.</p>
-              </div>
-            </div>
-          </div>
-
           <div>
             <h3 className="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Textos da Seção</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -210,6 +196,61 @@ export const HighlightsAdmin: React.FC = () => {
             </div>
           </div>
 
+          <div>
+            <h3 className="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Cards Promocionais (Banners)</h3>
+            <p className="text-sm text-slate-500 mb-6">Você pode adicionar até 3 cards. Em desktops eles ficarão lado a lado, e em celulares ficarão empilhados.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {cards.map((card, index) => (
+                <div key={index} className="border border-slate-200 rounded-lg p-4 bg-slate-50">
+                  <h4 className="font-bold text-slate-700 mb-3">Card {index + 1}</h4>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-700 mb-2">Imagem (Recomendado: Vertical/Quadrada)</label>
+                      {card.image && !card.file && (
+                        <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden border border-slate-200 bg-white mb-2">
+                          <img src={card.image} alt={`Card ${index + 1}`} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      {card.file && (
+                        <div className="w-full aspect-[4/5] bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center border border-blue-200 font-medium mb-2 text-xs text-center px-2">
+                          Nova imagem selecionada
+                        </div>
+                      )}
+                      {!card.image && !card.file && (
+                        <div className="w-full aspect-[4/5] bg-slate-100 rounded-lg flex items-center justify-center border border-slate-200 border-dashed mb-2 text-xs text-slate-400">
+                          Sem imagem
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            handleCardChange(index, 'file', e.target.files[0]);
+                          }
+                        }}
+                        className="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-slate-700 mb-1">Link</label>
+                      <input
+                        type="text"
+                        value={card.link}
+                        onChange={(e) => handleCardChange(index, 'link', e.target.value)}
+                        placeholder="/categoria"
+                        className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-end pt-4 border-t border-slate-200">
             <button
               type="submit"
@@ -221,7 +262,7 @@ export const HighlightsAdmin: React.FC = () => {
               ) : (
                 <Save size={20} />
               )}
-              {saving ? 'Salvando...' : 'Salvar Destaque'}
+              {saving ? 'Salvando...' : 'Salvar Destaques'}
             </button>
           </div>
         </form>
@@ -229,3 +270,4 @@ export const HighlightsAdmin: React.FC = () => {
     </div>
   );
 };
+
