@@ -77,25 +77,23 @@ export const CategoryList: React.FC = () => {
               <Link
                 key={category.id}
                 to={`/categoria/${category.slug}`}
-                className="flex-shrink-0 w-[100px] md:w-[130px] aspect-[4/5] snap-center group/card relative flex flex-col items-center justify-end rounded-xl bg-[#141A12] border border-[#1b241a] hover:border-[#33e36a] transition-all duration-300 hover:-translate-y-1 overflow-hidden shadow-md hover:shadow-lg"
+                className="flex-shrink-0 w-[100px] md:w-[120px] flex flex-col items-center gap-3 group/card snap-center"
               >
-                {/* Imagem de Fundo cobrindo tudo */}
-                <div className="absolute inset-0 w-full h-full bg-[#0f130e] flex items-center justify-center">
+                {/* Container da Imagem */}
+                <div className="relative w-full aspect-square flex items-center justify-center rounded-full transition-all duration-500 group-hover/card:bg-[#33e36a]">
                   {category.image ? (
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700 ease-out"
+                      className="w-[85%] h-[85%] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.6)] transition-all duration-500 group-hover/card:scale-125 group-hover/card:-translate-y-4 group-hover/card:drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
                     />
                   ) : (
-                    <ImageIcon size={40} className="text-[#6b7563] group-hover/card:text-[#33e36a] transition-colors duration-300" />
+                    <ImageIcon size={40} className="text-[#6b7563] group-hover/card:text-[#0a0d0a] transition-colors duration-300" />
                   )}
                 </div>
                 
-                {/* Overlay de Gradiente Escuro para legibilidade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
-                
-                <h3 className="relative z-10 p-2 text-[10px] md:text-xs font-heading font-bold text-[#eef4ea] group-hover/card:text-[#33e36a] transition-colors duration-300 text-center uppercase tracking-wide">
+                {/* Título */}
+                <h3 className="text-[11px] md:text-sm font-heading font-bold text-[#eef4ea] group-hover/card:text-[#33e36a] transition-colors duration-300 text-center uppercase tracking-wide">
                   {category.name}
                 </h3>
               </Link>
