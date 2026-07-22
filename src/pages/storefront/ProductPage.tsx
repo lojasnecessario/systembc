@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, CheckCircle2, ChevronDown, Clock, ShieldCheck, Truck, Package } from 'lucide-react';
+import { ShoppingCart, CheckCircle2, ChevronDown, ShieldCheck, Truck, Package } from 'lucide-react';
 
 export const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();

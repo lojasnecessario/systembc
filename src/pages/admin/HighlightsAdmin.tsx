@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../utils/upload';
-import { Save, Image as ImageIcon } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 const HIGHLIGHT_BANNER_TITLE = '__DESTAQUE_PRINCIPAL__';
 
