@@ -1,5 +1,6 @@
 import React from 'react';
-import { Play } from 'lucide-react';
+// import { Play } from 'lucide-react'; // unused
+
 import { Link } from 'react-router-dom';
 
 export const AboutSection: React.FC = () => {
