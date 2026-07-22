@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const AboutSection: React.FC = () => {
   return (
-    <section className="w-full py-16 md:py-24 px-4 md:px-8 bg-[#0a0d0a] relative overflow-hidden" id="sobre">
+    <section className="w-full py-8 md:py-12 px-4 md:px-8 bg-[#0a0d0a] relative overflow-hidden" id="sobre">
       <div className="max-w-[1400px] mx-auto relative z-10">
         <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
           

@@ -72,7 +72,7 @@ export const HighlightsSection: React.FC = () => {
   // No longer need gridColsClass for flex layout
 
   return (
-    <section className="py-16 md:py-24 bg-[#050505] relative border-t border-white/5">
+    <section className="w-full py-8 md:py-12 bg-[#06120d] relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6">
         
         {/* Textos Acima do Banner */}

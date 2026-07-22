@@ -60,7 +60,7 @@ export const CategoryList: React.FC = () => {
   }
 
   return (
-    <section className="w-full pt-8 pb-2 md:pb-4 px-4 md:px-8 bg-[#0a0d0a] relative overflow-hidden">
+    <section className="w-full pt-4 pb-0 px-4 md:px-8 bg-[#0a0d0a] relative overflow-hidden">
       <div className="max-w-[1400px] mx-auto relative z-10 group">
         <div className="mb-4 text-center">
           <h2 className="text-xl md:text-2xl font-heading font-bold text-[#eef4ea] uppercase tracking-tight">

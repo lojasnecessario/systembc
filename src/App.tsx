@@ -13,6 +13,8 @@ import { ProductPage } from './pages/storefront/ProductPage';
 import { GoogleReviews } from './pages/storefront/GoogleReviews';
 import { Testimonials } from './pages/storefront/Testimonials';
 import { LegalPage } from './pages/storefront/LegalPage';
+import { AllCategories } from './pages/storefront/AllCategories';
+import { AboutUs } from './pages/storefront/AboutUs';
 
 // Admin Pages
 import { Login } from './pages/admin/Login';
@@ -42,8 +44,10 @@ function App() {
         {/* Loja Virtual */}
         <Route path="/" element={<StoreLayout />}>
           <Route index element={<Home />} />
+          <Route path="categorias" element={<AllCategories />} />
           <Route path="categoria/:slug" element={<CategoryPage />} />
           <Route path="produto/:slug" element={<ProductPage />} />
+          <Route path="sobre-nos" element={<AboutUs />} />
           <Route path="depoimentos" element={<Testimonials />} />
           <Route path="legal/:slug" element={<LegalPage />} />
         </Route>

@@ -26,7 +26,7 @@ const advantages = [
 
 export const StoreAdvantages: React.FC = () => {
   return (
-    <div className="w-full bg-[#0a0d0a] py-12 px-4 md:px-8 border-b border-[#1b241a]">
+    <section className="bg-[#050605] py-6 md:py-10 border-t border-[#11381b]/30 px-4 md:px-8">
       <div className="max-w-[1400px] mx-auto">
         
         {/* Header da Seção */}

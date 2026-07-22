@@ -101,17 +101,18 @@ export const Header: React.FC = () => {
             <div className="flex items-center gap-2 h-full text-[#8b977f] border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#eef4ea] cursor-pointer transition-colors">
               <Menu size={18} />
             </div>
-            {['XBOX ONE / SERIES', 'PRÉ-VENDAS', 'PACOTES', 'PROMOÇÕES', 'DEPOIMENTOS', 'GRUPOS DE DESCONTO'].map((item, index) => (
-              <a 
-                key={index}
-                href="#"
-                className="h-full flex items-center text-xs font-bold text-[#eef4ea] uppercase border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#33e36a] transition-colors whitespace-nowrap"
-              >
-                {item === 'PROMOÇÕES' && <span className="text-orange-500 mr-1">🔥</span>}
-                {item === 'DEPOIMENTOS' && <span className="text-yellow-400 mr-1">☆</span>}
-                {item}
-              </a>
-            ))}
+            <Link to="/categorias" className="h-full flex items-center text-xs font-bold text-[#eef4ea] uppercase border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#33e36a] transition-colors whitespace-nowrap">
+              CATEGORIAS
+            </Link>
+            <Link to="/sobre-nos" className="h-full flex items-center text-xs font-bold text-[#eef4ea] uppercase border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#33e36a] transition-colors whitespace-nowrap">
+              SOBRE NÓS
+            </Link>
+            <Link to="/depoimentos" className="h-full flex items-center text-xs font-bold text-[#eef4ea] uppercase border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#33e36a] transition-colors whitespace-nowrap">
+              <span className="text-yellow-400 mr-1">☆</span> DEPOIMENTOS
+            </Link>
+            <Link to="/google" className="h-full flex items-center text-xs font-bold text-[#eef4ea] uppercase border-b-2 border-transparent hover:border-[#33e36a] hover:text-[#33e36a] transition-colors whitespace-nowrap">
+              <span className="text-blue-400 font-extrabold mr-1">G</span> CONFIRA NO GOOGLE
+            </Link>
           </nav>
         </div>
       </div>
@@ -124,10 +125,11 @@ export const Header: React.FC = () => {
       >
         <div className="flex flex-col gap-6">
           <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Início</Link>
-          <Link to="/depoimentos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Avaliações</Link>
-          <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Login / Criar</Link>
-          <a href="#categorias" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Categorias</a>
-          <a href="#produtos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Produtos</a>
+          <Link to="/categorias" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Categorias</Link>
+          <Link to="/sobre-nos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Sobre Nós</Link>
+          <Link to="/depoimentos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Depoimentos</Link>
+          <Link to="/google" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Confira no Google</Link>
+          <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Minha Conta</Link>
         </div>
       </div>
     </header>

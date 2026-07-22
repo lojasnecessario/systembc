@@ -36,7 +36,7 @@ export const FeaturedProducts: React.FC = () => {
   }
 
   return (
-    <section className="relative py-24 bg-[#0a0a0a] overflow-hidden">
+    <section className="relative py-12 md:py-16 bg-[#0a0a0a] overflow-hidden">
       {/* Elementos de background decorativos */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-green-500/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
