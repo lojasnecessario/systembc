@@ -3,7 +3,7 @@ import { CategoryList } from '../../components/storefront/CategoryList';
 
 export const AllCategories: React.FC = () => {
   return (
-    <div className="w-full bg-[#0a0d0a] min-h-screen pt-24 pb-16">
+    <div className="w-full bg-[#0a0d0a] min-h-screen pt-28 md:pt-40 pb-16">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 mb-8">
         <h1 className="text-3xl md:text-5xl font-heading font-black text-[#eef4ea] uppercase tracking-tighter mb-4">
           Nossas Categorias

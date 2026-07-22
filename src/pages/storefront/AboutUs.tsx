@@ -4,7 +4,7 @@ import { StoreAdvantages } from '../../components/storefront/StoreAdvantages';
 
 export const AboutUs: React.FC = () => {
   return (
-    <div className="w-full bg-[#0a0d0a] min-h-screen pt-24 pb-8">
+    <div className="w-full bg-[#0a0d0a] min-h-screen pt-28 md:pt-40 pb-8">
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 mb-4 text-center">
         <h1 className="text-3xl md:text-5xl font-heading font-black text-[#eef4ea] uppercase tracking-tighter">
           Sobre a Blackcore
