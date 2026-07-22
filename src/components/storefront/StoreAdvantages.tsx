@@ -64,6 +64,6 @@ export const StoreAdvantages: React.FC = () => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
