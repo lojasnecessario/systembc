@@ -18,7 +18,7 @@ export const AboutSection: React.FC = () => {
             </h3>
             
             <p className="text-[#8b977f] text-sm md:text-base lg:text-lg mb-8 leading-relaxed max-w-xl">
-              Imagine comprar seus jogos de Xbox com até 70% de desconto e ter eles para sempre, com total suporte de uma equipe especializada. Assista o vídeo para e saiba como isso é possível...
+              Imagine comprar seus jogos de Xbox com até 70% de desconto e ter eles para sempre, com total suporte de uma equipe especializada. Confira nossas ofertas e saiba como isso é possível...
             </p>
 
             <div>
@@ -31,35 +31,13 @@ export const AboutSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Vídeo Thumbnail (Mobile: Fica abaixo do texto? Não, no print o texto tá encima e o botão embaixo. O vídeo não aparece no print mobile, mas vamos colocar acima do texto no mobile por padrão visual) */}
-          <div className="w-full md:w-1/2 relative rounded-2xl overflow-hidden group order-1 md:order-2 cursor-pointer shadow-2xl border border-[#1b241a]">
+          {/* Imagem da Seção */}
+          <div className="w-full md:w-1/2 relative rounded-2xl overflow-hidden group order-1 md:order-2 shadow-2xl border border-[#1b241a]">
             <img 
-              src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop" 
-              alt="Vídeo Promocional" 
-              className="w-full aspect-video md:aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100"
+              src="/sobrenos.jpeg" 
+              alt="Sobre Nós" 
+              className="w-full aspect-video md:aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
-            {/* Overlay Escuro Inferior (Para o título do vídeo) */}
-            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/80 to-transparent z-10" />
-            
-            {/* Título Estilo YouTube */}
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-3">
-              <div className="w-10 h-10 bg-black rounded-full overflow-hidden border border-white/20">
-                 {/* Fake Avatar */}
-                 <div className="w-full h-full bg-[#33e36a] flex items-center justify-center text-[#06250f] font-bold text-xs">BC</div>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-semibold text-sm leading-tight line-clamp-1 drop-shadow-md">
-                  Blackcore Jogos Xbox Mídia Digital com até 70% OFF
-                </span>
-              </div>
-            </div>
-
-            {/* Ícone de Play Estilo Shorts/YT */}
-            <div className="absolute inset-0 z-30 flex items-center justify-center">
-              <div className="w-16 h-12 bg-red-600 rounded-xl flex items-center justify-center group-hover:bg-red-500 transition-colors shadow-[0_0_30px_rgba(220,38,38,0.5)]">
-                <Play className="text-white ml-1 fill-white" size={24} />
-              </div>
-            </div>
           </div>
 
         </div>
