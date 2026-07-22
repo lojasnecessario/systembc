@@ -14,10 +14,10 @@ export const HighlightsAdmin: React.FC = () => {
   const [subtitle, setSubtitle] = useState('Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.');
   const [tagText, setTagText] = useState('% COMPRE POR FAIXA DE PREÇO');
   
-  const [cards, setCards] = useState<{image: string, link: string, file: File | null}[]>([
-    { image: '', link: '', file: null },
-    { image: '', link: '', file: null },
-    { image: '', link: '', file: null }
+  const [cards, setCards] = useState<{image: string, mobileImage: string, link: string, file: File | null, mobileFile: File | null}[]>([
+    { image: '', mobileImage: '', link: '', file: null, mobileFile: null },
+    { image: '', mobileImage: '', link: '', file: null, mobileFile: null },
+    { image: '', mobileImage: '', link: '', file: null, mobileFile: null }
   ]);
 
   useEffect(() => {
@@ -50,19 +50,21 @@ export const HighlightsAdmin: React.FC = () => {
           if (parsedData.cards && Array.isArray(parsedData.cards)) {
             const loadedCards = parsedData.cards.map((c: any) => ({
               image: c.image || '',
+              mobileImage: c.mobileImage || '',
               link: c.link || '',
-              file: null
+              file: null,
+              mobileFile: null
             }));
             while (loadedCards.length < 3) {
-              loadedCards.push({ image: '', link: '', file: null });
+              loadedCards.push({ image: '', mobileImage: '', link: '', file: null, mobileFile: null });
             }
             setCards(loadedCards.slice(0, 3));
           } else {
             // Legacy migration
             setCards([
-              { image: data.image || '', link: data.link || '', file: null },
-              { image: '', link: '', file: null },
-              { image: '', link: '', file: null }
+              { image: data.image || '', mobileImage: '', link: data.link || '', file: null, mobileFile: null },
+              { image: '', mobileImage: '', link: '', file: null, mobileFile: null },
+              { image: '', mobileImage: '', link: '', file: null, mobileFile: null }
             ]);
           }
         } catch (e) {
@@ -76,7 +78,7 @@ export const HighlightsAdmin: React.FC = () => {
     }
   };
 
-  const handleCardChange = (index: number, field: 'link' | 'file', value: any) => {
+  const handleCardChange = (index: number, field: 'link' | 'file' | 'mobileFile', value: any) => {
     const newCards = [...cards];
     newCards[index] = { ...newCards[index], [field]: value };
     setCards(newCards);
@@ -97,12 +99,21 @@ export const HighlightsAdmin: React.FC = () => {
     try {
       const processedCards = await Promise.all(cards.map(async (card) => {
         let finalImageUrl = card.image;
+        let finalMobileUrl = card.mobileImage;
+        
         if (card.file) {
           const uploadedUrl = await uploadImage(card.file);
           if (uploadedUrl) finalImageUrl = uploadedUrl;
         }
+        
+        if (card.mobileFile) {
+          const uploadedUrl = await uploadImage(card.mobileFile);
+          if (uploadedUrl) finalMobileUrl = uploadedUrl;
+        }
+        
         return {
           image: finalImageUrl,
+          mobileImage: finalMobileUrl,
           link: card.link
         };
       }));
@@ -207,19 +218,19 @@ export const HighlightsAdmin: React.FC = () => {
                   
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-2">Imagem (Recomendado: Vertical/Quadrada)</label>
+                      <label className="block text-xs font-medium text-slate-700 mb-2">Imagem Desktop (Quadrada 1:1)</label>
                       {card.image && !card.file && (
-                        <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden border border-slate-200 bg-white mb-2">
-                          <img src={card.image} alt={`Card ${index + 1}`} className="w-full h-full object-cover" />
+                        <div className="relative w-full aspect-square rounded-lg overflow-hidden border border-slate-200 bg-white mb-2">
+                          <img src={card.image} alt={`Desktop ${index + 1}`} className="w-full h-full object-cover" />
                         </div>
                       )}
                       {card.file && (
-                        <div className="w-full aspect-[4/5] bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center border border-blue-200 font-medium mb-2 text-xs text-center px-2">
-                          Nova imagem selecionada
+                        <div className="w-full aspect-square bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center border border-blue-200 font-medium mb-2 text-xs text-center px-2">
+                          Nova imagem
                         </div>
                       )}
                       {!card.image && !card.file && (
-                        <div className="w-full aspect-[4/5] bg-slate-100 rounded-lg flex items-center justify-center border border-slate-200 border-dashed mb-2 text-xs text-slate-400">
+                        <div className="w-full aspect-square bg-slate-100 rounded-lg flex items-center justify-center border border-slate-200 border-dashed mb-2 text-xs text-slate-400">
                           Sem imagem
                         </div>
                       )}
@@ -229,6 +240,35 @@ export const HighlightsAdmin: React.FC = () => {
                         onChange={(e) => {
                           if (e.target.files && e.target.files.length > 0) {
                             handleCardChange(index, 'file', e.target.files[0]);
+                          }
+                        }}
+                        className="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-slate-700 mb-2">Imagem Mobile (Retangular 2:1)</label>
+                      {card.mobileImage && !card.mobileFile && (
+                        <div className="relative w-full aspect-[2/1] rounded-lg overflow-hidden border border-slate-200 bg-white mb-2">
+                          <img src={card.mobileImage} alt={`Mobile ${index + 1}`} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      {card.mobileFile && (
+                        <div className="w-full aspect-[2/1] bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center border border-blue-200 font-medium mb-2 text-xs text-center px-2">
+                          Nova imagem mobile
+                        </div>
+                      )}
+                      {!card.mobileImage && !card.mobileFile && (
+                        <div className="w-full aspect-[2/1] bg-slate-100 rounded-lg flex items-center justify-center border border-slate-200 border-dashed mb-2 text-xs text-slate-400">
+                          Usa a imagem desktop
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            handleCardChange(index, 'mobileFile', e.target.files[0]);
                           }
                         }}
                         className="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"

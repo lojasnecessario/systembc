@@ -106,12 +106,17 @@ export const HighlightsSection: React.FC = () => {
         <div className={`grid gap-6 md:gap-8 ${gridColsClass}`}>
           {validCards.map((card: any, index: number) => {
             const content = (
-              <div className="rounded-2xl overflow-hidden relative group w-full bg-slate-900 border border-white/10 hover:border-green-500/50 transition-colors duration-500 shadow-lg aspect-[4/5] md:aspect-auto md:h-[450px]">
-                <img 
-                  src={card.image} 
-                  alt={`${config.title} - Banner ${index + 1}`} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
+              <div className="rounded-2xl overflow-hidden relative group w-full bg-slate-900 border border-white/10 hover:border-green-500/50 transition-colors duration-500 shadow-lg aspect-[2/1] md:aspect-square md:h-auto">
+                <picture>
+                  {card.mobileImage && (
+                    <source media="(max-width: 767px)" srcSet={card.mobileImage} />
+                  )}
+                  <img 
+                    src={card.image} 
+                    alt={`${config.title} - Banner ${index + 1}`} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             );
