@@ -2,7 +2,7 @@ import React from 'react';
 
 export const BrandSlider: React.FC = () => {
   const brands = [
-    { name: 'PlayStation', src: '/ChatGPT Image 21 de jul. de 2026, 17_03_22.png', scale: 'scale-[1.8]' },
+    { name: 'PlayStation', src: '/playstationlogo.png', scale: 'scale-[1.8]' },
     { name: 'Xbox', src: '/XBOX_logo_2012.svg.webp', scale: 'scale-100' },
     { name: 'Nintendo', src: '/nintendologo.png', scale: 'scale-[1.8]' }
   ];
@@ -12,7 +12,7 @@ export const BrandSlider: React.FC = () => {
   const sliderItems = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 
   return (
-    <div className="w-full bg-[#141A12] border-b border-[#1b241a] py-3 relative overflow-hidden group">
+    <div className="w-full bg-transparent py-3 relative overflow-hidden group">
       {/* Container do Marquee com animação contínua */}
       <div className="flex w-[200%] md:w-[150%] lg:w-[100%] animate-marquee items-center gap-16 md:gap-24">
         {sliderItems.map((brand, index) => (
