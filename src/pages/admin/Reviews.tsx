@@ -9,6 +9,7 @@ interface Review {
   reviewer_name: string;
   rating: number;
   comment: string;
+  image_url?: string;
   is_approved: boolean;
   created_at: string;
   products?: { name: string; sku: string };
@@ -129,7 +130,7 @@ export const Reviews: React.FC = () => {
   };
 
   const downloadCSVTemplate = () => {
-    const csvContent = "\uFEFFsku_produto;nome_cliente;nota;comentario\nSKU-EXEMPLO;João Silva;5;Ótimo produto, chegou muito rápido!";
+    const csvContent = "\uFEFFsku_produto;nome_cliente;nota;comentario;imagem_url\nSKU-EXEMPLO;João Silva;5;Ótimo produto, chegou muito rápido!;https://link-da-imagem.com/img.jpg";
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     if (link.download !== undefined) {
@@ -151,7 +152,7 @@ export const Reviews: React.FC = () => {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      transformHeader: (header) => header.trim().toLowerCase(),
+      transformHeader: (header) => header.replace(/^\uFEFF/, '').trim().toLowerCase(),
       complete: async (results: any) => {
         try {
           const rows = results.data;
@@ -163,27 +164,55 @@ export const Reviews: React.FC = () => {
             return;
           }
 
-          // Busca todos os produtos para ter um mapa de SKU -> ID
+          // Busca todos os produtos para ter um mapa de SKU -> ID e Nome -> ID
           const skuToIdMap = new Map(products.map(p => [p.sku, p.id]));
+          const nameToIdMap = new Map(products.map(p => [p.name.toLowerCase(), p.id]));
 
           const reviewsToInsert = [];
+          const missingProducts = new Set<string>();
 
           for (const row of rows) {
             const rowSku = row.sku_produto || row.sku;
-            if (!rowSku) continue;
+            const rowName = row.product_title || row.produto || '';
+            
+            let productId = null;
+            if (rowSku) {
+              productId = skuToIdMap.get(rowSku.trim());
+            } 
+            if (!productId && rowName) {
+              const searchName = rowName.trim().toLowerCase();
+              productId = nameToIdMap.get(searchName);
+              
+              // Busca aproximada (substring) caso não encontre exatamente
+              if (!productId) {
+                const found = products.find(p => 
+                  p.name.toLowerCase().includes(searchName) || 
+                  searchName.includes(p.name.toLowerCase())
+                );
+                if (found) productId = found.id;
+              }
+            }
 
-            const productId = skuToIdMap.get(rowSku.trim());
             if (!productId) {
-              console.warn(`Produto com SKU ${rowSku} não encontrado. Avaliação ignorada.`);
+              console.warn(`Produto não encontrado para a linha:`, row);
+              if (rowName) missingProducts.add(rowName);
               continue;
+            }
+
+            // Tratamento especial para múltiplas imagens separadas por vírgula no CSV
+            let finalImageUrl = null;
+            const rawImage = row.images || row.imagem_url || row.imagem || row.image;
+            if (rawImage) {
+              finalImageUrl = rawImage.split(',')[0].trim();
             }
 
             reviewsToInsert.push({
               product_id: productId,
-              reviewer_name: row.nome_cliente || row.nome || 'Cliente Anônimo',
-              rating: parseFloat(row.nota || '5'),
-              comment: row.comentario || '',
-              is_approved: true // Avaliações importadas geralmente são aprovadas direto
+              reviewer_name: row.author || row.nome_cliente || row.nome || 'Cliente Anônimo',
+              rating: parseFloat(row.rating || row.nota || '5'),
+              comment: row.content || row.comentario || '',
+              image_url: finalImageUrl,
+              is_approved: row.status === 'hidden' ? false : true
             });
             
             successCount++;
@@ -194,7 +223,12 @@ export const Reviews: React.FC = () => {
             if (error) throw error;
           }
 
-          alert(`Importação concluída! ${successCount} avaliações processadas.`);
+          let msg = `Importação concluída! ${successCount} avaliações processadas.`;
+          if (missingProducts.size > 0) {
+            msg += `\n\nAtenção: ${missingProducts.size} produtos do CSV não foram encontrados na sua loja e foram ignorados (ex: ${Array.from(missingProducts).slice(0, 3).join(', ')}). Certifique-se de que os nomes no CSV correspondam aos produtos reais da sua loja.`;
+          }
+          alert(msg);
+          
           fetchData();
         } catch (error: any) {
           console.error("Erro na importação:", error);

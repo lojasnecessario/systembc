@@ -14,7 +14,7 @@ export const BrandSlider: React.FC = () => {
   return (
     <div className="w-full bg-transparent py-4 md:py-6 relative overflow-hidden group">
       {/* Container do Marquee com animação contínua */}
-      <div className="flex w-[200%] md:w-[150%] lg:w-[100%] animate-marquee items-center gap-20 md:gap-32 lg:gap-40">
+      <div className="flex w-[200%] md:w-[150%] lg:w-[100%] animate-marquee items-center gap-20 md:gap-32 lg:gap-24">
         {sliderItems.map((brand, index) => (
           <div 
             key={index} 
@@ -24,7 +24,7 @@ export const BrandSlider: React.FC = () => {
               <img 
                 src={brand.src} 
                 alt={brand.name} 
-                className={`h-14 md:h-16 lg:h-24 w-auto object-contain ${brand.scale}`} 
+                className={`h-14 md:h-16 lg:h-14 w-auto object-contain ${brand.scale}`} 
               />
             </div>
           </div>

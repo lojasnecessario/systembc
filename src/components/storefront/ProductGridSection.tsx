@@ -45,9 +45,7 @@ export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
   };
 
   return (
-    <section className="w-full pt-6 pb-8 md:pt-10 md:pb-16 px-4 md:px-8 relative bg-transparent">
-
-
+    <section className="w-full pt-3 pb-4 md:pt-5 md:pb-8 px-4 md:px-8 relative bg-transparent">
       <div className="max-w-[1400px] mx-auto relative z-10 group">
         
         {/* Cabeçalho da Seção */}
@@ -70,7 +68,7 @@ export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
           {viewAllLink && (
             <Link 
               to={viewAllLink}
-              className="hidden md:flex items-center gap-2 bg-[#141A12] border border-[#1b241a] hover:border-[#33e36a] text-[#eef4ea] px-6 py-3 rounded-lg transition-colors font-bold text-sm uppercase tracking-wider"
+              className="hidden md:flex items-center gap-2 bg-[#141A12] border border-[#1b241a] hover:border-[#33e36a] text-[#eef4ea] px-6 py-3 rounded-lg md:rounded-full transition-colors font-bold text-sm uppercase tracking-wider"
             >
               <ListFilter size={18} />
               Ver todos

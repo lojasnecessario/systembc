@@ -1,0 +1,6 @@
+product_title,author,rating,date,email,content,images,country,status
+Sample Product 1,Peter Parker,5,2025-01-01,parker@gmail.com,A normal review.,,US,approved
+Sample Product 2,Mary Jane,4,2024-12-20,jane@gmail.com,Still a normal review of other product.,,VN,approved
+Sample Product 2,Ben Parker,4,2024-12-21,ben@gmail.com,A review with 1 photo.,https://d1rc46soeuwz3b.cloudfront.net/set-the-site-up/reviews/66434020894713402089471.png,PT,hidden
+Sample Product 3,May Parker,3,2024-12-31,may@gmail.com,A review with 2 photos.,"https://d1rc46soeuwz3b.cloudfront.net/set-the-site-up/reviews/66434020894713402089471.png,https://d1rc46soeuwz3b.cloudfront.net/set-the-site-up/reviews/66434020894713402089471.png",UK,approved
+Sample Product 2,Gwen Stacy,2,27/10/2023,gwen@gmail.com,A review with a different date format.,,IT,approved

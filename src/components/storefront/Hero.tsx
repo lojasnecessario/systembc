@@ -64,7 +64,7 @@ export const Hero: React.FC = () => {
           </p>
           <Link 
             to="/categoria/pacotes" 
-            className="inline-block bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] font-black uppercase text-lg px-8 py-4 rounded-xl transition-colors shadow-[0_0_20px_rgba(51,227,106,0.3)] hover:shadow-[0_0_30px_rgba(51,227,106,0.5)]"
+            className="inline-block bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] font-black uppercase text-lg px-8 py-4 rounded-xl md:rounded-full transition-colors shadow-[0_0_20px_rgba(51,227,106,0.3)] hover:shadow-[0_0_30px_rgba(51,227,106,0.5)]"
           >
             Compre Agora
           </Link>

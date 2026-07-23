@@ -134,7 +134,7 @@ export const HighlightsSection: React.FC = () => {
                     </div>
                   )}
                   {card.buttonText && (
-                    <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold text-[10px] md:text-xs uppercase px-3 py-1.5 md:px-4 md:py-2 rounded hover:bg-white hover:text-black transition-all duration-300">
+                    <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold text-[10px] md:text-xs uppercase px-3 py-1.5 md:px-4 md:py-2 rounded md:rounded-full hover:bg-white hover:text-black transition-all duration-300">
                       {card.buttonText} &rarr;
                     </div>
                   )}

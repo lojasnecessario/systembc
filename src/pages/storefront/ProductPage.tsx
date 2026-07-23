@@ -505,6 +505,15 @@ export const ProductPage: React.FC = () => {
                             "{review.comment}"
                           </p>
                         )}
+                        {review.image_url && (
+                          <div className="mt-3">
+                            <img 
+                              src={review.image_url} 
+                              alt={`Foto da avaliação de ${review.reviewer_name}`}
+                              className="w-24 h-24 object-cover rounded-lg border border-[#1b241a] shadow-sm hover:scale-150 origin-bottom-left md:origin-center transition-transform duration-300 z-10 relative cursor-pointer"
+                            />
+                          </div>
+                        )}
                       </div>
                     ))
                   ) : (
