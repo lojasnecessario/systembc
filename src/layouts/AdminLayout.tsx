@@ -11,7 +11,8 @@ import {
   Menu,
   X,
   Image as ImageIcon,
-  Activity
+  Activity,
+  Star
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -35,6 +36,7 @@ export const AdminLayout: React.FC = () => {
     { to: '/admin/banners', icon: <ImageIcon size={20} />, label: 'Banners' },
     { to: '/admin/destaques', icon: <ImageIcon size={20} />, label: 'Destaques' },
     { to: '/admin/customers', icon: <Users size={20} />, label: 'Clientes' },
+    { to: '/admin/reviews', icon: <Star size={20} />, label: 'Avaliações' },
     { to: '/admin/logs', icon: <Activity size={20} />, label: 'Logs de Atividade' },
     { to: '/admin/settings', icon: <Settings size={20} />, label: 'Configurações' },
   ];

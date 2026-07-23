@@ -134,13 +134,35 @@ export const Products: React.FC = () => {
             return;
           }
 
-          for (const row of rows) {
-            // Shopify às vezes deixa a coluna name (Title) vazia em linhas de variantes/imagens adicionais.
-            // O fallback para SKU será o 'handle' do Shopify caso a pessoa não tenha cadastrado SKU lá.
-            const rowSku = row.sku || row.handle;
-            if (!rowSku) continue; // Pula se realmente não tiver identificador
+          // Agrupa as linhas por sku ou handle para coletar todas as imagens
+          const groupedProducts = new Map();
 
-            // Pula se não for a linha principal do produto (Shopify) e não tiver nome
+          for (const row of rows) {
+            const rowSku = row.sku || row.handle;
+            if (!rowSku) continue;
+
+            const key = String(rowSku).trim();
+            if (!groupedProducts.has(key)) {
+              groupedProducts.set(key, { ...row, all_images: [] });
+            }
+            
+            const group = groupedProducts.get(key);
+            
+            // Se for uma linha principal (tem nome), atualiza os dados base caso ainda não tenha
+            if (row.name && !group.name) {
+              Object.assign(group, row);
+            }
+            
+            // Coleta a imagem (Shopify usa Image Src para todas as imagens, uma por linha)
+            if (row.main_image) {
+              group.all_images.push(String(row.main_image).trim());
+            }
+          }
+
+          for (const row of groupedProducts.values()) {
+            const rowSku = row.sku || row.handle;
+            if (!rowSku) continue;
+
             if (!row.name && !row.sku) continue; 
 
             const parseNumber = (val: any) => {
@@ -168,10 +190,11 @@ export const Products: React.FC = () => {
               order_grid: 1
             };
 
-            if (row.main_image) {
-              productData.main_image = String(row.main_image).trim();
-            }
-            if (row.images) {
+            if (row.all_images && row.all_images.length > 0) {
+              productData.main_image = row.all_images[0];
+              productData.images = row.all_images;
+            } else if (row.images) {
+              // Fallback para caso venham separadas por vírgula na mesma linha
               productData.images = String(row.images).split(',').map((url: string) => url.trim()).filter(Boolean);
             }
 

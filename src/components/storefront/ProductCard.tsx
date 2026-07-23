@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { Lock, Star, StarHalf, Truck, Package } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 interface ProductCardProps {
   product: {
@@ -23,6 +24,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     : 0;
     
   const pixPrice = currentPrice * 0.97; // 3% off no pix como na referência
+
+  const [ratingData, setRatingData] = useState<{ average: number, count: number } | null>(null);
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const { data } = await supabase
+          .from('product_reviews')
+          .select('rating')
+          .eq('product_id', product.id)
+          .eq('is_approved', true);
+
+        if (data && data.length > 0) {
+          const sum = data.reduce((acc, curr) => acc + Number(curr.rating), 0);
+          const avg = sum / data.length;
+          setRatingData({ average: avg, count: data.length });
+        }
+      } catch (err) {
+        console.error('Erro ao buscar avaliação', err);
+      }
+    };
+    fetchRating();
+  }, [product.id]);
+
+  // Função para renderizar as estrelas (0 a 5)
+  const renderStars = (rating: number) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<Star key={`full-${i}`} size={12} className="fill-[#33e36a] text-[#33e36a]" />);
+    }
+    
+    if (hasHalfStar) {
+      stars.push(<StarHalf key="half" size={12} className="fill-[#33e36a] text-[#33e36a]" />);
+    }
+
+    const emptyStars = 5 - stars.length;
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<Star key={`empty-${i}`} size={12} className="text-neutral-600" />);
+    }
+
+    return stars;
+  };
 
   return (
     <div className="group flex flex-col bg-[#141A12] rounded-xl md:rounded-none overflow-hidden transition-all duration-300 relative border border-[#1b241a] md:border-transparent md:border-b md:border-[#1b241a] md:hover:border-[#33e36a] shadow-md md:shadow-none h-full">
@@ -48,11 +94,47 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="flex flex-col flex-1 p-3 md:p-4 bg-[#141A12]">
         
         {/* Título */}
-        <Link to={`/produto/${product.slug}`} className="block flex-1 mb-2">
+        <Link to={`/produto/${product.slug}`} className="block flex-1 mb-1">
           <h3 className="text-[#eae8e8] font-sans font-bold text-[13px] md:text-base leading-snug line-clamp-2 md:line-clamp-3 group-hover:text-[#33e36a] transition-colors">
             {product.name}
           </h3>
         </Link>
+
+        {/* Neon Tags */}
+        <div className="flex items-center gap-1.5 mb-2 flex-wrap mt-1">
+          <div 
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-[#33e36a] text-[#33e36a] bg-[#33e36a]/10" 
+            style={{ boxShadow: '0 0 8px rgba(51, 227, 106, 0.5), inset 0 0 4px rgba(51, 227, 106, 0.3)' }}
+          >
+            <Truck size={10} className="drop-shadow-[0_0_3px_rgba(51,227,106,0.8)]" />
+            <span className="text-[9px] font-bold uppercase tracking-wider" style={{ textShadow: '0 0 4px rgba(51, 227, 106, 0.8)' }}>
+              Frete Grátis
+            </span>
+          </div>
+          <div 
+            className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-[#33e36a] text-[#33e36a] bg-[#33e36a]/10" 
+            style={{ boxShadow: '0 0 8px rgba(51, 227, 106, 0.5), inset 0 0 4px rgba(51, 227, 106, 0.3)' }}
+          >
+            <Package size={10} className="drop-shadow-[0_0_3px_rgba(51,227,106,0.8)]" />
+            <span className="text-[9px] font-bold uppercase tracking-wider" style={{ textShadow: '0 0 4px rgba(51, 227, 106, 0.8)' }}>
+              Pronta Entrega
+            </span>
+          </div>
+        </div>
+        
+        {/* Avaliação */}
+        <div className="h-[20px] mb-2">
+          {ratingData && (
+            <div className="flex items-center gap-1.5">
+              <div className="flex">
+                {renderStars(ratingData.average)}
+              </div>
+              <span className="text-[10px] text-neutral-400 font-medium">
+                {ratingData.average.toFixed(1).replace('.', ',')} ({ratingData.count})
+              </span>
+            </div>
+          )}
+        </div>
         
         {/* Preços */}
         <div className="flex flex-col mt-auto">

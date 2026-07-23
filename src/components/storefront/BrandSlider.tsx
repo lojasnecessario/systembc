@@ -2,9 +2,9 @@ import React from 'react';
 
 export const BrandSlider: React.FC = () => {
   const brands = [
-    { name: 'PlayStation', src: '/playstationlogo.png', scale: 'scale-[2.2]' },
-    { name: 'Xbox', src: '/xboxlogo.png', scale: 'scale-[2.0]' },
-    { name: 'Nintendo', src: '/nintendologo.png', scale: 'scale-[2.2]' }
+    { name: 'PlayStation', src: '/playstationlogo.png', scale: 'scale-[1.9]' },
+    { name: 'Xbox', src: '/xboxlogo.png', scale: 'scale-[1.7]' },
+    { name: 'Nintendo', src: '/nintendologo.png', scale: 'scale-[1.9]' }
   ];
 
   // Duplicando a lista de marcas para fazer o efeito de slide infinito (Marquee)
@@ -24,7 +24,7 @@ export const BrandSlider: React.FC = () => {
               <img 
                 src={brand.src} 
                 alt={brand.name} 
-                className={`h-16 md:h-20 lg:h-28 w-auto object-contain ${brand.scale}`} 
+                className={`h-14 md:h-16 lg:h-24 w-auto object-contain ${brand.scale}`} 
               />
             </div>
           </div>

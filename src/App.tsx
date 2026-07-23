@@ -29,6 +29,7 @@ import { HighlightsAdmin } from './pages/admin/HighlightsAdmin';
 import { Settings } from './pages/admin/Settings';
 import { Customers } from './pages/admin/Customers';
 import { Orders } from './pages/admin/Orders';
+import { Reviews } from './pages/admin/Reviews';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
             <Route path="banners" element={<Banners />} />
             <Route path="destaques" element={<HighlightsAdmin />} />
             <Route path="customers" element={<Customers />} />
+            <Route path="reviews" element={<Reviews />} />
             <Route path="logs" element={<Logs />} />
             <Route path="settings" element={<Settings />} />
           </Route>
