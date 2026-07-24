@@ -291,6 +291,9 @@ export const Reviews: React.FC = () => {
             if (createdAt) {
               reviewData.created_at = createdAt;
             }
+            if (finalImageUrl) {
+              reviewData.image_url = finalImageUrl;
+            }
 
             reviewsToInsert.push(reviewData);
             
