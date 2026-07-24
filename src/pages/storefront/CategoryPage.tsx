@@ -83,7 +83,7 @@ export const CategoryPage: React.FC = () => {
                 {categoryName}
               </h1>
               <p className="text-[#8b977f] text-sm md:text-base">
-                Explorando todos os jogos disponíveis na categoria {categoryName}.
+                Explorando todos os produtos disponíveis na categoria {categoryName}.
               </p>
             </div>
             
@@ -96,9 +96,9 @@ export const CategoryPage: React.FC = () => {
             ) : (
               <div className="flex flex-col items-center justify-center h-64 bg-[#141A12] rounded-xl border border-[#1b241a] border-dashed">
                 <Gamepad2 size={48} className="text-[#363f31] mb-4" />
-                <h3 className="text-xl font-heading font-bold text-[#eef4ea] mb-2">Nenhum jogo encontrado</h3>
+                <h3 className="text-xl font-heading font-bold text-[#eef4ea] mb-2">Nenhum produto encontrado</h3>
                 <p className="text-[#8b977f] text-center max-w-md">
-                  Ainda não temos jogos cadastrados nesta categoria. Fique de olho, novidades chegam sempre!
+                  Ainda não temos produtos cadastrados nesta categoria. Fique de olho, novidades chegam sempre!
                 </p>
               </div>
             )}

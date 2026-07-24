@@ -54,13 +54,13 @@ export const Hero: React.FC = () => {
       <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12 pt-[120px]">
         <div className="max-w-xl">
           <span className="text-[#33e36a] font-bold text-sm md:text-base uppercase tracking-wider mb-2 block drop-shadow-md">
-            PACOTE AVENTURA
+            OFERTAS ESPECIAIS
           </span>
           <h1 className="text-4xl md:text-6xl font-heading font-black text-[#eef4ea] uppercase leading-tight mb-4 drop-shadow-xl">
-            Três jogos de <br/> aventura com um <br/> super desconto
+            Tudo para o <br/> seu setup com <br/> super desconto
           </h1>
           <p className="text-[#8b977f] text-sm md:text-base mb-8 max-w-md uppercase font-semibold drop-shadow-md">
-            Red Dead Redemption 2, Cyberpunk 2077 e GTA V. Garanta agora o seu pacote aventura com entrega especial incluída.
+            Consoles, controles, jogos e acessórios. Garanta agora os melhores produtos para elevar o seu nível.
           </p>
           <Link 
             to="/categoria/pacotes" 

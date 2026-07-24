@@ -6,7 +6,7 @@ import { CategoryList } from '../../components/storefront/CategoryList';
 import { ProductGridSection } from '../../components/storefront/ProductGridSection';
 import { AboutSection } from '../../components/storefront/AboutSection';
 import { HighlightsSection } from '../../components/storefront/HighlightsSection';
-import { FeaturedProducts } from '../../components/storefront/FeaturedProducts';
+import { TestimonialsSection } from '../../components/storefront/TestimonialsSection';
 import { supabase } from '../../lib/supabase';
 
 export const Home: React.FC = () => {
@@ -79,14 +79,14 @@ export const Home: React.FC = () => {
         </div>
       )}
       
-      {/* Seção Sobre Nós */}
-      <AboutSection />
-      
       {/* Seção de Destaques (Promoção) */}
       <HighlightsSection />
       
-      {/* Produtos em Destaque */}
-      <FeaturedProducts />
+      {/* Seção Sobre Nós */}
+      <AboutSection />
+      
+      {/* Avaliações / Depoimentos */}
+      <TestimonialsSection />
       
       {/* Seção de Vantagens na Última Posição */}
       <StoreAdvantages />

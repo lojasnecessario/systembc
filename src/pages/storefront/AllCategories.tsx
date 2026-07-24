@@ -9,7 +9,7 @@ export const AllCategories: React.FC = () => {
           Nossas Categorias
         </h1>
         <p className="text-[#8b977f] text-sm md:text-base max-w-2xl">
-          Encontre os melhores jogos por categoria. Navegue pelas opções abaixo e descubra grandes títulos com descontos imbatíveis.
+          Encontre os melhores produtos por categoria. Navegue pelas opções abaixo e descubra grandes opções com descontos imbatíveis.
         </p>
       </div>
       

@@ -54,7 +54,7 @@ export const FeaturedProducts: React.FC = () => {
               Produtos em <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Destaque</span>
             </h2>
             <p className="text-neutral-400 mt-4 max-w-xl text-sm md:text-base leading-relaxed">
-              Os títulos mais aclamados e cobiçados do momento, escolhidos a dedo para elevar o nível da sua gameplay.
+              Os produtos mais aclamados e cobiçados do momento, escolhidos a dedo para elevar o nível do seu setup e da sua gameplay.
             </p>
           </div>
           
@@ -63,7 +63,7 @@ export const FeaturedProducts: React.FC = () => {
               to="/categoria/todos" 
               className="group flex items-center gap-2 text-sm font-bold text-white hover:text-green-400 transition-colors"
             >
-              Ver todos os jogos
+              Ver todos os produtos
               <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-green-500/10 group-hover:border-green-500/30 transition-all">
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </span>
@@ -90,7 +90,7 @@ export const FeaturedProducts: React.FC = () => {
             to="/categoria/todos" 
             className="w-full flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-4 rounded-xl transition-colors"
           >
-            Ver todos os jogos
+            Ver todos os produtos
             <ArrowRight size={18} />
           </Link>
         </div>

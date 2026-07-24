@@ -122,7 +122,7 @@ export const ProductPage: React.FC = () => {
 
   const faqs = [
     { question: 'Compra Segura', answer: 'Sua compra é processada em ambiente 100% seguro com criptografia de ponta a ponta.' },
-    { question: 'Como recebo meu jogo?', answer: 'Após a confirmação do pagamento, você receberá os dados de acesso e o tutorial diretamente no seu e-mail e WhatsApp cadastrados.' },
+    { question: 'Como recebo meu produto?', answer: 'Após a confirmação do pagamento, você receberá os dados e atualizações diretamente no seu e-mail e WhatsApp cadastrados.' },
     { question: 'Prazos de Entrega?', answer: 'O envio é imediato e automático para compras no PIX ou Cartão de Crédito aprovadas.' },
     { question: 'É original e tem garantia?', answer: 'Sim! Garantia vitalícia contra quedas e suporte especializado disponível 24/7 para te ajudar com qualquer dúvida.' },
   ];
@@ -185,17 +185,17 @@ export const ProductPage: React.FC = () => {
           
           {/* Esquerda: Capa do Jogo e Galeria */}
           <div className="w-full md:w-5/12 lg:w-4/12 flex-shrink-0 flex flex-col gap-4 max-w-sm mx-auto md:max-w-none">
-            <div className="relative w-full aspect-square bg-white rounded-3xl overflow-hidden border border-[#1b241a] shadow-[0_0_30px_rgba(51,227,106,0.1)] group">
+            <div className="relative w-full bg-transparent rounded-3xl overflow-hidden border border-[#1b241a] shadow-[0_0_30px_rgba(51,227,106,0.1)] group">
               <div className="absolute inset-0 bg-[#33e36a]/10 blur-[100px] rounded-full pointer-events-none" />
               {selectedImage || product.main_image ? (
                 <img 
                   src={selectedImage || product.main_image} 
                   alt={product.name} 
-                  className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 relative z-10"
+                  className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105 relative z-10"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-neutral-600 font-heading relative z-10">
-                  Capa do Jogo
+                  Imagem do Produto
                 </div>
               )}
             </div>
@@ -207,13 +207,13 @@ export const ProductPage: React.FC = () => {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`flex-shrink-0 relative w-16 h-20 md:w-20 md:h-28 rounded-xl overflow-hidden border-2 transition-all duration-300 bg-white ${
+                    className={`flex-shrink-0 relative w-16 h-20 md:w-20 md:h-28 rounded-xl overflow-hidden border-2 transition-all duration-300 bg-transparent ${
                       (selectedImage || product.main_image) === img 
                         ? 'border-[#33e36a] shadow-[0_0_15px_rgba(51,227,106,0.3)] opacity-100 scale-105' 
                         : 'border-[#1b241a] opacity-60 hover:opacity-100 hover:border-[#33e36a]/50'
                     }`}
                   >
-                    <img src={img} alt={`Galeria ${idx + 1}`} className="w-full h-full object-contain p-1" />
+                    <img src={img} alt={`Galeria ${idx + 1}`} className="w-full h-full object-contain" />
                   </button>
                 ))}
               </div>
@@ -574,7 +574,7 @@ export const ProductPage: React.FC = () => {
                         onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
                         className="w-full bg-[#141A12] border border-[#1b241a] rounded-xl px-4 py-3 text-[#eef4ea] focus:outline-none focus:border-[#33e36a] transition-colors resize-none"
                         rows={3}
-                        placeholder="O que você achou do jogo?"
+                        placeholder="O que você achou do produto?"
                       />
                     </div>
                     <button

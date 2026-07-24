@@ -23,8 +23,8 @@ export const HighlightsSection: React.FC = () => {
         
         if (data) {
           let parsedConfig = {
-            title: 'TEM JOGO PRA TODO BOLSO',
-            subtitle: 'Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.',
+            title: 'TEM OPÇÃO PRA TODO BOLSO',
+            subtitle: 'Escolha quanto quer gastar e a gente mostra os melhores produtos naquela faixa.',
             tagText: '% COMPRE POR FAIXA DE PREÇO',
             cards: [] as { image: string, link: string }[]
           };

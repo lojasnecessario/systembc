@@ -11,14 +11,14 @@ export function GoogleReviews() {
   const reviewsList = [
     { id: 1, author: 'João Silva', date: 'há 2 dias', text: 'Excelente loja! O atendimento foi impecável e encontrei tudo o que precisava para o meu setup. O console veio em perfeito estado.', rating: 5 },
     { id: 2, author: 'Maria Souza', date: 'há 1 semana', text: 'Preços muito bons e entrega super rápida. A Blackcore sempre supera as expectativas, sou cliente fiel agora!', rating: 5 },
-    { id: 3, author: 'Carlos Andrade', date: 'há 3 semanas', text: 'Ótima variedade de jogos e acessórios. Só acho que o estacionamento poderia ser um pouco maior, mas de resto tudo perfeito.', rating: 4 },
+    { id: 3, author: 'Carlos Andrade', date: 'há 3 semanas', text: 'Ótima variedade de produtos e gadgets. Só acho que o estacionamento poderia ser um pouco maior, mas de resto tudo perfeito.', rating: 4 },
     { id: 4, author: 'Ana Paula', date: 'há 1 mês', text: 'A melhor loja de games da região! Ambiente super agradável, dá vontade de ficar horas testando os lançamentos.', rating: 5 },
     { id: 5, author: 'Roberto Gomes', date: 'há 2 meses', text: 'Comprei meu PS5 aqui e o vendedor foi super atencioso, explicou tudo direitinho e ainda ganhei um brinde. Recomendo demais!', rating: 5 },
     { id: 6, author: 'Lucas Martins', date: 'há 2 meses', text: 'Sempre encontro os últimos lançamentos aqui. A equipe é muito prestativa e entende do assunto.', rating: 5 },
     { id: 7, author: 'Fernanda Lima', date: 'há 3 meses', text: 'Comprei um headset novo e o preço estava melhor que na internet. Vale a pena visitar!', rating: 4 },
     { id: 8, author: 'Rafael Costa', date: 'há 4 meses', text: 'A loja é incrível, super organizada e com uma iluminação muito legal. Dá gosto de comprar lá.', rating: 5 },
     { id: 9, author: 'Juliana Alves', date: 'há 5 meses', text: 'Gostei muito, mas aos finais de semana fica um pouco cheio.', rating: 4 },
-    { id: 10, author: 'Pedro Santos', date: 'há 6 meses', text: 'Melhor lugar para trocar jogos usados. A avaliação deles é muito justa.', rating: 5 },
+    { id: 10, author: 'Pedro Santos', date: 'há 6 meses', text: 'Melhor lugar para comprar novos equipamentos e setups. O atendimento deles é muito justo.', rating: 5 },
   ];
 
   return (

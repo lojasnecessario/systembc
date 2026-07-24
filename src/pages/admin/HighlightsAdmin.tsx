@@ -10,8 +10,8 @@ export const HighlightsAdmin: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [bannerId, setBannerId] = useState<string | null>(null);
 
-  const [title, setTitle] = useState('TEM JOGO PRA TODO BOLSO');
-  const [subtitle, setSubtitle] = useState('Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.');
+  const [title, setTitle] = useState('TEM OPÇÃO PRA TODO BOLSO');
+  const [subtitle, setSubtitle] = useState('Escolha quanto quer gastar e a gente mostra os melhores produtos naquela faixa.');
   const [tagText, setTagText] = useState('% COMPRE POR FAIXA DE PREÇO');
   
   const [cards, setCards] = useState<{image: string, mobileImage: string, link: string, file: File | null, mobileFile: File | null, tag: string, title: string, highlight: string, buttonText: string}[]>([
@@ -43,8 +43,8 @@ export const HighlightsAdmin: React.FC = () => {
         
         try {
           const parsedData = JSON.parse(data.subtitle || '{}');
-          setTitle(parsedData.title || 'TEM JOGO PRA TODO BOLSO');
-          setSubtitle(parsedData.subtitle || 'Escolha quanto quer gastar e a gente mostra os melhores títulos naquela faixa.');
+          setTitle(parsedData.title || 'TEM OPÇÃO PRA TODO BOLSO');
+          setSubtitle(parsedData.subtitle || 'Escolha quanto quer gastar e a gente mostra os melhores produtos naquela faixa.');
           setTagText(parsedData.tagText || '% COMPRE POR FAIXA DE PREÇO');
           
           if (parsedData.cards && Array.isArray(parsedData.cards)) {
@@ -307,7 +307,7 @@ export const HighlightsAdmin: React.FC = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Título (Ex: JOGOS DE NO MÁXIMO)</label>
+                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Título (Ex: PRODUTOS DE NO MÁXIMO)</label>
                           <input
                             type="text"
                             value={card.title}
@@ -325,7 +325,7 @@ export const HighlightsAdmin: React.FC = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Botão (Ex: VER JOGOS)</label>
+                          <label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Botão (Ex: VER PRODUTOS)</label>
                           <input
                             type="text"
                             value={card.buttonText}

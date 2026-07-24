@@ -10,7 +10,7 @@ export const AboutUs: React.FC = () => {
           Sobre a Blackcore
         </h1>
         <p className="text-[#8b977f] text-sm md:text-base max-w-2xl mx-auto mt-4">
-          Conheça mais sobre a nossa história, missão e o motivo de sermos a melhor opção para seus jogos digitais.
+          Conheça mais sobre a nossa história, missão e o motivo de sermos a melhor opção para seus setups e games.
         </p>
       </div>
 

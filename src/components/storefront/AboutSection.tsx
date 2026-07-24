@@ -12,14 +12,14 @@ export const AboutSection: React.FC = () => {
           {/* Texto (Mobile: Fica acima do vídeo, Desktop: Fica na esquerda) */}
           <div className="w-full md:w-1/2 flex flex-col justify-center order-2 md:order-1">
             <h2 className="text-[#33e36a] text-xs md:text-sm font-bold uppercase tracking-widest mb-4">
-              JOGOS XBOX MÍDIA DIGITAL
+              PRODUTOS GAMER E TECNOLOGIA
             </h2>
             <h3 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black text-[#eef4ea] mb-6 leading-[1.1] tracking-tighter">
-              Economize até 70% na <br className="hidden lg:block"/> compra dos seus Jogos <br className="hidden lg:block"/> de Xbox com total segurança
+              Tudo para o seu <br className="hidden lg:block"/> Setup com os <br className="hidden lg:block"/> melhores preços
             </h3>
             
             <p className="text-[#8b977f] text-sm md:text-base lg:text-lg mb-8 leading-relaxed max-w-xl">
-              Imagine comprar seus jogos de Xbox com até 70% de desconto e ter eles para sempre, com total suporte de uma equipe especializada. Confira nossas ofertas e saiba como isso é possível...
+              Imagine comprar tudo o que você precisa para o seu setup gamer com descontos incríveis, total suporte de uma equipe especializada. Confira nossas ofertas e descubra um novo mundo de possibilidades...
             </p>
 
             <div>

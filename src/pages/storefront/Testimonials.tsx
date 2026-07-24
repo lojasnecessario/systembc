@@ -98,7 +98,7 @@ const testimonials: Testimonial[] = [
     role: 'Cliente Fiel',
     avatar: 'https://ui-avatars.com/api/?name=Felipe+Santos&background=22c55e&color=fff',
     rating: 5,
-    text: 'Sempre compro meus jogos e consoles com eles. Chegou tudo certinho como sempre.',
+    text: 'Sempre compro meus equipamentos e consoles com eles. Chegou tudo certinho como sempre.',
     date: 'há 2 meses',
     verified: true,
   },

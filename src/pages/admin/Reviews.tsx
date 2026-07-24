@@ -165,27 +165,80 @@ export const Reviews: React.FC = () => {
           }
 
           // Busca todos os produtos para ter um mapa de SKU -> ID e Nome -> ID
-          const skuToIdMap = new Map(products.map(p => [p.sku, p.id]));
-          const nameToIdMap = new Map(products.map(p => [p.name.toLowerCase(), p.id]));
+          const localProducts = [...products];
+          const skuToIdMap = new Map(localProducts.map(p => [p.sku, p.id]));
+          const nameToIdMap = new Map(localProducts.map(p => [p.name.toLowerCase(), p.id]));
+
+          const missingProductsToCreate = new Map<string, {name: string, sku: string}>();
+
+          for (const row of rows) {
+            const rowSku = (row.sku_produto || row.sku || row.product_handle || '').trim();
+            const rowName = (row.product_title || row.produto || '').trim();
+            
+            let productId = null;
+            if (rowSku) {
+              productId = skuToIdMap.get(rowSku);
+            } 
+            if (!productId && rowName) {
+              const searchName = rowName.toLowerCase();
+              productId = nameToIdMap.get(searchName);
+              if (!productId) {
+                const found = localProducts.find(p => 
+                  p.name.toLowerCase().includes(searchName) || 
+                  searchName.includes(p.name.toLowerCase())
+                );
+                if (found) productId = found.id;
+              }
+            }
+
+            if (!productId && rowName) {
+              const key = rowSku || rowName;
+              if (!missingProductsToCreate.has(key)) {
+                missingProductsToCreate.set(key, {
+                  name: rowName,
+                  sku: rowSku || `sku-auto-${Date.now()}-${Math.floor(Math.random()*1000)}`
+                });
+              }
+            }
+          }
+
+          if (missingProductsToCreate.size > 0) {
+            const productsToInsert = Array.from(missingProductsToCreate.values()).map(p => ({
+              name: p.name,
+              sku: p.sku,
+              price: 0,
+              is_active: false
+            }));
+            
+            const { data: newProducts, error: pError } = await supabase.from('products').insert(productsToInsert).select('id, name, sku');
+            if (!pError && newProducts) {
+              newProducts.forEach(p => {
+                skuToIdMap.set(p.sku, p.id);
+                nameToIdMap.set(p.name.toLowerCase(), p.id);
+                localProducts.push(p as any);
+              });
+            } else if (pError) {
+              console.error('Erro ao criar produtos automaticamente:', pError);
+            }
+          }
 
           const reviewsToInsert = [];
           const missingProducts = new Set<string>();
 
           for (const row of rows) {
-            const rowSku = row.sku_produto || row.sku;
-            const rowName = row.product_title || row.produto || '';
+            const rowSku = (row.sku_produto || row.sku || row.product_handle || '').trim();
+            const rowName = (row.product_title || row.produto || '').trim();
             
             let productId = null;
             if (rowSku) {
-              productId = skuToIdMap.get(rowSku.trim());
+              productId = skuToIdMap.get(rowSku);
             } 
             if (!productId && rowName) {
-              const searchName = rowName.trim().toLowerCase();
+              const searchName = rowName.toLowerCase();
               productId = nameToIdMap.get(searchName);
               
-              // Busca aproximada (substring) caso não encontre exatamente
               if (!productId) {
-                const found = products.find(p => 
+                const found = localProducts.find(p => 
                   p.name.toLowerCase().includes(searchName) || 
                   searchName.includes(p.name.toLowerCase())
                 );
@@ -232,7 +285,6 @@ export const Reviews: React.FC = () => {
               reviewer_name: row.author || row.nome_cliente || row.nome || 'Cliente Anônimo',
               rating: parsedRating,
               comment: row.content || row.comentario || '',
-              image_url: finalImageUrl,
               is_approved: row.status === 'hidden' ? false : true
             };
             
@@ -251,8 +303,11 @@ export const Reviews: React.FC = () => {
           }
 
           let msg = `Importação concluída! ${successCount} avaliações processadas.`;
+          if (missingProductsToCreate.size > 0) {
+            msg += `\n\n${missingProductsToCreate.size} produtos não existiam e foram criados automaticamente como rascunhos (inativos) para receberem essas avaliações.`;
+          }
           if (missingProducts.size > 0) {
-            msg += `\n\nAtenção: ${missingProducts.size} produtos do CSV não foram encontrados na sua loja e foram ignorados (ex: ${Array.from(missingProducts).slice(0, 3).join(', ')}). Certifique-se de que os nomes no CSV correspondam aos produtos reais da sua loja.`;
+            msg += `\n\nAtenção: ${missingProducts.size} avaliações ainda foram ignoradas pois não tinham nome de produto no CSV.`;
           }
           alert(msg);
           
