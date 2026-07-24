@@ -16,7 +16,6 @@ export const Hero: React.FC = () => {
           autoPlay
           muted 
           playsInline
-          loop
           preload="none"
           poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
           className="w-full h-full object-cover hidden md:block"
@@ -29,7 +28,6 @@ export const Hero: React.FC = () => {
           autoPlay
           muted 
           playsInline
-          loop
           preload="none"
           poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
           className="w-full h-full object-cover block md:hidden"
