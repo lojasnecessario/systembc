@@ -27,6 +27,13 @@ export const Reviews: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [selectedReviews, setSelectedReviews] = useState<Set<string>>(new Set());
+  
+  const filteredReviews = reviews.filter(r => 
+    r.reviewer_name.toLowerCase().includes(search.toLowerCase()) || 
+    r.products?.name?.toLowerCase().includes(search.toLowerCase()) ||
+    r.comment.toLowerCase().includes(search.toLowerCase())
+  );
   
   // Formulário
   const [formData, setFormData] = useState<Partial<Review>>({
@@ -331,11 +338,61 @@ export const Reviews: React.FC = () => {
     });
   };
 
-  const filteredReviews = reviews.filter(r => 
-    r.reviewer_name.toLowerCase().includes(search.toLowerCase()) || 
-    r.products?.name?.toLowerCase().includes(search.toLowerCase()) ||
-    r.comment.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedReviews(new Set(filteredReviews.map(r => r.id)));
+    } else {
+      setSelectedReviews(new Set());
+    }
+  };
+
+  const handleSelectReview = (id: string) => {
+    const newSelected = new Set(selectedReviews);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedReviews(newSelected);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedReviews.size === 0) return;
+    if (!window.confirm(`Tem certeza que deseja excluir as ${selectedReviews.size} avaliações selecionadas?`)) return;
+
+    try {
+      setLoading(true);
+      const ids = Array.from(selectedReviews);
+      const { error } = await supabase.from('product_reviews').delete().in('id', ids);
+      if (error) throw error;
+      
+      setSelectedReviews(new Set());
+      await fetchData();
+    } catch (error) {
+      console.error('Erro ao excluir em massa:', error);
+      alert('Erro ao excluir avaliações em massa.');
+      setLoading(false);
+    }
+  };
+
+  const handleBulkDisapprove = async () => {
+    if (selectedReviews.size === 0) return;
+    if (!window.confirm(`Tem certeza que deseja reprovar as ${selectedReviews.size} avaliações selecionadas?`)) return;
+
+    try {
+      setLoading(true);
+      const ids = Array.from(selectedReviews);
+      const { error } = await supabase.from('product_reviews').update({ is_approved: false }).in('id', ids);
+      if (error) throw error;
+      
+      setSelectedReviews(new Set());
+      await fetchData();
+    } catch (error) {
+      console.error('Erro ao reprovar em massa:', error);
+      alert('Erro ao reprovar avaliações em massa.');
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -384,11 +441,41 @@ export const Reviews: React.FC = () => {
         </div>
       </div>
 
+      {selectedReviews.size > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-center justify-between">
+          <span className="text-blue-800 font-medium">
+            {selectedReviews.size} {selectedReviews.size === 1 ? 'avaliação selecionada' : 'avaliações selecionadas'}
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={handleBulkDisapprove}
+              className="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+            >
+              Reprovar Selecionadas
+            </button>
+            <button
+              onClick={handleBulkDelete}
+              className="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+            >
+              Excluir Selecionadas
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
+                <th className="px-6 py-4 w-10 text-center">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    checked={filteredReviews.length > 0 && selectedReviews.size === filteredReviews.length}
+                    onChange={handleSelectAll}
+                  />
+                </th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Produto</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Cliente</th>
                 <th className="px-6 py-4 text-sm font-semibold text-slate-600">Nota</th>
@@ -400,19 +487,27 @@ export const Reviews: React.FC = () => {
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
                     Carregando avaliações...
                   </td>
                 </tr>
               ) : filteredReviews.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
                     Nenhuma avaliação encontrada.
                   </td>
                 </tr>
               ) : (
                 filteredReviews.map((review) => (
-                  <tr key={review.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={review.id} className={`hover:bg-slate-50 transition-colors ${selectedReviews.has(review.id) ? 'bg-blue-50/50' : ''}`}>
+                    <td className="px-6 py-4 text-center">
+                      <input 
+                        type="checkbox" 
+                        className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        checked={selectedReviews.has(review.id)}
+                        onChange={() => handleSelectReview(review.id)}
+                      />
+                    </td>
                     <td className="px-6 py-4 font-medium text-slate-900">{review.products?.name}</td>
                     <td className="px-6 py-4 text-slate-600">{review.reviewer_name}</td>
                     <td className="px-6 py-4 text-slate-600">

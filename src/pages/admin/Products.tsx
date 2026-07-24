@@ -121,7 +121,7 @@ export const Products: React.FC = () => {
         if (header === 'body (html)') return 'description';
         if (header === 'image src') return 'main_image';
         if (header === 'handle') return 'handle'; // Mantém o handle para usar como fallback de SKU
-        if (header === 'type' || header === 'product type' || header === 'category' || header === 'categoria' || header === 'tipo') return 'category';
+        if (header === 'type' || header === 'product type' || header === 'category' || header === 'product category' || header === 'categoria' || header === 'tipo') return 'category';
         return header;
       },
       complete: async (results: any) => {
@@ -145,7 +145,15 @@ export const Products: React.FC = () => {
             
             // Verifica categorias
             if (row.category) {
-              const catName = String(row.category).trim();
+              let catName = String(row.category).trim();
+              // Se for hierárquica (ex: Electronics > Video Games), pega a última parte
+              if (catName.includes('>')) {
+                const parts = catName.split('>');
+                catName = parts[parts.length - 1].trim();
+              }
+              // Atualiza o row.category para usar no segundo loop
+              row.category = catName;
+              
               if (catName && !categoryMap.has(catName.toLowerCase()) && !missingCategories.has(catName)) {
                 missingCategories.set(catName, generateSlug(catName));
               }
