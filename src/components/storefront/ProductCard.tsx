@@ -74,14 +74,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="group flex flex-col bg-[#141A12] rounded-xl md:rounded-2xl overflow-hidden transition-all duration-300 relative border border-[#1b241a] md:border-transparent md:border-b md:border-[#1b241a] md:hover:border-[#33e36a] shadow-md md:shadow-none h-full">
       
       {/* Imagem */}
-      <Link to={`/produto/${product.slug}`} className="relative block w-full aspect-[4/5] md:aspect-square bg-[#0a0d0a] overflow-hidden flex-shrink-0">
+      <Link to={`/produto/${product.slug}`} className="relative block w-full aspect-[4/5] md:aspect-square bg-white overflow-hidden flex-shrink-0">
         
         {/* Imagem Principal */}
         {product.main_image ? (
           <img 
             src={product.main_image} 
             alt={product.name} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500 ease-out"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-neutral-600 font-heading">

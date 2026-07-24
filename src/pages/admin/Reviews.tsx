@@ -199,21 +199,48 @@ export const Reviews: React.FC = () => {
               continue;
             }
 
-            // Tratamento especial para múltiplas imagens separadas por vírgula no CSV
             let finalImageUrl = null;
             const rawImage = row.images || row.imagem_url || row.imagem || row.image;
             if (rawImage) {
-              finalImageUrl = rawImage.split(',')[0].trim();
+              const extracted = rawImage.split(',')[0].trim();
+              if (extracted) finalImageUrl = extracted;
             }
 
-            reviewsToInsert.push({
+            let createdAt = undefined;
+            const rawDate = row.date || row.data || row.created_at;
+            if (rawDate) {
+              const dStr = rawDate.trim();
+              let parsedDate = null;
+              if (dStr.includes('/')) {
+                const parts = dStr.split('/');
+                if (parts.length === 3) {
+                  parsedDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T12:00:00Z`);
+                }
+              } else {
+                parsedDate = new Date(dStr);
+              }
+              if (parsedDate && !isNaN(parsedDate.getTime())) {
+                createdAt = parsedDate.toISOString();
+              }
+            }
+
+            let parsedRating = parseFloat(row.rating || row.nota || '5');
+            if (isNaN(parsedRating)) parsedRating = 5;
+
+            const reviewData: any = {
               product_id: productId,
               reviewer_name: row.author || row.nome_cliente || row.nome || 'Cliente Anônimo',
-              rating: parseFloat(row.rating || row.nota || '5'),
+              rating: parsedRating,
               comment: row.content || row.comentario || '',
               image_url: finalImageUrl,
               is_approved: row.status === 'hidden' ? false : true
-            });
+            };
+            
+            if (createdAt) {
+              reviewData.created_at = createdAt;
+            }
+
+            reviewsToInsert.push(reviewData);
             
             successCount++;
           }

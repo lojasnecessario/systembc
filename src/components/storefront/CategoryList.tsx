@@ -77,23 +77,26 @@ export const CategoryList: React.FC = () => {
               <Link
                 key={category.id}
                 to={`/categoria/${category.slug}`}
-                className="flex-shrink-0 w-[100px] md:w-[120px] flex flex-col items-center gap-3 group/card snap-center"
+                className="flex-shrink-0 w-[130px] md:w-[160px] flex flex-col items-center gap-4 group/card snap-center"
               >
                 {/* Container da Imagem */}
-                <div className="relative w-full aspect-square flex items-center justify-center rounded-full transition-all duration-500 group-hover/card:bg-[#33e36a]">
+                <div className="relative w-full aspect-square flex items-center justify-center transition-all duration-500">
+                  {/* Efeito Neon Fundo */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] rounded-full bg-[#33e36a] blur-[25px] opacity-0 group-hover/card:opacity-60 transition-opacity duration-500 pointer-events-none"></div>
+                  
                   {category.image ? (
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-[85%] h-[85%] object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.6)] transition-all duration-500 group-hover/card:scale-125 group-hover/card:-translate-y-4 group-hover/card:drop-shadow-[0_25px_25px_rgba(0,0,0,0.8)]"
+                      className="relative z-10 w-full h-full object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.6)] transition-all duration-500 group-hover/card:scale-125 group-hover/card:-translate-y-4 group-hover/card:drop-shadow-[0_0_25px_rgba(51,227,106,0.6)]"
                     />
                   ) : (
-                    <ImageIcon size={40} className="text-[#6b7563] group-hover/card:text-[#0a0d0a] transition-colors duration-300" />
+                    <ImageIcon size={40} className="relative z-10 text-[#6b7563] group-hover/card:text-[#eef4ea] transition-colors duration-300" />
                   )}
                 </div>
                 
                 {/* Título */}
-                <h3 className="text-[11px] md:text-sm font-heading font-bold text-[#eef4ea] group-hover/card:text-[#33e36a] transition-colors duration-300 text-center uppercase tracking-wide">
+                <h3 className="text-xs md:text-sm font-heading font-bold text-[#eef4ea] group-hover/card:text-[#33e36a] transition-colors duration-300 text-center uppercase tracking-wide">
                   {category.name}
                 </h3>
               </Link>

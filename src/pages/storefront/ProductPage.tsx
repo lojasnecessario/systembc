@@ -185,13 +185,13 @@ export const ProductPage: React.FC = () => {
           
           {/* Esquerda: Capa do Jogo e Galeria */}
           <div className="w-full md:w-5/12 lg:w-4/12 flex-shrink-0 flex flex-col gap-4 max-w-sm mx-auto md:max-w-none">
-            <div className="relative w-full aspect-square bg-[#0f130e] rounded-3xl overflow-hidden border border-[#1b241a] shadow-[0_0_30px_rgba(51,227,106,0.1)] group">
+            <div className="relative w-full aspect-square bg-white rounded-3xl overflow-hidden border border-[#1b241a] shadow-[0_0_30px_rgba(51,227,106,0.1)] group">
               <div className="absolute inset-0 bg-[#33e36a]/10 blur-[100px] rounded-full pointer-events-none" />
               {selectedImage || product.main_image ? (
                 <img 
                   src={selectedImage || product.main_image} 
                   alt={product.name} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 relative z-10"
+                  className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105 relative z-10"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-neutral-600 font-heading relative z-10">
@@ -207,13 +207,13 @@ export const ProductPage: React.FC = () => {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`flex-shrink-0 relative w-16 h-20 md:w-20 md:h-28 rounded-xl overflow-hidden border-2 transition-all duration-300 ${
+                    className={`flex-shrink-0 relative w-16 h-20 md:w-20 md:h-28 rounded-xl overflow-hidden border-2 transition-all duration-300 bg-white ${
                       (selectedImage || product.main_image) === img 
                         ? 'border-[#33e36a] shadow-[0_0_15px_rgba(51,227,106,0.3)] opacity-100 scale-105' 
                         : 'border-[#1b241a] opacity-60 hover:opacity-100 hover:border-[#33e36a]/50'
                     }`}
                   >
-                    <img src={img} alt={`Galeria ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={img} alt={`Galeria ${idx + 1}`} className="w-full h-full object-contain p-1" />
                   </button>
                 ))}
               </div>
