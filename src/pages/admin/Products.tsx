@@ -121,6 +121,7 @@ export const Products: React.FC = () => {
         if (header === 'body (html)') return 'description';
         if (header === 'image src') return 'main_image';
         if (header === 'handle') return 'handle'; // Mantém o handle para usar como fallback de SKU
+        if (header === 'type' || header === 'product type' || header === 'category' || header === 'categoria' || header === 'tipo') return 'category';
         return header;
       },
       complete: async (results: any) => {
@@ -136,9 +137,20 @@ export const Products: React.FC = () => {
 
           // Agrupa as linhas por sku ou handle para coletar todas as imagens
           const groupedProducts = new Map();
+          const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c.id]));
+          const missingCategories = new Map<string, string>(); // name -> slug
 
           for (const row of rows) {
             const rowSku = row.sku || row.handle;
+            
+            // Verifica categorias
+            if (row.category) {
+              const catName = String(row.category).trim();
+              if (catName && !categoryMap.has(catName.toLowerCase()) && !missingCategories.has(catName)) {
+                missingCategories.set(catName, generateSlug(catName));
+              }
+            }
+
             if (!rowSku) continue;
 
             const key = String(rowSku).trim();
@@ -156,6 +168,27 @@ export const Products: React.FC = () => {
             // Coleta a imagem (Shopify usa Image Src para todas as imagens, uma por linha)
             if (row.main_image) {
               group.all_images.push(String(row.main_image).trim());
+            }
+          }
+
+          // Cria categorias faltantes
+          if (missingCategories.size > 0) {
+            const categoriesToInsert = Array.from(missingCategories.entries()).map(([name, slug]) => ({
+              name,
+              slug,
+              is_active: true,
+              order_grid: categories.length > 0 ? Math.max(...categories.map((c: any) => c.order_grid || 0)) + 1 : 1
+            }));
+            
+            const { data: newCats, error } = await supabase
+              .from('categories')
+              .insert(categoriesToInsert)
+              .select('id, name');
+              
+            if (!error && newCats) {
+              newCats.forEach(cat => {
+                categoryMap.set(cat.name.toLowerCase(), cat.id);
+              });
             }
           }
 
@@ -177,6 +210,11 @@ export const Products: React.FC = () => {
             };
 
             const finalName = String(row.name || row.handle).trim();
+            
+            let categoryId = null;
+            if (row.category) {
+              categoryId = categoryMap.get(String(row.category).trim().toLowerCase()) || null;
+            }
 
             const productData: any = {
               name: finalName,
@@ -187,7 +225,8 @@ export const Products: React.FC = () => {
               stock: parseInt(String(row.stock || '0').replace(/[^0-9-]/g, ''), 10) || 0,
               description: row.description ? String(row.description).trim() : '',
               is_active: true,
-              order_grid: 1
+              order_grid: 1,
+              category_id: categoryId
             };
 
             if (row.all_images && row.all_images.length > 0) {
@@ -212,6 +251,7 @@ export const Products: React.FC = () => {
                 promotional_price: productData.promotional_price,
                 stock: productData.stock,
                 description: productData.description,
+                ...(productData.category_id && { category_id: productData.category_id }),
                 ...(productData.main_image && { main_image: productData.main_image }),
                 ...(productData.images && { images: productData.images })
               };
