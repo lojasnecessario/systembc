@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Menu, Search, X, User, MessageCircle } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -62,34 +62,7 @@ export const Header: React.FC = () => {
               <Search size={22} />
             </button>
 
-            {/* Desktop Account */}
-            <Link to="/admin/login" className="hidden lg:flex items-center gap-3 text-[#8b977f] hover:text-[#eef4ea] transition-colors">
-              <User size={24} />
-              <div className="flex flex-col">
-                <span className="text-[10px] leading-tight">Entrar</span>
-                <span className="text-sm font-bold leading-tight text-[#eef4ea]">Minha conta</span>
-              </div>
-            </Link>
 
-            {/* Desktop & Mobile Cart */}
-            <button className="flex items-center gap-3 text-[#8b977f] hover:text-[#eef4ea] transition-colors group relative p-2 lg:p-0">
-              <ShoppingCart size={24} />
-              <div className="hidden lg:flex flex-col text-left">
-                <span className="text-[10px] leading-tight">Carrinho</span>
-                <span className="text-sm font-bold leading-tight text-[#eef4ea]">R$0,00</span>
-              </div>
-              {/* Notifier dot for mobile/desktop */}
-              <span className="absolute top-1 lg:-top-1 right-1 lg:-right-1 w-2.5 h-2.5 bg-[#33e36a] rounded-full border-2 border-[#0a0d0a]"></span>
-            </button>
-
-            {/* Desktop WhatsApp Button */}
-            <a href="https://wa.me/5516991484745" target="_blank" rel="noopener noreferrer" className="hidden lg:flex items-center gap-2 bg-[#0f130e] border border-[#1b241a] hover:border-[#33e36a] text-[#8b977f] hover:text-[#33e36a] px-4 py-2 rounded-md transition-colors">
-              <MessageCircle size={20} className="text-[#33e36a]" />
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] leading-tight">Fale conosco</span>
-                <span className="text-sm font-bold leading-tight text-[#eef4ea]">WhatsApp</span>
-              </div>
-            </a>
           </div>
         </div>
       </div>

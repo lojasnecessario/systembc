@@ -23,7 +23,7 @@ export const ProductPage: React.FC = () => {
     if (product?.main_image && !selectedImage) {
       setSelectedImage(product.main_image);
     }
-  }, [product]);
+  }, [product, selectedImage]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

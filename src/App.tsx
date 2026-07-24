@@ -1,36 +1,42 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 
-// Layouts
+// Layouts e Auth
 import { AdminLayout } from './layouts/AdminLayout';
-
-// Storefront Pages
 import { StoreLayout } from './layouts/StoreLayout';
-import { Home } from './pages/storefront/Home';
-import { CategoryPage } from './pages/storefront/CategoryPage';
-import { ProductPage } from './pages/storefront/ProductPage';
-import { GoogleReviews } from './pages/storefront/GoogleReviews';
-import { Testimonials } from './pages/storefront/Testimonials';
-import { LegalPage } from './pages/storefront/LegalPage';
-import { AllCategories } from './pages/storefront/AllCategories';
-import { AboutUs } from './pages/storefront/AboutUs';
-
-// Admin Pages
-import { Login } from './pages/admin/Login';
-import { Dashboard } from './pages/admin/Dashboard';
-import { Logs } from './pages/admin/Logs';
-import { Products } from './pages/admin/Products';
-import { Categories } from './pages/admin/Categories';
-import { Brands } from './pages/admin/Brands';
-import { ProductGrids } from './pages/admin/ProductGrids';
-import { Banners } from './pages/admin/Banners';
-import { HighlightsAdmin } from './pages/admin/HighlightsAdmin';
-import { Settings } from './pages/admin/Settings';
-import { Customers } from './pages/admin/Customers';
-import { Orders } from './pages/admin/Orders';
-import { Reviews } from './pages/admin/Reviews';
 import { ProtectedRoute } from './components/ProtectedRoute';
+
+// Storefront Pages (Lazy)
+const Home = lazy(() => import('./pages/storefront/Home').then(m => ({ default: m.Home })));
+const CategoryPage = lazy(() => import('./pages/storefront/CategoryPage').then(m => ({ default: m.CategoryPage })));
+const ProductPage = lazy(() => import('./pages/storefront/ProductPage').then(m => ({ default: m.ProductPage })));
+const GoogleReviews = lazy(() => import('./pages/storefront/GoogleReviews').then(m => ({ default: m.GoogleReviews })));
+const Testimonials = lazy(() => import('./pages/storefront/Testimonials').then(m => ({ default: m.Testimonials })));
+const LegalPage = lazy(() => import('./pages/storefront/LegalPage').then(m => ({ default: m.LegalPage })));
+const AllCategories = lazy(() => import('./pages/storefront/AllCategories').then(m => ({ default: m.AllCategories })));
+const AboutUs = lazy(() => import('./pages/storefront/AboutUs').then(m => ({ default: m.AboutUs })));
+
+// Admin Pages (Lazy)
+const Login = lazy(() => import('./pages/admin/Login').then(m => ({ default: m.Login })));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard').then(m => ({ default: m.Dashboard })));
+const Logs = lazy(() => import('./pages/admin/Logs').then(m => ({ default: m.Logs })));
+const Products = lazy(() => import('./pages/admin/Products').then(m => ({ default: m.Products })));
+const Categories = lazy(() => import('./pages/admin/Categories').then(m => ({ default: m.Categories })));
+const Brands = lazy(() => import('./pages/admin/Brands').then(m => ({ default: m.Brands })));
+const ProductGrids = lazy(() => import('./pages/admin/ProductGrids').then(m => ({ default: m.ProductGrids })));
+const Banners = lazy(() => import('./pages/admin/Banners').then(m => ({ default: m.Banners })));
+const HighlightsAdmin = lazy(() => import('./pages/admin/HighlightsAdmin').then(m => ({ default: m.HighlightsAdmin })));
+const Settings = lazy(() => import('./pages/admin/Settings').then(m => ({ default: m.Settings })));
+const Customers = lazy(() => import('./pages/admin/Customers').then(m => ({ default: m.Customers })));
+const Orders = lazy(() => import('./pages/admin/Orders').then(m => ({ default: m.Orders })));
+const Reviews = lazy(() => import('./pages/admin/Reviews').then(m => ({ default: m.Reviews })));
+
+const SuspenseFallback = () => (
+  <div className="min-h-screen bg-[#0a0d0a] flex items-center justify-center">
+    <div className="w-8 h-8 border-4 border-[#33e36a] border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
 
 function App() {
   const { initialize } = useAuthStore();
@@ -41,45 +47,46 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Loja Virtual */}
-        <Route path="/" element={<StoreLayout />}>
-          <Route index element={<Home />} />
-          <Route path="categorias" element={<AllCategories />} />
-          <Route path="categoria/:slug" element={<CategoryPage />} />
-          <Route path="produto/:slug" element={<ProductPage />} />
-          <Route path="sobre-nos" element={<AboutUs />} />
-          <Route path="depoimentos" element={<Testimonials />} />
-          <Route path="legal/:slug" element={<LegalPage />} />
-        </Route>
-
-        <Route path="/google" element={<GoogleReviews />} />
-
-        {/* Admin Login */}
-        <Route path="/admin/login" element={<Login />} />
-
-        {/* Admin Rotas Protegidas */}
-        <Route path="/admin" element={<ProtectedRoute />}>
-          <Route element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            {/* Outras rotas do painel serão adicionadas aqui */}
-            <Route path="orders" element={<Orders />} />
-            <Route path="products" element={<Products />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="brands" element={<Brands />} />
-            <Route path="grids" element={<ProductGrids />} />
-            <Route path="banners" element={<Banners />} />
-            <Route path="destaques" element={<HighlightsAdmin />} />
-            <Route path="customers" element={<Customers />} />
-            <Route path="reviews" element={<Reviews />} />
-            <Route path="logs" element={<Logs />} />
-            <Route path="settings" element={<Settings />} />
+      <Suspense fallback={<SuspenseFallback />}>
+        <Routes>
+          {/* Loja Virtual */}
+          <Route path="/" element={<StoreLayout />}>
+            <Route index element={<Home />} />
+            <Route path="categorias" element={<AllCategories />} />
+            <Route path="categoria/:slug" element={<CategoryPage />} />
+            <Route path="produto/:slug" element={<ProductPage />} />
+            <Route path="sobre-nos" element={<AboutUs />} />
+            <Route path="depoimentos" element={<Testimonials />} />
+            <Route path="legal/:slug" element={<LegalPage />} />
           </Route>
-        </Route>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          <Route path="/google" element={<GoogleReviews />} />
+
+          {/* Admin Login */}
+          <Route path="/admin/login" element={<Login />} />
+
+          {/* Admin Rotas Protegidas */}
+          <Route path="/admin" element={<ProtectedRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="orders" element={<Orders />} />
+              <Route path="products" element={<Products />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="brands" element={<Brands />} />
+              <Route path="grids" element={<ProductGrids />} />
+              <Route path="banners" element={<Banners />} />
+              <Route path="destaques" element={<HighlightsAdmin />} />
+              <Route path="customers" element={<Customers />} />
+              <Route path="reviews" element={<Reviews />} />
+              <Route path="logs" element={<Logs />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Route>
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

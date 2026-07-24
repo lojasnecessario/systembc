@@ -1,18 +1,44 @@
+import { createClient } from '@supabase/supabase-js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
-    const { productId, productPrice, productName, productDescription } = req.body;
+    const { productId } = req.body;
 
     if (!productId) {
       return res.status(400).json({ error: 'Produto não informado' });
     }
 
-    // A URL que o usuário informou
+    const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      console.error('Supabase keys missing in environment variables');
+      return res.status(500).json({ error: 'Configuração de banco de dados ausente.' });
+    }
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    
+    const { data: product, error: dbError } = await supabase
+      .from('products')
+      .select('name, price, promotional_price, description')
+      .eq('id', productId)
+      .single();
+
+    if (dbError || !product) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    const currentPrice = product.promotional_price !== null && product.promotional_price < product.price 
+      ? product.promotional_price 
+      : product.price;
+
+    const amountInCents = Math.round(Number(currentPrice) * 100);
+
     const VEGA_API_URL = 'https://checkout.seudominioaprovado.com/api/checkout';
-    // Pega a chave da API do Vercel Environment Variables
     const VEGA_API_KEY = process.env.VEGA_API_KEY;
 
     if (!VEGA_API_KEY) {
@@ -20,16 +46,14 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Configuração da API ausente.' });
     }
 
-    const amountInCents = Math.round(Number(productPrice) * 100);
-
     const payload = {
       products: [
         {
           code: productId,
-          title: productName,
+          title: product.name,
           amount: amountInCents,
           quantity: 1,
-          description: productDescription || productName
+          description: product.description || product.name
         }
       ],
       payment: {

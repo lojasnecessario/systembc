@@ -34,7 +34,7 @@ export const HighlightsSection: React.FC = () => {
               const parsed = JSON.parse(data.subtitle);
               parsedConfig = { ...parsedConfig, ...parsed };
             }
-          } catch (e) {
+          } catch {
             // Se falhar o parse, usa os defaults
           }
 

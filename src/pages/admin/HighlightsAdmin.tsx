@@ -71,7 +71,7 @@ export const HighlightsAdmin: React.FC = () => {
               { image: '', mobileImage: '', link: '', file: null, mobileFile: null, tag: '', title: '', highlight: '', buttonText: '' }
             ]);
           }
-        } catch (e) {
+        } catch {
           // Fallback
         }
       }
