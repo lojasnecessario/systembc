@@ -1,13 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { 
+  Image as ImageIcon, 
+  ChevronLeft, 
+  ChevronRight,
+  Gamepad,
+  Headset,
+  Gamepad2,
+  Joystick,
+  Monitor,
+  Computer,
+  Smartphone,
+  Mouse,
+  Keyboard,
+  Cpu
+} from 'lucide-react';
 
 interface Category {
   id: string;
   name: string;
   slug: string;
   image: string | null;
+  icon?: string | null;
   order_grid: number;
 }
 
@@ -21,7 +36,7 @@ export const CategoryList: React.FC = () => {
       try {
         const { data, error } = await supabase
           .from('categories')
-          .select('id, name, slug, image, order_grid')
+          .select('id, name, slug, image, icon, order_grid')
           .eq('is_active', true)
           .order('order_grid', { ascending: true });
 
@@ -45,6 +60,39 @@ export const CategoryList: React.FC = () => {
     }
   };
 
+  const getCategoryIcon = (category: Category) => {
+    const iconProps = { size: 32, strokeWidth: 1.5, className: "text-[#33e36a] group-hover/card:scale-110 transition-transform duration-300 drop-shadow-[0_0_8px_rgba(51,227,106,0.5)]" };
+    
+    // Se o ícone foi selecionado no admin, usa-o com prioridade
+    if (category.icon) {
+      switch (category.icon) {
+        case 'Gamepad': return <Gamepad {...iconProps} />;
+        case 'Gamepad2': return <Gamepad2 {...iconProps} />;
+        case 'Headset': return <Headset {...iconProps} />;
+        case 'Monitor': return <Monitor {...iconProps} />;
+        case 'Computer': return <Computer {...iconProps} />;
+        case 'Joystick': return <Joystick {...iconProps} />;
+        case 'Smartphone': return <Smartphone {...iconProps} />;
+        case 'Cpu': return <Cpu {...iconProps} />;
+        case 'Mouse': return <Mouse {...iconProps} />;
+        case 'Keyboard': return <Keyboard {...iconProps} />;
+      }
+    }
+
+    // Fallback: se não tiver ícone salvo no banco, adivinha pelo slug
+    const s = category.slug.toLowerCase();
+    
+    if (s.includes('console')) return <Gamepad {...iconProps} />;
+    if (s.includes('gadget') || s.includes('audio') || s.includes('headset')) return <Headset {...iconProps} />;
+    if (s.includes('eletronico') || s.includes('hardware') || s.includes('placa')) return <Monitor {...iconProps} />;
+    if (s.includes('jogo') || s.includes('game')) return <Gamepad2 {...iconProps} />;
+    if (s.includes('joystick') || s.includes('controle')) return <Joystick {...iconProps} />;
+    if (s.includes('pc') || s.includes('computador') || s.includes('desktop')) return <Computer {...iconProps} />;
+    if (s.includes('celular') || s.includes('smartphone')) return <Smartphone {...iconProps} />;
+  
+    return <ImageIcon {...iconProps} />;
+  };
+
   if (loading) {
     return (
       <section className="w-full pt-8 pb-2 md:pb-4 px-4 md:px-8 bg-[#0a0d0a]">
@@ -60,45 +108,64 @@ export const CategoryList: React.FC = () => {
   }
 
   return (
-    <section className="w-full pt-4 pb-0 px-4 md:px-8 bg-[#0a0d0a] relative overflow-hidden">
+    <section className="w-full pt-8 pb-8 px-4 md:px-8 bg-[#0a0d0a] relative overflow-hidden">
       <div className="max-w-[1400px] mx-auto relative z-10 group">
-        <div className="mb-4 text-center">
-          <h2 className="text-xl md:text-2xl font-heading font-bold text-[#eef4ea] uppercase tracking-tight">
-            Categorias em <span className="text-[#33e36a]">Destaque</span>
-          </h2>
+        
+        {/* Título com linhas decorativas */}
+        <div className="mb-10 flex flex-col items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-4 w-full">
+            <div className="h-[1px] w-12 md:w-32 bg-gradient-to-r from-transparent to-[#1b241a] md:to-[#33e36a]/30"></div>
+            <h2 className="text-xl md:text-3xl font-heading font-bold text-[#eef4ea] uppercase tracking-tight text-center flex-shrink-0">
+              Categorias em <span className="text-[#33e36a]">Destaque</span>
+            </h2>
+            <div className="h-[1px] w-12 md:w-32 bg-gradient-to-l from-transparent to-[#1b241a] md:to-[#33e36a]/30"></div>
+          </div>
         </div>
 
-        <div className="relative">
+        <div className="relative px-2 md:px-8">
           <div 
             ref={scrollRef}
-            className="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar scroll-smooth"
+            className="flex overflow-x-auto gap-4 md:gap-6 pb-6 pt-2 snap-x hide-scrollbar scroll-smooth"
           >
             {categories.map((category) => (
               <Link
                 key={category.id}
                 to={`/categoria/${category.slug}`}
-                className="flex-shrink-0 w-[130px] md:w-[160px] flex flex-col items-center gap-4 group/card snap-center"
+                className="flex-shrink-0 w-[140px] md:w-[170px] h-[240px] md:h-[280px] flex flex-col bg-gradient-to-b from-[#111612] to-[#0a0d0a] border border-[#1b241a] rounded-2xl overflow-hidden group/card hover:border-[#33e36a]/50 transition-all duration-300 snap-center hover:shadow-[0_0_20px_rgba(51,227,106,0.15)] relative"
               >
-                {/* Container da Imagem */}
-                <div className="relative w-full aspect-square flex items-center justify-center transition-all duration-500">
-                  {/* Efeito Neon Fundo */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] rounded-full bg-[#33e36a] blur-[25px] opacity-0 group-hover/card:opacity-60 transition-opacity duration-500 pointer-events-none"></div>
-                  
+                {/* Glow de fundo no Hover */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#33e36a]/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                
+                {/* Imagem (Top) */}
+                <div className="h-[150px] md:h-[190px] w-full relative z-10 overflow-hidden">
                   {category.image ? (
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="relative z-10 w-full h-full object-contain drop-shadow-[0_15px_15px_rgba(0,0,0,0.6)] transition-all duration-500 group-hover/card:scale-125 group-hover/card:-translate-y-4 group-hover/card:drop-shadow-[0_0_25px_rgba(51,227,106,0.6)]"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110"
                     />
                   ) : (
-                    <ImageIcon size={40} className="relative z-10 text-[#6b7563] group-hover/card:text-[#eef4ea] transition-colors duration-300" />
+                    <div className="w-full h-full flex items-center justify-center bg-[#111612]">
+                      <ImageIcon size={40} className="text-[#1b241a]" />
+                    </div>
                   )}
+                  {/* Gradiente para suavizar a transição inferior */}
+                  <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0d0a] to-transparent pointer-events-none"></div>
                 </div>
                 
-                {/* Título */}
-                <h3 className="text-xs md:text-sm font-heading font-bold text-[#eef4ea] group-hover/card:text-[#33e36a] transition-colors duration-300 text-center uppercase tracking-wide">
-                  {category.name}
-                </h3>
+                {/* Linha Divisória */}
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-[#1b241a] group-hover/card:via-[#33e36a]/30 to-transparent relative z-10 shrink-0"></div>
+                
+                {/* Ícone e Nome (Bottom) */}
+                <div className="flex-1 flex flex-col items-center justify-center gap-2 relative z-10 shrink-0 px-2 pb-2">
+                  <div className="flex flex-col items-center gap-1.5">
+                    {getCategoryIcon(category)}
+                    <div className="w-6 h-[2px] bg-[#33e36a]/30 group-hover/card:bg-[#33e36a] rounded-full transition-colors duration-300 mt-1"></div>
+                  </div>
+                  <h3 className="text-[10px] md:text-xs font-heading font-bold text-[#eef4ea] group-hover/card:text-white transition-colors duration-300 text-center uppercase tracking-[0.1em] line-clamp-1 w-full">
+                    {category.name}
+                  </h3>
+                </div>
               </Link>
             ))}
           </div>
@@ -106,13 +173,13 @@ export const CategoryList: React.FC = () => {
           {/* Navegação do Slider */}
           <button 
             onClick={() => scroll('left')}
-            className="hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#141A12] border border-[#1b241a] hover:border-[#33e36a] hover:bg-[#1a2217] rounded-full items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-20 shadow-lg"
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#0a0d0a] border border-[#1b241a] hover:border-[#33e36a] hover:bg-[#111612] rounded-full items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-20 shadow-[0_0_15px_rgba(0,0,0,0.5)] -ml-4"
           >
             <ChevronLeft size={24} className="text-[#eef4ea] hover:text-[#33e36a]" />
           </button>
           <button 
             onClick={() => scroll('right')}
-            className="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#141A12] border border-[#1b241a] hover:border-[#33e36a] hover:bg-[#1a2217] rounded-full items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-20 shadow-lg"
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-[#0a0d0a] border border-[#1b241a] hover:border-[#33e36a] hover:bg-[#111612] rounded-full items-center justify-center text-white transition-all opacity-0 group-hover:opacity-100 z-20 shadow-[0_0_15px_rgba(0,0,0,0.5)] -mr-4"
           >
             <ChevronRight size={24} className="text-[#eef4ea] hover:text-[#33e36a]" />
           </button>
@@ -121,3 +188,4 @@ export const CategoryList: React.FC = () => {
     </section>
   );
 };
+

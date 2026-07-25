@@ -43,19 +43,19 @@ export const Hero: React.FC = () => {
       {/* Conteúdo do Banner */}
       <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12 md:pt-[120px]">
         <div className="max-w-2xl mt-8 md:mt-0">
-          <span className="text-white font-medium text-[10px] md:text-sm tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2">
+          <span className="text-white font-medium text-[10px] md:text-sm tracking-[0.2em] mb-3 md:mb-4 flex items-center gap-2 animate-fade-in-up">
             ELEVE SEU JOGO <span className="text-[#33e36a]">/////////</span>
           </span>
-          <h1 className="text-[42px] leading-[0.9] sm:text-6xl md:text-7xl lg:text-[90px] font-heading font-black text-white uppercase tracking-tighter mb-5 md:mb-6 flex flex-col">
+          <h1 className="text-[42px] leading-[0.9] sm:text-6xl md:text-7xl lg:text-[90px] font-heading font-black text-white uppercase tracking-tighter mb-5 md:mb-6 flex flex-col animate-fade-in-up animation-delay-100">
             <span className="drop-shadow-xl">VIVA O GAME.</span>
             <span className="text-[#33e36a] drop-shadow-[0_0_15px_rgba(51,227,106,0.3)]">SINTA A VITÓRIA.</span>
           </h1>
-          <p className="text-[#eef4ea] text-xs md:text-base mb-8 md:mb-10 max-w-lg font-medium leading-relaxed tracking-wide">
+          <p className="text-[#eef4ea] text-xs md:text-base mb-8 md:mb-10 max-w-lg font-medium leading-relaxed tracking-wide animate-fade-in-up animation-delay-200">
             OS MELHORES GAMES, ELETRÔNICOS E ACESSÓRIOS<br className="hidden md:block"/>
             <span className="md:hidden"> </span>PARA LEVAR SUA EXPERIÊNCIA AO <span className="text-[#33e36a] font-bold">PRÓXIMO NÍVEL.</span>
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8 md:mb-10">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8 md:mb-10 animate-fade-in-up animation-delay-300">
             <div className="flex items-center gap-3">
               <div className="text-[#33e36a]"><Truck size={28} strokeWidth={1.5} /></div>
               <div className="flex flex-col">
@@ -81,7 +81,7 @@ export const Hero: React.FC = () => {
 
           <Link 
             to="/categoria/pacotes" 
-            className="group inline-flex items-center justify-between border border-[#33e36a] text-[#33e36a] hover:bg-[#33e36a] hover:text-[#06250f] font-bold uppercase text-sm px-6 py-4 rounded-lg transition-all shadow-[0_0_15px_rgba(51,227,106,0.15)] hover:shadow-[0_0_25px_rgba(51,227,106,0.4)] w-[280px]"
+            className="group inline-flex items-center justify-between border border-[#33e36a] text-[#33e36a] hover:bg-[#33e36a] hover:text-[#06250f] font-bold uppercase text-sm px-6 py-4 rounded-lg transition-all shadow-[0_0_15px_rgba(51,227,106,0.15)] hover:shadow-[0_0_25px_rgba(51,227,106,0.4)] w-[280px] animate-fade-in-up animation-delay-400"
           >
             <span>Confira as Ofertas</span>
             <div className="border border-[#33e36a] group-hover:border-[#06250f] rounded-full p-1 transition-colors">

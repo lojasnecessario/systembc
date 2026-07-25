@@ -1,12 +1,32 @@
 import React, { useState } from 'react';
 import { 
   Star, MapPin, Phone, Clock, Globe, Bookmark, 
-  Search, Smartphone, Share2, ChevronRight, Check, ThumbsUp, Loader2
+  Search, Smartphone, Share2, ChevronRight, Check, ThumbsUp, Loader2, ChevronDown
 } from 'lucide-react';
 
 export function GoogleReviews() {
   const [activeTab, setActiveTab] = useState('VISÃO GERAL');
   const [isLoading, setIsLoading] = useState(false);
+
+  const now = new Date();
+  const day = now.getDay();
+  const hour = now.getHours();
+  const isOpen = day >= 1 && day <= 6 && hour >= 8 && hour < 18;
+  const statusText = isOpen ? "Aberto agora" : "Fechado";
+  const statusColor = isOpen ? "text-green-600" : "text-red-600";
+  const statusInfo = isOpen ? "Fecha às 18:00" : "Abre às 08:00";
+
+  const [isHoursExpanded, setIsHoursExpanded] = useState(false);
+
+  const hoursSchedule = [
+    { day: 'domingo', hours: 'Fechado' },
+    { day: 'segunda-feira', hours: '08:00–18:00' },
+    { day: 'terça-feira', hours: '08:00–18:00' },
+    { day: 'quarta-feira', hours: '08:00–18:00' },
+    { day: 'quinta-feira', hours: '08:00–18:00' },
+    { day: 'sexta-feira', hours: '08:00–18:00' },
+    { day: 'sábado', hours: '08:00–18:00' },
+  ];
 
   const reviewsList = [
     { id: 1, author: 'João Silva', date: 'há 2 dias', text: 'Excelente loja! O atendimento foi impecável e encontrei tudo o que precisava para o meu setup. O console veio em perfeito estado.', rating: 5 },
@@ -76,8 +96,24 @@ export function GoogleReviews() {
         {/* Info List */}
         <div className="flex flex-col py-2">
           <InfoItem icon={<MapPin />} text="São Paulo, SP - Brasil" />
-          <InfoItem icon={<Clock />} text={<><span className="text-green-600 font-medium">Aberto agora</span> ⋅ Fecha às 22:00</>} />
-          <InfoItem icon={<Globe />} text="blackcoregames.com.br" />
+          <InfoItem 
+            icon={<Clock />} 
+            text={<><span className={`${statusColor} font-medium`}>{statusText}</span> ⋅ {statusInfo}</>}
+            onClick={() => setIsHoursExpanded(!isHoursExpanded)}
+            rightIcon={<ChevronDown className={`transition-transform ${isHoursExpanded ? 'rotate-180' : ''}`} />}
+          >
+            {isHoursExpanded && (
+              <div className="flex flex-col gap-2 mt-1">
+                {hoursSchedule.map((schedule, idx) => (
+                  <div key={idx} className={`flex gap-6 ${idx === day ? 'font-bold text-neutral-900' : ''}`}>
+                    <span className="w-24 capitalize">{schedule.day}</span>
+                    <span>{schedule.hours}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </InfoItem>
+          <InfoItem icon={<Globe />} text="black-core.site" />
           <InfoItem icon={<Phone />} text="(11) 99999-9999" />
         </div>
 
@@ -154,7 +190,7 @@ export function GoogleReviews() {
                 </div>
               </div>
               <p className="text-sm text-neutral-600 leading-snug">
-                Loja de Videogames • <span className="text-green-600 font-medium">Aberto</span>
+                Loja de Videogames • <span className={`${statusColor} font-medium`}>{isOpen ? 'Aberto' : 'Fechado'}</span>
               </p>
             </div>
             <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 shadow-sm border border-neutral-100">
@@ -167,7 +203,7 @@ export function GoogleReviews() {
           </div>
 
           {/* Mobile Tabs */}
-          <div className="flex overflow-x-auto border-b border-neutral-200 px-2 scrollbar-hide">
+          <div className="flex overflow-x-auto border-b border-neutral-200 px-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {['VISÃO GERAL', 'INFORMAÇÕES', 'AVALIAÇÕES', 'FOTOS'].map(tab => (
               <button 
                 key={tab}
@@ -183,48 +219,100 @@ export function GoogleReviews() {
             ))}
           </div>
 
-          {/* Mobile Action Buttons */}
-          <div className="flex justify-around p-5 border-b border-neutral-100">
-            <MobileActionButton icon={<Phone />} label="LIGAR" active />
-            <MobileActionButton icon={<MapPin />} label="ROTAS" active />
-            <MobileActionButton icon={<Bookmark />} label="SALVAR" />
-            <MobileActionButton icon={<Globe />} label="SITE" active />
-          </div>
-
-          {/* Description Snippet */}
-          <div className="flex items-center justify-between p-5 border-b border-neutral-100 cursor-pointer hover:bg-neutral-50 transition-colors">
-            <span className="text-neutral-700 text-sm">Descrição da empresa</span>
-            <ChevronRight className="w-5 h-5 text-neutral-400" />
-          </div>
-
-          {/* Mobile Info List */}
-          <div className="flex flex-col pb-4">
-            <InfoItem icon={<MapPin />} text="São Paulo, SP - Brasil" />
-            <InfoItem icon={<Clock />} text="Horário comercial" />
-            <InfoItem icon={<Globe />} text="Website comercial" />
-          </div>
-
-          {/* Reviews Section Mobile */}
-          <div className="flex flex-col p-4 bg-neutral-50 pb-8 border-t border-neutral-200">
-            <h2 className="font-bold text-lg mb-4">Avaliações</h2>
-            <div className="space-y-4">
-              {reviewsList.map(review => (
-                <ReviewItem key={review.id} review={review} />
-              ))}
-            </div>
-            
-            <button 
-              className="mt-6 w-full py-3 rounded-full border border-neutral-300 text-blue-600 font-medium hover:bg-neutral-100 flex items-center justify-center transition-colors"
-              onClick={() => setIsLoading(true)}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
-              ) : (
-                "Ver todas as avaliações"
+          {/* Mobile Content Rendering based on Active Tab */}
+          {(activeTab === 'VISÃO GERAL' || activeTab === 'INFORMAÇÕES') && (
+            <>
+              {activeTab === 'VISÃO GERAL' && (
+                <div className="flex justify-around p-5 border-b border-neutral-100">
+                  <MobileActionButton icon={<Phone />} label="LIGAR" active />
+                  <MobileActionButton icon={<MapPin />} label="ROTAS" active />
+                  <MobileActionButton icon={<Bookmark />} label="SALVAR" />
+                  <MobileActionButton icon={<Globe />} label="SITE" active />
+                </div>
               )}
-            </button>
-          </div>
+
+              <div className="w-full h-56 bg-[#e5e3df] border-b border-neutral-100 relative">
+                <iframe 
+                  title="Mapa Interativo Blackcore Mobile"
+                  className="w-full h-full border-0 grayscale-[20%] contrast-125" 
+                  loading="lazy" 
+                  allowFullScreen 
+                  referrerPolicy="no-referrer-when-downgrade" 
+                  src="https://maps.google.com/maps?q=S%C3%A3o+Paulo,+Brasil&t=&z=11&ie=UTF8&iwloc=&output=embed"
+                ></iframe>
+              </div>
+
+              {activeTab === 'VISÃO GERAL' && (
+                <div className="flex items-center justify-between p-5 border-b border-neutral-100 cursor-pointer hover:bg-neutral-50 transition-colors">
+                  <span className="text-neutral-700 text-sm">Descrição da empresa</span>
+                  <ChevronRight className="w-5 h-5 text-neutral-400" />
+                </div>
+              )}
+
+              <div className="flex flex-col pb-4 pt-2">
+                <InfoItem icon={<MapPin />} text="São Paulo, SP - Brasil" />
+                <InfoItem 
+                  icon={<Clock />} 
+                  text={<><span className={`${statusColor} font-medium`}>{statusText}</span> ⋅ {statusInfo}</>}
+                  onClick={() => setIsHoursExpanded(!isHoursExpanded)}
+                  rightIcon={<ChevronDown className={`transition-transform ${isHoursExpanded ? 'rotate-180' : ''}`} />}
+                >
+                  {isHoursExpanded && (
+                    <div className="flex flex-col gap-2 mt-1">
+                      {hoursSchedule.map((schedule, idx) => (
+                        <div key={idx} className={`flex gap-6 ${idx === day ? 'font-bold text-neutral-900' : ''}`}>
+                          <span className="w-24 capitalize">{schedule.day}</span>
+                          <span>{schedule.hours}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </InfoItem>
+                <InfoItem icon={<Globe />} text="black-core.site" />
+                {activeTab === 'INFORMAÇÕES' && <InfoItem icon={<Phone />} text="(11) 99999-9999" />}
+              </div>
+            </>
+          )}
+
+          {(activeTab === 'VISÃO GERAL' || activeTab === 'AVALIAÇÕES') && (
+            <div className="flex flex-col p-4 bg-neutral-50 pb-8 border-t border-neutral-200">
+              <h2 className="font-bold text-lg mb-4">Avaliações</h2>
+              <div className="space-y-4">
+                {reviewsList.slice(0, activeTab === 'VISÃO GERAL' ? 3 : reviewsList.length).map(review => (
+                  <ReviewItem key={review.id} review={review} />
+                ))}
+              </div>
+              
+              {(activeTab === 'AVALIAÇÕES' || reviewsList.length > 3) && (
+                <button 
+                  className="mt-6 w-full py-3 rounded-full border border-neutral-300 text-blue-600 font-medium hover:bg-neutral-100 flex items-center justify-center transition-colors"
+                  onClick={() => {
+                    if (activeTab === 'VISÃO GERAL') {
+                      setActiveTab('AVALIAÇÕES');
+                    } else {
+                      setIsLoading(true);
+                    }
+                  }}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+                  ) : (
+                    activeTab === 'VISÃO GERAL' ? "Ver todas as avaliações" : "Carregar mais"
+                  )}
+                </button>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'FOTOS' && (
+            <div className="p-4 grid grid-cols-2 gap-2 pb-8">
+              <img src="/googlepage.jpeg" alt="Foto da loja 1" className="w-full h-32 object-cover rounded-lg" />
+              <div className="w-full h-32 bg-neutral-200 rounded-lg flex items-center justify-center text-neutral-400 text-sm border border-dashed border-neutral-300">
+                Sem mais fotos
+              </div>
+            </div>
+          )}
           
         </div>
       </div>
@@ -306,15 +394,32 @@ function MobileActionButton({ icon, label, active = false }: { icon: React.React
   );
 }
 
-function InfoItem({ icon, text }: { icon: React.ReactNode, text: React.ReactNode }) {
+function InfoItem({ icon, text, onClick, rightIcon, children }: { icon: React.ReactNode, text: React.ReactNode, onClick?: () => void, rightIcon?: React.ReactNode, children?: React.ReactNode }) {
   return (
-    <div className="flex items-start gap-4 px-5 py-4 border-b border-neutral-100 hover:bg-neutral-50 transition-colors cursor-pointer">
-      <div className="text-blue-600 shrink-0 mt-0.5">
-        {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}
+    <div className="flex flex-col border-b border-neutral-100 last:border-b-0">
+      <div 
+        className="flex items-start justify-between px-5 py-4 hover:bg-neutral-50 transition-colors cursor-pointer w-full"
+        onClick={onClick}
+      >
+        <div className="flex items-start gap-4">
+          <div className="text-blue-600 shrink-0 mt-0.5">
+            {React.cloneElement(icon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}
+          </div>
+          <div className="text-sm text-neutral-700 leading-snug">
+            {text}
+          </div>
+        </div>
+        {rightIcon && (
+          <div className="text-neutral-500 shrink-0 ml-4">
+            {React.cloneElement(rightIcon as React.ReactElement<{ className?: string }>, { className: 'w-5 h-5' })}
+          </div>
+        )}
       </div>
-      <div className="text-sm text-neutral-700 leading-snug">
-        {text}
-      </div>
+      {children && (
+        <div className="px-14 pb-4 text-sm text-neutral-600">
+          {children}
+        </div>
+      )}
     </div>
   );
 }

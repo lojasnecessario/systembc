@@ -22,8 +22,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const discountPercent = hasDiscount 
     ? Math.round(((product.price - currentPrice) / product.price) * 100)
     : 0;
-    
-  const pixPrice = currentPrice * 0.97; // 3% off no pix como na referência
 
   const [ratingData, setRatingData] = useState<{ average: number, count: number } | null>(null);
 
@@ -159,11 +157,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           )}
           
-          <span className="text-[#8b977f] text-[10px] md:text-xs">
-            Parcele em até 12x
-          </span>
           <span className="text-[#8b977f] text-[10px] md:text-xs mb-1.5">
-            R${pixPrice.toFixed(2).replace('.', ',')} no Pix (3% off)
+            Parcele em até 12x
           </span>
 
           {/* Botão Comprar */}

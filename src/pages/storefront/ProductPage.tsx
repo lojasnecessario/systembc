@@ -115,16 +115,12 @@ export const ProductPage: React.FC = () => {
 
   const hasDiscount = product.promotional_price !== null && product.promotional_price < product.price;
   const currentPrice = hasDiscount ? product.promotional_price! : product.price;
-  
-  // Simula o desconto no PIX de 5%
-  const pixPrice = currentPrice * 0.95;
-  const pixDiscount = currentPrice - pixPrice;
 
   const faqs = [
     { question: 'Compra Segura', answer: 'Sua compra é processada em ambiente 100% seguro com criptografia de ponta a ponta.' },
     { question: 'Como recebo meu produto?', answer: 'Após a confirmação do pagamento, você receberá os dados e atualizações diretamente no seu e-mail e WhatsApp cadastrados.' },
     { question: 'Prazos de Entrega?', answer: 'O envio é imediato e automático para compras no PIX ou Cartão de Crédito aprovadas.' },
-    { question: 'É original e tem garantia?', answer: 'Sim! Garantia vitalícia contra quedas e suporte especializado disponível 24/7 para te ajudar com qualquer dúvida.' },
+    { question: 'É original e tem garantia?', answer: 'Sim! Garantia de 6 meses contra quedas e suporte especializado disponível 24/7 para te ajudar com qualquer dúvida.' },
   ];
 
   // Avaliação helpers
@@ -239,10 +235,10 @@ export const ProductPage: React.FC = () => {
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 <span className="bg-[#33e36a] text-black font-bold text-xs px-3 py-1.5 rounded uppercase shadow-sm">
-                  Envio Digital Imediato
+                  Envio Imediato
                 </span>
                 <span className="border border-neutral-300 bg-neutral-100 text-black font-bold text-xs px-3 py-1.5 rounded uppercase">
-                  Garantia Vitalícia
+                  Garantia de 6 meses
                 </span>
               </div>
 
@@ -264,17 +260,6 @@ export const ProductPage: React.FC = () => {
                       </span>
                     )}
                   </div>
-
-                  <div className="flex items-center gap-2 text-green-700 font-bold text-sm mb-2">
-                    <CheckCircle2 size={16} />
-                    <span>Preço garantido! 5% de desconto à vista no PIX</span>
-                  </div>
-
-                  <div className="w-full h-px bg-neutral-200 my-3" />
-
-                  <p className="text-xs text-black font-medium uppercase tracking-wide">
-                    À vista no <strong className="text-green-700">PIX</strong> por <strong>R$ {pixPrice.toFixed(2).replace('.', ',')}</strong> — você economiza <strong className="text-green-700">R$ {pixDiscount.toFixed(2).replace('.', ',')}</strong>
-                  </p>
                 </div>
               </div>
 
@@ -318,7 +303,7 @@ export const ProductPage: React.FC = () => {
                   {/* Visa */}
                   <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
                     <rect width="38" height="24" rx="4" fill="#1434CB"/>
-                    <path d="M14.072 17.618l2.253-14.23h3.58l-2.253 14.23h-3.58zm17.91-14.004c-1.127-.428-2.67-.732-4.237-.732-3.834 0-6.536 2.046-6.554 4.975-.028 2.164 1.94 3.364 3.418 4.092 1.513.743 2.022 1.22 2.022 1.884-.02 1.018-1.224 1.488-2.35 1.488-1.572 0-2.418-.242-3.69-.812l-.526-.248-.5 3.123c.922.427 2.628.796 4.394.814 4.053 0 6.717-1.996 6.745-5.086.02-1.725-1.026-3.04-3.298-4.135-1.353-.715-2.183-1.192-2.183-1.916.02-.676.75-1.39 2.24-1.39 1.246-.02 2.146.262 2.85.57l.34.156.49-3.044zM10.87 3.614c-.694 0-1.29.5-1.517 1.157L5.8 17.618H2.15l-.234-1.096C1.458 14.364.5 11.233.02 9.775L2.9 3.614h3.69l1.96 9.873 2.827-9.873h3.5l-3.996 14.004H7.218z" fill="#fff"/>
+                    <text x="19" y="16" fill="#fff" fontSize="10" fontStyle="italic" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">VISA</text>
                   </svg>
                   {/* Mastercard */}
                   <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
@@ -335,8 +320,7 @@ export const ProductPage: React.FC = () => {
                   {/* Pix */}
                   <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
                     <rect width="38" height="24" rx="4" fill="#32BCAD"/>
-                    <path d="M19 16.5l-4.5-4.5 4.5-4.5 4.5 4.5-4.5 4.5z" stroke="#fff" strokeWidth="2"/>
-                    <circle cx="19" cy="12" r="1.5" fill="#fff"/>
+                    <text x="19" y="16" fill="#fff" fontSize="10" fontStyle="italic" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">PIX</text>
                   </svg>
                 </div>
               </div>
@@ -447,11 +431,11 @@ export const ProductPage: React.FC = () => {
               >
                 {product.description ? (
                   <div 
-                    className="p-5 pt-0 text-[#8b977f] text-sm md:text-base leading-relaxed"
+                    className="p-5 pt-0 text-white text-sm md:text-base leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: product.description }}
                   />
                 ) : (
-                  <div className="p-5 pt-0 text-[#8b977f] text-sm md:text-base leading-relaxed">
+                  <div className="p-5 pt-0 text-white text-sm md:text-base leading-relaxed">
                     Nenhuma descrição disponível para este produto.
                   </div>
                 )}

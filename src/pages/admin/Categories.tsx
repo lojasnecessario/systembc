@@ -8,6 +8,7 @@ interface Category {
   name: string;
   slug: string;
   image: string | null;
+  icon?: string | null;
   order_grid: number;
   is_active: boolean;
 }
@@ -21,11 +22,26 @@ export const Categories: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
+  const [icon, setIcon] = useState('');
   const [orderGrid, setOrderGrid] = useState(0);
   const [isActive, setIsActive] = useState(true);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  
+  const availableIcons = [
+    { name: 'Padrão (Imagem)', value: '' },
+    { name: 'Console Clássico (Gamepad)', value: 'Gamepad' },
+    { name: 'Console Moderno (Gamepad2)', value: 'Gamepad2' },
+    { name: 'Fone (Headset)', value: 'Headset' },
+    { name: 'Tela / Eletrônicos (Monitor)', value: 'Monitor' },
+    { name: 'Desktop (Computer)', value: 'Computer' },
+    { name: 'Joystick (Controle de voo)', value: 'Joystick' },
+    { name: 'Smartphone', value: 'Smartphone' },
+    { name: 'Processador (Cpu)', value: 'Cpu' },
+    { name: 'Mouse', value: 'Mouse' },
+    { name: 'Teclado', value: 'Keyboard' }
+  ];
 
   useEffect(() => {
     fetchCategories();
@@ -65,6 +81,7 @@ export const Categories: React.FC = () => {
       setEditingId(category.id);
       setName(category.name);
       setSlug(category.slug);
+      setIcon(category.icon || '');
       setOrderGrid(category.order_grid);
       setIsActive(category.is_active);
       setCurrentImageUrl(category.image);
@@ -72,6 +89,7 @@ export const Categories: React.FC = () => {
       setEditingId(null);
       setName('');
       setSlug('');
+      setIcon('');
       setOrderGrid(categories.length > 0 ? Math.max(...categories.map(c => c.order_grid)) + 1 : 1);
       setIsActive(true);
       setCurrentImageUrl(null);
@@ -99,6 +117,7 @@ export const Categories: React.FC = () => {
       const categoryData = {
         name,
         slug,
+        icon: icon || null,
         image: finalImageUrl,
         order_grid: orderGrid,
         is_active: isActive
@@ -279,6 +298,22 @@ export const Categories: React.FC = () => {
                   onChange={(e) => setSlug(e.target.value)}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Ícone</label>
+                <select
+                  value={icon}
+                  onChange={(e) => setIcon(e.target.value)}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {availableIcons.map(item => (
+                    <option key={item.value} value={item.value}>{item.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-slate-500 mt-1">
+                  Selecione um ícone para exibir na vitrine. Se deixar no Padrão, tentará usar o nome da slug.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
