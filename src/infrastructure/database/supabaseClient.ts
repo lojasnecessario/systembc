@@ -5,13 +5,10 @@ let supabaseInstance: SupabaseClient | null = null;
 export function getSupabaseClient(): SupabaseClient {
   if (supabaseInstance) return supabaseInstance;
 
-  // Supports both Vite frontend (import.meta.env) and Node.js backend (process.env)
+  // Usa apenas process.env pois este arquivo é usado apenas no backend (Node.js/Vercel)
   const getEnv = (key: string) => {
     if (typeof process !== 'undefined' && process.env && process.env[key]) {
       return process.env[key];
-    }
-    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[key]) {
-      return import.meta.env[key];
     }
     return undefined;
   };
