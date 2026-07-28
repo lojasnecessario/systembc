@@ -366,9 +366,9 @@ export const ProductPage: React.FC = () => {
                     } else {
                       alert('Erro ao gerar link de pagamento. Tente novamente mais tarde.');
                     }
-                  } catch (err) {
+                  } catch (err: any) {
                     console.error('Erro no checkout:', err);
-                    alert('Erro ao se comunicar com o sistema de pagamento.');
+                    alert(err.message || 'Erro ao se comunicar com o sistema de pagamento.');
                   } finally {
                     const btn = document.getElementById('buy-button');
                     if (btn) {

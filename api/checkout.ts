@@ -5,13 +5,7 @@ import { PaymentRepository } from '../src/infrastructure/repositories/PaymentRep
 import { WebhookEventRepository } from '../src/infrastructure/repositories/WebhookEventRepository';
 import { VegaAdapter } from '../src/infrastructure/commerce/vega/VegaAdapter';
 
-// Singleton das dependências (pode ser substituído por injeção de dependência via DI Container no futuro)
-const orderRepo = new OrderRepository();
-const productRepo = new ProductRepository();
-const paymentRepo = new PaymentRepository();
-const webhookEventRepo = new WebhookEventRepository();
-const vegaAdapter = new VegaAdapter();
-const checkoutService = new CheckoutService(orderRepo, productRepo, paymentRepo, webhookEventRepo, vegaAdapter);
+let checkoutService: CheckoutService;
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
@@ -19,6 +13,15 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    if (!checkoutService) {
+      const orderRepo = new OrderRepository();
+      const productRepo = new ProductRepository();
+      const paymentRepo = new PaymentRepository();
+      const webhookEventRepo = new WebhookEventRepository();
+      const vegaAdapter = new VegaAdapter();
+      checkoutService = new CheckoutService(orderRepo, productRepo, paymentRepo, webhookEventRepo, vegaAdapter);
+    }
+
     const { productId, items, customerId } = req.body;
 
     let cartItems = [];

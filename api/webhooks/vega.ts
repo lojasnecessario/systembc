@@ -6,12 +6,7 @@ import { WebhookEventRepository } from '../../src/infrastructure/repositories/We
 import { VegaAdapter } from '../../src/infrastructure/commerce/vega/VegaAdapter';
 import { VegaValidationError } from '../../src/infrastructure/commerce/vega/errors';
 
-const orderRepo = new OrderRepository();
-const productRepo = new ProductRepository();
-const paymentRepo = new PaymentRepository();
-const webhookEventRepo = new WebhookEventRepository();
-const vegaAdapter = new VegaAdapter();
-const checkoutService = new CheckoutService(orderRepo, productRepo, paymentRepo, webhookEventRepo, vegaAdapter);
+let checkoutService: CheckoutService;
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
@@ -19,6 +14,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    if (!checkoutService) {
+      const orderRepo = new OrderRepository();
+      const productRepo = new ProductRepository();
+      const paymentRepo = new PaymentRepository();
+      const webhookEventRepo = new WebhookEventRepository();
+      const vegaAdapter = new VegaAdapter();
+      checkoutService = new CheckoutService(orderRepo, productRepo, paymentRepo, webhookEventRepo, vegaAdapter);
+    }
     const payload = req.body;
     // O header de assinatura varia, exemplo comum: 'x-signature' ou authorization
     const signature = req.headers['x-signature'] || req.headers['authorization'];
