@@ -21,8 +21,7 @@ export class VegaAdapter implements CommerceProvider {
     }
 
     this.appUrl = process.env.APP_URL || 'https://systembc-slpc.vercel.app';
-    // Se a Vega não tiver um endpoint oficial nas vars, podemos usar o antigo como fallback ou forçar o erro. O ideal é deixar a var cuidar disso.
-    this.apiUrl = process.env.VEGA_API_URL || 'https://checkout.seudominioaprovado.com/api/checkout';
+    this.apiUrl = process.env.VEGA_API_URL || 'https://checkout.black-core.site/api/checkout';
   }
 
   async createCheckout(order: Order, products: Product[]): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }> {
@@ -36,17 +35,15 @@ export class VegaAdapter implements CommerceProvider {
       try {
         const response = await createCheckoutRequest(payload, this.apiKey, this.apiUrl);
         
-        const checkoutUrl = response.checkout_url || response.url || response.payment_url;
+        const checkoutUrl = response.checkout_url || response.url || response.payment_url || JSON.stringify(response);
         
-        if (!checkoutUrl) {
-          throw new Error('URL de checkout não retornada pela Vega');
-        }
-
         return {
           checkoutUrl,
           transactionToken: response.transaction_token,
-          externalCode: payload.external_code
-        };
+          externalCode: payload.external_code,
+          paymentStatus: response.payment_status,
+          paymentData: response
+        } as any;
       } catch (error: any) {
         attempt++;
         if (attempt > maxRetries || (error.statusCode && error.statusCode >= 400 && error.statusCode < 500)) {

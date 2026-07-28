@@ -25,7 +25,7 @@ export class VegaMapper {
         currency: "BRL"
       },
       external_code: order.external_code,
-      webhook_url: `${appUrl}/api/webhooks/vega`,
+      notification_url: `${appUrl}/api/webhooks/vega`,
       return_url: `${appUrl}/checkout/success`
     };
   }

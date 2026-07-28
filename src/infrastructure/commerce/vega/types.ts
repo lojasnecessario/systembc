@@ -18,7 +18,7 @@ export const VegaCheckoutPayloadSchema = z.object({
   products: z.array(VegaProductSchema),
   payment: VegaPaymentSchema,
   external_code: z.string().optional(),
-  webhook_url: z.string().optional(),
+  notification_url: z.string().optional(),
   return_url: z.string().optional()
 });
 
@@ -28,7 +28,8 @@ export const VegaCheckoutResponseSchema = z.object({
   checkout_url: z.string().optional(),
   payment_url: z.string().optional(),
   url: z.string().optional(),
-  transaction_token: z.string().optional()
+  transaction_token: z.string().optional(),
+  payment_status: z.string().optional()
 });
 
 export type VegaCheckoutResponse = z.infer<typeof VegaCheckoutResponseSchema>;

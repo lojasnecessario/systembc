@@ -11,7 +11,8 @@ export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
+        'api-key': apiKey,
+        'x-domain': 'black-core.site'
       },
       body: JSON.stringify(payload),
       signal: controller.signal
