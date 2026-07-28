@@ -2,18 +2,30 @@ import { OrderRepository } from '../../infrastructure/repositories/OrderReposito
 import { ProductRepository } from '../../infrastructure/repositories/ProductRepository';
 import { PaymentRepository } from '../../infrastructure/repositories/PaymentRepository';
 import { WebhookEventRepository } from '../../infrastructure/repositories/WebhookEventRepository';
-import { CommerceProvider } from '../../domain/commerce/CommerceProvider';
+import type { CommerceProvider } from '../../domain/commerce/CommerceProvider';
 import { OrderStatus, PaymentStatus, PaymentMethod } from '../../domain/models/enums';
-import { Order, OrderItem, Product } from '../../domain/models/types';
+import type { Order, OrderItem, Product } from '../../domain/models/types';
 
 export class CheckoutService {
+  private orderRepo: OrderRepository;
+  private productRepo: ProductRepository;
+  private paymentRepo: PaymentRepository;
+  private webhookEventRepo: WebhookEventRepository;
+  private commerceProvider: CommerceProvider;
+
   constructor(
-    private orderRepo: OrderRepository,
-    private productRepo: ProductRepository,
-    private paymentRepo: PaymentRepository,
-    private webhookEventRepo: WebhookEventRepository,
-    private commerceProvider: CommerceProvider
-  ) {}
+    orderRepo: OrderRepository,
+    productRepo: ProductRepository,
+    paymentRepo: PaymentRepository,
+    webhookEventRepo: WebhookEventRepository,
+    commerceProvider: CommerceProvider
+  ) {
+    this.orderRepo = orderRepo;
+    this.productRepo = productRepo;
+    this.paymentRepo = paymentRepo;
+    this.webhookEventRepo = webhookEventRepo;
+    this.commerceProvider = commerceProvider;
+  }
 
   async processCheckout(
     items: { productId: string; quantity: number }[],

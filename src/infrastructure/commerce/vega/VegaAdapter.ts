@@ -1,15 +1,16 @@
-import { CommerceProvider, WebhookResult } from '../../../domain/commerce/CommerceProvider';
-import { Order, Product } from '../../../domain/models/types';
+import type { CommerceProvider, WebhookResult } from '../../../domain/commerce/CommerceProvider';
+import type { Order, Product } from '../../../domain/models/types';
 import { VegaMapper } from './mapper';
 import { createCheckoutRequest } from './createCheckout';
 import { verifyWebhookSignature } from './verifyWebhook';
-import { VegaWebhookPayload } from './types';
+import type { VegaWebhookPayload } from './types';
 import { VegaValidationError } from './errors';
 
 export class VegaAdapter implements CommerceProvider {
   private webhookSecret: string;
   private apiUrl: string;
   private appUrl: string;
+  private apiKey: string;
 
   constructor() {
     this.apiKey = process.env.VEGA_API_KEY || '';

@@ -1,11 +1,11 @@
-import { Order } from '../models/types';
+import type { Order, Product } from '../models/types';
 
 export interface CommerceProvider {
   /**
    * Cria um checkout no provedor e retorna a URL de redirecionamento,
    * bem como o transaction_token se houver.
    */
-  createCheckout(order: Order, items: any[]): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }>;
+  createCheckout(order: Order, products: Product[]): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }>;
 
   /**
    * Valida e processa o webhook recebido

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Shield, Target, Award, Users, MapPin, Zap, CheckCircle2, Gamepad2, Laptop, Clock } from 'lucide-react';
+import { Shield, Award, Users, MapPin, Zap, CheckCircle2, Gamepad2, Laptop, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const AboutUs: React.FC = () => {

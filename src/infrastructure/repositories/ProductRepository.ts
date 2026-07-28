@@ -1,4 +1,4 @@
-import { Product } from '../../domain/models/types';
+import type { Product } from '../../domain/models/types';
 import { getSupabaseClient } from '../database/supabaseClient';
 
 export class ProductRepository {

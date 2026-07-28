@@ -1,7 +1,12 @@
 export class VegaCommunicationError extends Error {
-  constructor(message: string, public readonly statusCode?: number, public readonly details?: any) {
+  public readonly statusCode?: number;
+  public readonly details?: any;
+
+  constructor(message: string, statusCode?: number, details?: any) {
     super(message);
     this.name = 'VegaCommunicationError';
+    this.statusCode = statusCode;
+    this.details = details;
   }
 }
 

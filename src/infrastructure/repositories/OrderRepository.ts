@@ -1,4 +1,4 @@
-import { Order } from '../../domain/models/types';
+import type { Order } from '../../domain/models/types';
 import { getSupabaseClient } from '../database/supabaseClient';
 
 export class OrderRepository {

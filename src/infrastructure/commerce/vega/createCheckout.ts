@@ -1,4 +1,5 @@
-import { VegaCheckoutPayload, VegaCheckoutResponse, VegaCheckoutResponseSchema } from './types';
+import type { VegaCheckoutPayload, VegaCheckoutResponse } from './types';
+import { VegaCheckoutResponseSchema } from './types';
 import { VegaCommunicationError } from './errors';
 
 export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey: string, apiUrl: string): Promise<VegaCheckoutResponse> {

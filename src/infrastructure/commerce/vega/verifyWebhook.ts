@@ -1,6 +1,6 @@
 import { VegaValidationError } from './errors';
 
-export function verifyWebhookSignature(payload: any, signature: string | undefined, secret: string): boolean {
+export function verifyWebhookSignature(_payload: any, signature: string | undefined, secret: string): boolean {
   // A Vega Checkout pode exigir verificação de HMAC ou apenas token Bearer.
   // De acordo com os requisitos e documentação comum, assumiremos que
   // a verificação utiliza um header ou um secret nas variáveis de ambiente.

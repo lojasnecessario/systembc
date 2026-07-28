@@ -1,4 +1,4 @@
-import { Payment } from '../../domain/models/types';
+import type { Payment } from '../../domain/models/types';
 import { getSupabaseClient } from '../database/supabaseClient';
 
 export class PaymentRepository {

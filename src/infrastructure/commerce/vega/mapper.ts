@@ -1,6 +1,6 @@
-import { Order, Product } from '../../../domain/models/types';
+import type { Order, Product } from '../../../domain/models/types';
 import { PaymentStatus } from '../../../domain/models/enums';
-import { VegaCheckoutPayload } from './types';
+import type { VegaCheckoutPayload } from './types';
 import { toCents } from './utils';
 import { VEGA_STATUS_MAP } from './constants';
 
