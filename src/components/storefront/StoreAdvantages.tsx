@@ -1,21 +1,21 @@
 import React from 'react';
-import { Send, UserCircle, TicketPercent, Headset } from 'lucide-react';
+import { Truck, ShieldCheck, TicketPercent, Headset } from 'lucide-react';
 
 const advantages = [
   { 
-    icon: <Send size={24} />, 
-    title: 'Entrega digital na hora',
-    description: 'Entrega super rapida' 
+    icon: <Truck size={24} />, 
+    title: 'Envio rápido e seguro',
+    description: 'Enviamos para todo o Brasil com total segurança e agilidade.' 
   },
   { 
-    icon: <UserCircle size={24} />, 
-    title: 'Jogue na sua conta',
-    description: 'Jogue na sua conta pessoal, obtenha conquistas direto nela.' 
+    icon: <ShieldCheck size={24} />, 
+    title: 'Produtos Originais',
+    description: 'Garantia de qualidade e procedência em todos os nossos games e eletrônicos.' 
   },
   { 
     icon: <TicketPercent size={24} />, 
     title: 'Até 30% OFF',
-    description: 'Entre para nosso grupo e receba cupons diários' 
+    description: 'Entre para nosso grupo e receba cupons diários de desconto.' 
   },
   { 
     icon: <Headset size={24} />, 

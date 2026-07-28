@@ -172,8 +172,20 @@ export function GoogleReviews() {
           </div>
         </div>
 
+        {/* Mobile Map (Moved to Top) */}
+        <div className="w-full h-72 bg-[#e5e3df] relative">
+          <iframe 
+            title="Mapa Interativo Blackcore Mobile"
+            className="w-full h-full border-0 grayscale-[20%] contrast-125" 
+            loading="lazy" 
+            allowFullScreen 
+            referrerPolicy="no-referrer-when-downgrade" 
+            src="https://maps.google.com/maps?q=S%C3%A3o+Paulo,+Brasil&t=&z=11&ie=UTF8&iwloc=&output=embed"
+          ></iframe>
+        </div>
+
         {/* Main Content Card */}
-        <div className="bg-white mt-2 rounded-t-3xl shadow-sm border border-neutral-200/60 overflow-hidden min-h-screen">
+        <div className="bg-white -mt-6 rounded-t-3xl shadow-[0_-4px_16px_rgba(0,0,0,0.1)] border-x border-t border-neutral-200/60 overflow-hidden min-h-screen relative z-10">
           
           {/* Mobile Header Info */}
           <div className="p-5 flex gap-4">
@@ -202,6 +214,14 @@ export function GoogleReviews() {
             </div>
           </div>
 
+          {/* Action Buttons (Moved below Header) */}
+          <div className="flex justify-around px-5 pb-5 pt-2 border-b border-neutral-100">
+            <MobileActionButton icon={<Phone />} label="LIGAR" active />
+            <MobileActionButton icon={<MapPin />} label="ROTAS" active />
+            <MobileActionButton icon={<Bookmark />} label="SALVAR" />
+            <MobileActionButton icon={<Globe />} label="SITE" active />
+          </div>
+
           {/* Mobile Tabs */}
           <div className="flex overflow-x-auto border-b border-neutral-200 px-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {['VISÃO GERAL', 'INFORMAÇÕES', 'AVALIAÇÕES', 'FOTOS'].map(tab => (
@@ -222,26 +242,6 @@ export function GoogleReviews() {
           {/* Mobile Content Rendering based on Active Tab */}
           {(activeTab === 'VISÃO GERAL' || activeTab === 'INFORMAÇÕES') && (
             <>
-              {activeTab === 'VISÃO GERAL' && (
-                <div className="flex justify-around p-5 border-b border-neutral-100">
-                  <MobileActionButton icon={<Phone />} label="LIGAR" active />
-                  <MobileActionButton icon={<MapPin />} label="ROTAS" active />
-                  <MobileActionButton icon={<Bookmark />} label="SALVAR" />
-                  <MobileActionButton icon={<Globe />} label="SITE" active />
-                </div>
-              )}
-
-              <div className="w-full h-56 bg-[#e5e3df] border-b border-neutral-100 relative">
-                <iframe 
-                  title="Mapa Interativo Blackcore Mobile"
-                  className="w-full h-full border-0 grayscale-[20%] contrast-125" 
-                  loading="lazy" 
-                  allowFullScreen 
-                  referrerPolicy="no-referrer-when-downgrade" 
-                  src="https://maps.google.com/maps?q=S%C3%A3o+Paulo,+Brasil&t=&z=11&ie=UTF8&iwloc=&output=embed"
-                ></iframe>
-              </div>
-
               {activeTab === 'VISÃO GERAL' && (
                 <div className="flex items-center justify-between p-5 border-b border-neutral-100 cursor-pointer hover:bg-neutral-50 transition-colors">
                   <span className="text-neutral-700 text-sm">Descrição da empresa</span>

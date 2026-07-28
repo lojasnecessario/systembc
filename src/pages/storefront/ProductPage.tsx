@@ -118,8 +118,8 @@ export const ProductPage: React.FC = () => {
 
   const faqs = [
     { question: 'Compra Segura', answer: 'Sua compra é processada em ambiente 100% seguro com criptografia de ponta a ponta.' },
-    { question: 'Como recebo meu produto?', answer: 'Após a confirmação do pagamento, você receberá os dados e atualizações diretamente no seu e-mail e WhatsApp cadastrados.' },
-    { question: 'Prazos de Entrega?', answer: 'O envio é imediato e automático para compras no PIX ou Cartão de Crédito aprovadas.' },
+    { question: 'Como recebo meu produto?', answer: 'Após a confirmação do pagamento, seu pedido será processado e enviado. Você receberá o código de rastreio e todas as atualizações no seu e-mail e WhatsApp.' },
+    { question: 'Prazos de Entrega?', answer: 'Despachamos o seu pedido rapidamente após a aprovação do pagamento via PIX ou Cartão de Crédito.' },
     { question: 'É original e tem garantia?', answer: 'Sim! Garantia de 6 meses contra quedas e suporte especializado disponível 24/7 para te ajudar com qualquer dúvida.' },
   ];
 
@@ -173,7 +173,7 @@ export const ProductPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0d0a] text-[#eef4ea] pt-24 pb-20">
+    <div className="min-h-screen bg-[#0a0d0a] text-[#eef4ea] pt-24 lg:pt-36 pb-20">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         
         {/* Top Content: Grid de 2 colunas */}
@@ -235,7 +235,7 @@ export const ProductPage: React.FC = () => {
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mb-4">
                 <span className="bg-[#33e36a] text-black font-bold text-xs px-3 py-1.5 rounded uppercase shadow-sm">
-                  Envio Imediato
+                  Envio Rápido
                 </span>
                 <span className="border border-neutral-300 bg-neutral-100 text-black font-bold text-xs px-3 py-1.5 rounded uppercase">
                   Garantia de 6 meses
@@ -393,7 +393,7 @@ export const ProductPage: React.FC = () => {
                 </div>
                 <div className="flex flex-col items-center justify-center p-3 bg-neutral-50 border border-neutral-200 rounded-xl gap-1 text-center transition-all duration-300 hover:border-green-400">
                   <Truck className="text-green-600" size={24} />
-                  <span className="text-[10px] sm:text-xs font-bold text-black uppercase tracking-wide leading-tight">Envio<br/>Imediato</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-black uppercase tracking-wide leading-tight">Envio<br/>Rápido</span>
                 </div>
                 <div className="flex flex-col items-center justify-center p-3 bg-neutral-50 border border-neutral-200 rounded-xl gap-1 text-center transition-all duration-300 hover:border-green-400">
                   <Package className="text-green-600" size={24} />
