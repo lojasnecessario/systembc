@@ -5,28 +5,34 @@ import { toCents } from './utils.js';
 import { VEGA_STATUS_MAP } from './constants.js';
 
 export class VegaMapper {
-  static toCheckoutPayload(order: Order, products: Product[], appUrl: string): VegaCheckoutPayload {
+  static toCheckoutPayload(order: Order, products: Product[], appUrl: string): any {
     const vegaProducts = order.items.map(item => {
       const product = products.find(p => p.id === item.product_id);
       return {
         code: item.product_id,
-        title: product ? product.name : `Produto ${item.product_id}`,
-        amount: toCents(item.unit_price),
+        name: product ? product.name : `Produto ${item.product_id}`,
+        price: toCents(item.unit_price),
+        is_digital: false,
         quantity: item.quantity,
         description: product ? product.description : undefined
       };
     });
 
     return {
-      products: vegaProducts,
+      // Como não temos os dados do cliente no momento do clique em "comprar", 
+      // enviamos os dados mínimos possíveis ou omitimos. 
+      // Caso a API exija, teremos que enviar dados vazios.
       payment: {
-        method: "credit_card", // Default, pode ser dinâmico no futuro
+        method: "pix", // O endpoint da doc é "Api de Pix", então enviamos pix
         payment_value: toCents(order.total_amount),
+        freight_value: 0,
+        discount_value: 0,
+        external_code: order.external_code || order.id,
         currency: "BRL"
       },
-      external_code: order.external_code,
+      products: vegaProducts,
       notification_url: `${appUrl}/api/webhooks/vega`,
-      return_url: `${appUrl}/checkout/success`
+      src: "systembc"
     };
   }
 

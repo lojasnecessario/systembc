@@ -30,7 +30,7 @@ export const VegaCheckoutResponseSchema = z.object({
   url: z.string().optional(),
   transaction_token: z.string().optional(),
   payment_status: z.string().optional()
-});
+}).passthrough();
 
 export type VegaCheckoutResponse = z.infer<typeof VegaCheckoutResponseSchema>;
 

@@ -35,7 +35,7 @@ export class VegaAdapter implements CommerceProvider {
       try {
         const response = await createCheckoutRequest(payload, this.apiKey, this.apiUrl);
         
-        const checkoutUrl = response.checkout_url || response.url || response.payment_url || JSON.stringify(response);
+        const checkoutUrl = response.checkout_url || response.order_url || response.url || response.payment_url || JSON.stringify(response);
         
         return {
           checkoutUrl,
