@@ -70,6 +70,7 @@ export class CheckoutService {
       customer_id: customerId,
       total_amount: totalAmount,
       subtotal: totalAmount,
+      payment_method: PaymentMethod.CREDIT_CARD, // Preenchimento padrão para satisfazer o constraint
       status: OrderStatus.PENDING,
       items: orderItems // Depende de como a estrutura do banco armazena. Assumindo jsonb ou inserção separada no repo real
     });

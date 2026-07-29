@@ -27,6 +27,7 @@ export interface Order {
   customer_id?: string;
   total_amount: number;
   subtotal?: number;
+  payment_method?: PaymentMethod;
   status: OrderStatus;
   external_code?: string;
   transaction_token?: string;
