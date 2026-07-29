@@ -69,6 +69,7 @@ export class CheckoutService {
     let order = await this.orderRepo.create({
       customer_id: customerId,
       total_amount: totalAmount,
+      subtotal: totalAmount,
       status: OrderStatus.PENDING,
       items: orderItems // Depende de como a estrutura do banco armazena. Assumindo jsonb ou inserção separada no repo real
     });
