@@ -1,5 +1,5 @@
 import type { CommerceProvider, WebhookResult } from '../../../domain/commerce/CommerceProvider.js';
-import type { Order, Product } from '../../../domain/models/types.js';
+import type { Order, Product, Customer } from '../../../domain/models/types.js';
 import { VegaMapper } from './mapper.js';
 import { createCheckoutRequest } from './createCheckout.js';
 import { verifyWebhookSignature } from './verifyWebhook.js';
@@ -24,8 +24,8 @@ export class VegaAdapter implements CommerceProvider {
     this.apiUrl = process.env.VEGA_API_URL || 'https://checkout.black-core.site/api/checkout';
   }
 
-  async createCheckout(order: Order, products: Product[]): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }> {
-    const payload = VegaMapper.toCheckoutPayload(order, products, this.appUrl);
+  async createCheckout(order: Order, products: Product[], customer: Customer): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }> {
+    const payload = VegaMapper.toCheckoutPayload(order, products, customer, this.appUrl);
     
     // Implementação de retry simples para erros de rede
     let attempt = 0;

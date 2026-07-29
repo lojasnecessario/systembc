@@ -2,7 +2,7 @@ import { CheckoutService } from '../src/application/services/CheckoutService.js'
 import { OrderRepository } from '../src/infrastructure/repositories/OrderRepository.js';
 import { ProductRepository } from '../src/infrastructure/repositories/ProductRepository.js';
 import { PaymentRepository } from '../src/infrastructure/repositories/PaymentRepository.js';
-import { WebhookEventRepository } from '../src/infrastructure/repositories/WebhookEventRepository.js';
+import { CustomerRepository } from '../src/infrastructure/repositories/CustomerRepository.js';
 import { VegaAdapter } from '../src/infrastructure/commerce/vega/VegaAdapter.js';
 
 let checkoutService: CheckoutService;
@@ -17,12 +17,12 @@ export default async function handler(req: any, res: any) {
       const orderRepo = new OrderRepository();
       const productRepo = new ProductRepository();
       const paymentRepo = new PaymentRepository();
-      const webhookEventRepo = new WebhookEventRepository();
+      const customerRepo = new CustomerRepository();
       const vegaAdapter = new VegaAdapter();
-      checkoutService = new CheckoutService(orderRepo, productRepo, paymentRepo, webhookEventRepo, vegaAdapter);
+      checkoutService = new CheckoutService(orderRepo, productRepo, paymentRepo, customerRepo, vegaAdapter);
     }
 
-    const { productId, items, customerId } = req.body;
+    const { productId, items, customer } = req.body;
 
     let cartItems = [];
     if (productId) {
@@ -34,10 +34,14 @@ export default async function handler(req: any, res: any) {
     if (cartItems.length === 0) {
       return res.status(400).json({ error: 'Nenhum produto informado' });
     }
+    
+    if (!customer || !customer.name || !customer.cpf) {
+      return res.status(400).json({ error: 'Dados do cliente incompletos' });
+    }
 
-    const { checkoutUrl } = await checkoutService.processCheckout(cartItems, customerId);
+    const result = await checkoutService.processCheckout(cartItems, customer);
 
-    return res.status(200).json({ checkout_url: checkoutUrl });
+    return res.status(200).json(result);
 
   } catch (error: any) {
     console.error("Erro no checkout:", error);

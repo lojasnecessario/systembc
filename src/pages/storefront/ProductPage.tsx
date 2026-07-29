@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, Star, StarHalf, User, CreditCard } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
 
 export const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -336,55 +337,13 @@ export const ProductPage: React.FC = () => {
                 </button>
               ) : (
                 <button 
-                  onClick={async () => {
-                  try {
-                    const btn = document.getElementById('buy-button');
-                    if (btn) {
-                      btn.innerHTML = '<div class="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin"></div>';
-                      btn.setAttribute('disabled', 'true');
-                    }
-                    
-                    const response = await fetch('/api/checkout', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        productId: product.id,
-                        productName: product.name,
-                        productPrice: product.promotional_price || product.price,
-                        productDescription: product.description
-                      })
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                      const err: any = new Error(data.error || 'Erro desconhecido ao comunicar com a API');
-                      err.details = data.details;
-                      throw err;
-                    }
-
-                    if (data?.checkout_url) {
-                      window.location.href = data.checkout_url;
-                    } else {
-                      alert(`Erro ao gerar link de pagamento. Tente novamente mais tarde. Retorno: ${JSON.stringify(data)}`);
-                    }
-                  } catch (err: any) {
-                    console.error('Erro no checkout:', err);
-                    alert(`${err.message || 'Erro ao se comunicar com o sistema de pagamento.'}${err.details ? '\nDetalhes Vega: ' + JSON.stringify(err.details) : ''}`);
-                  } finally {
-                    const btn = document.getElementById('buy-button');
-                    if (btn) {
-                      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg> Comprar Agora';
-                      btn.removeAttribute('disabled');
-                    }
-                  }
-                }}
-                id="buy-button"
-                className="w-full bg-[#33e36a] hover:bg-[#11a544] disabled:opacity-50 disabled:cursor-not-allowed text-black text-lg md:text-xl font-heading font-bold uppercase tracking-widest py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(51,227,106,0.2)] hover:shadow-[0_0_30px_rgba(51,227,106,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
-              >
-                <ShoppingCart size={24} />
-                Comprar Agora
-              </button>
+                  onClick={() => navigate(`/checkout/${slug}`)}
+                  id="buy-button"
+                  className="w-full bg-[#33e36a] hover:bg-[#11a544] disabled:opacity-50 disabled:cursor-not-allowed text-black text-lg md:text-xl font-heading font-bold uppercase tracking-widest py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(51,227,106,0.2)] hover:shadow-[0_0_30px_rgba(51,227,106,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
+                >
+                  <ShoppingCart size={24} />
+                  Comprar Agora
+                </button>
               )}
 
               {/* Selos de Confiança */}

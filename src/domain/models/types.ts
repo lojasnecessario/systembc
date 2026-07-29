@@ -4,6 +4,15 @@ export interface Customer {
   id: string;
   name: string;
   email: string;
+  cpf?: string;
+  phone?: string;
+  cep?: string;
+  street?: string;
+  number?: string;
+  complement?: string;
+  district?: string;
+  city?: string;
+  state?: string;
 }
 
 export interface Product {
@@ -31,6 +40,10 @@ export interface Order {
   status: OrderStatus;
   external_code?: string;
   transaction_token?: string;
+  pix_copy_paste?: string;
+  qr_code_url?: string;
+  payload_enviado?: any;
+  payload_recebido?: any;
   items: OrderItem[];
   created_at?: string;
   updated_at?: string;

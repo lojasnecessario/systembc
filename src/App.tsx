@@ -9,6 +9,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Storefront Pages (Lazy)
 const Home = lazy(() => import('./pages/storefront/Home').then(m => ({ default: m.Home })));
+const Checkout = lazy(() => import('./pages/storefront/Checkout').then(m => ({ default: m.Checkout })));
 const CategoryPage = lazy(() => import('./pages/storefront/CategoryPage').then(m => ({ default: m.CategoryPage })));
 const ProductPage = lazy(() => import('./pages/storefront/ProductPage').then(m => ({ default: m.ProductPage })));
 const GoogleReviews = lazy(() => import('./pages/storefront/GoogleReviews').then(m => ({ default: m.GoogleReviews })));
@@ -55,6 +56,7 @@ function App() {
             <Route path="categorias" element={<AllCategories />} />
             <Route path="categoria/:slug" element={<CategoryPage />} />
             <Route path="produto/:slug" element={<ProductPage />} />
+            <Route path="checkout/:slug" element={<Checkout />} />
             <Route path="sobre-nos" element={<AboutUs />} />
             <Route path="depoimentos" element={<Testimonials />} />
             <Route path="legal/:slug" element={<LegalPage />} />

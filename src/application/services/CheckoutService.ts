@@ -1,36 +1,36 @@
 import { OrderRepository } from '../../infrastructure/repositories/OrderRepository.js';
 import { ProductRepository } from '../../infrastructure/repositories/ProductRepository.js';
 import { PaymentRepository } from '../../infrastructure/repositories/PaymentRepository.js';
-import { WebhookEventRepository } from '../../infrastructure/repositories/WebhookEventRepository.js';
+import { CustomerRepository } from '../../infrastructure/repositories/CustomerRepository.js';
 import type { CommerceProvider } from '../../domain/commerce/CommerceProvider.js';
 import { OrderStatus, PaymentStatus, PaymentMethod } from '../../domain/models/enums.js';
-import type { Order, OrderItem, Product } from '../../domain/models/types.js';
+import type { Order, OrderItem, Product, Customer } from '../../domain/models/types.js';
 
 export class CheckoutService {
   private orderRepo: OrderRepository;
   private productRepo: ProductRepository;
   private paymentRepo: PaymentRepository;
-  private webhookEventRepo: WebhookEventRepository;
+  private customerRepo: CustomerRepository;
   private commerceProvider: CommerceProvider;
 
   constructor(
     orderRepo: OrderRepository,
     productRepo: ProductRepository,
     paymentRepo: PaymentRepository,
-    webhookEventRepo: WebhookEventRepository,
+    customerRepo: CustomerRepository,
     commerceProvider: CommerceProvider
   ) {
     this.orderRepo = orderRepo;
     this.productRepo = productRepo;
     this.paymentRepo = paymentRepo;
-    this.webhookEventRepo = webhookEventRepo;
+    this.customerRepo = customerRepo;
     this.commerceProvider = commerceProvider;
   }
 
   async processCheckout(
     items: { productId: string; quantity: number }[],
-    customerId?: string
-  ): Promise<{ checkoutUrl: string }> {
+    customerData: any
+  ): Promise<any> {
     if (!items || items.length === 0) {
       throw new Error('Carrinho vazio');
     }
@@ -48,7 +48,6 @@ export class CheckoutService {
       if (!product.is_active) {
         throw new Error(`Produto indisponível: ${product.name}`);
       }
-      // TODO: Validar stock (product.stock >= item.quantity) se aplicável ao negócio atual
 
       const currentPrice = (product.promotional_price !== null && product.promotional_price < product.price)
         ? product.promotional_price
@@ -65,17 +64,48 @@ export class CheckoutService {
       totalAmount += currentPrice * item.quantity;
     }
 
-    // 2. Criação do Pedido Base
+    // 2. Get or Create Customer
+    let customer = await this.customerRepo.getByEmailOrCpf(customerData.email, customerData.cpf);
+    if (!customer) {
+      customer = await this.customerRepo.create({
+        name: customerData.name,
+        email: customerData.email,
+        cpf: customerData.cpf,
+        phone: customerData.phone,
+        cep: customerData.cep,
+        street: customerData.street,
+        number: customerData.number,
+        complement: customerData.complement,
+        district: customerData.district,
+        city: customerData.city,
+        state: customerData.state
+      });
+    } else {
+      // Atualiza os dados de endereço se o cliente já existia
+      await this.customerRepo.update(customer.id, {
+        name: customerData.name,
+        phone: customerData.phone,
+        cep: customerData.cep,
+        street: customerData.street,
+        number: customerData.number,
+        complement: customerData.complement,
+        district: customerData.district,
+        city: customerData.city,
+        state: customerData.state
+      });
+      customer = { ...customer, ...customerData };
+    }
+
+    // 3. Criação do Pedido Base (Pending)
     let order = await this.orderRepo.create({
-      customer_id: customerId,
+      customer_id: customer!.id,
       total_amount: totalAmount,
       subtotal: totalAmount,
-      payment_method: PaymentMethod.CREDIT_CARD, // Preenchimento padrão para satisfazer o constraint
+      payment_method: PaymentMethod.PIX,
       status: OrderStatus.PENDING,
-      items: orderItems // Depende de como a estrutura do banco armazena. Assumindo jsonb ou inserção separada no repo real
+      items: orderItems
     });
 
-    // 3. Gerar external code e atualizar
     const externalCode = `ORDER-${order.id.slice(0, 8).toUpperCase()}`;
     await this.orderRepo.update(order.id, { external_code: externalCode });
     order.external_code = externalCode;
@@ -85,36 +115,48 @@ export class CheckoutService {
       order_id: order.id,
       amount: Math.round(totalAmount * 100), // Converte para centavos pois a coluna exige integer
       status: PaymentStatus.PENDING,
-      payment_method: PaymentMethod.CREDIT_CARD, // Será atualizado via webhook se for diferente
+      payment_method: PaymentMethod.PIX,
       gateway: 'vega'
     });
 
-    // 5. Chamar a Vega (Provider)
-    const { checkoutUrl, transactionToken } = await this.commerceProvider.createCheckout(order, products);
-
-    // 6. Atualizar Pedido e Pagamento com os dados da Vega
-    await this.orderRepo.update(order.id, { transaction_token: transactionToken });
+    // 5. Chamar a Vega (Provider) com o customer montado
+    const vegaResponse = await this.commerceProvider.createCheckout(order, products, customer as Customer);
     
-    if (transactionToken) {
-      await this.paymentRepo.update(payment.id, { transaction_id: transactionToken });
+    // 6. Atualizar Pedido e Pagamento com a resposta da Vega
+    await this.orderRepo.update(order.id, { 
+      transaction_token: vegaResponse.transactionToken,
+      pix_copy_paste: vegaResponse.pix_copy_paste,
+      qr_code_url: vegaResponse.qr_code_url
+    });
+    
+    // Log apenas para depuração do sistema, não salvar payload no banco
+    console.log(`[Vega PIX] Pedido ${externalCode} criado. Resposta:`, JSON.stringify({
+       token: vegaResponse.transactionToken,
+       status: vegaResponse.payment_status
+    }));
+    
+    if (vegaResponse.transactionToken) {
+      await this.paymentRepo.update(payment.id, { transaction_id: vegaResponse.transactionToken });
     }
 
-    return { checkoutUrl };
+    return { 
+      external_code: externalCode,
+      transaction_token: vegaResponse.transactionToken,
+      pix_copy_paste: vegaResponse.pix_copy_paste,
+      qr_code_url: vegaResponse.qr_code_url,
+      payment_status: vegaResponse.payment_status
+    };
   }
 
   async processWebhook(payload: any, signature?: string): Promise<void> {
-    // 1. Registra evento raw para auditoria
-    await this.webhookEventRepo.create({
-      provider: 'vega',
-      payload: payload,
-      status: 'received'
-    });
+    console.log('[Webhook Recebido Vega]', JSON.stringify({ 
+      transaction_token: payload.transaction_token, 
+      status: payload.status 
+    }));
 
     try {
-      // 2. Valida e normaliza pelo Provider
       const result = await this.commerceProvider.handleWebhook(payload, signature);
 
-      // 3. Encontrar pedido relacionado
       let order: Order | null = null;
       if (result.transactionToken) {
         order = await this.orderRepo.findByTransactionToken(result.transactionToken);
@@ -127,25 +169,20 @@ export class CheckoutService {
         throw new Error(`Pedido não encontrado para token/code do webhook`);
       }
 
-      // 4. Encontrar pagamento
       const payment = await this.paymentRepo.findByOrderId(order.id);
       if (!payment) {
         throw new Error(`Pagamento não encontrado para o pedido ${order.id}`);
       }
 
-      // 5. Idempotência: Se o status já for o mesmo, não faz nada (apenas atualiza o evento para processed)
+      // Idempotência
       if (payment.status === result.status) {
-        // Nada a fazer, já processado
         return;
       }
 
-      // 6. Atualiza Status do Pagamento
       await this.paymentRepo.update(payment.id, {
-        status: result.status as PaymentStatus,
-        webhook_payload: result.rawEvent // Ou mesclar com existentes
+        status: result.status as PaymentStatus
       });
 
-      // 7. Atualiza Status do Pedido (mapeamento simples)
       let newOrderStatus = order.status;
       if (result.status === PaymentStatus.APPROVED) {
         newOrderStatus = OrderStatus.PAID;
@@ -158,7 +195,6 @@ export class CheckoutService {
       }
 
     } catch (error: any) {
-      // TODO: No futuro atualizar o status do evento de webhook para 'failed' no banco
       console.error('Erro ao processar webhook no serviço:', error);
       throw error;
     }

@@ -1,10 +1,10 @@
-import type { Order, Product } from '../../../domain/models/types.js';
+import type { Order, Product, Customer } from '../../../domain/models/types.js';
 import { PaymentStatus } from '../../../domain/models/enums.js';
 import { toCents } from './utils.js';
 import { VEGA_STATUS_MAP } from './constants.js';
 
 export class VegaMapper {
-  static toCheckoutPayload(order: Order, products: Product[], appUrl: string): any {
+  static toCheckoutPayload(order: Order, products: Product[], customer: Customer, appUrl: string): any {
     const vegaProducts = order.items.map(item => {
       const product = products.find(p => p.id === item.product_id);
       return {
@@ -18,20 +18,19 @@ export class VegaMapper {
     });
 
     return {
-      // Adicionado mock de customer para satisfazer a API de Pix que exige dados de cliente
       customer: {
-        name: "Cliente Loja",
-        email: "cliente@loja.com",
-        document: "00000000000",
-        phone: "+5511999999999",
+        name: customer.name,
+        email: customer.email,
+        document: customer.cpf || "00000000000",
+        phone: customer.phone || "+5511999999999",
         address: {
-            street: "Rua Exemplo",
-            number: "123",
-            complement: "Apto 1",
-            district: "Centro",
-            city: "São Paulo",
-            state: "SP",
-            zipcode: "01001000"
+            street: customer.street || "Rua Exemplo",
+            number: customer.number || "123",
+            complement: customer.complement || "",
+            district: customer.district || "Centro",
+            city: customer.city || "São Paulo",
+            state: customer.state || "SP",
+            zipcode: customer.cep || "01001000"
         }
       },
       payment: {
