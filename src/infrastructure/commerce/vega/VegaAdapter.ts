@@ -1,10 +1,10 @@
-import type { CommerceProvider, WebhookResult } from '../../../domain/commerce/CommerceProvider';
-import type { Order, Product } from '../../../domain/models/types';
-import { VegaMapper } from './mapper';
-import { createCheckoutRequest } from './createCheckout';
-import { verifyWebhookSignature } from './verifyWebhook';
-import type { VegaWebhookPayload } from './types';
-import { VegaValidationError } from './errors';
+import type { CommerceProvider, WebhookResult } from '../../../domain/commerce/CommerceProvider.js';
+import type { Order, Product } from '../../../domain/models/types.js';
+import { VegaMapper } from './mapper.js';
+import { createCheckoutRequest } from './createCheckout.js';
+import { verifyWebhookSignature } from './verifyWebhook.js';
+import type { VegaWebhookPayload } from './types.js';
+import { VegaValidationError } from './errors.js';
 
 export class VegaAdapter implements CommerceProvider {
   private webhookSecret: string;

@@ -1,5 +1,5 @@
-import type { Product } from '../../domain/models/types';
-import { getSupabaseClient } from '../database/supabaseClient';
+import type { Product } from '../../domain/models/types.js';
+import { getSupabaseClient } from '../database/supabaseClient.js';
 
 export class ProductRepository {
   async getById(id: string): Promise<Product | null> {

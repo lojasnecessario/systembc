@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '../database/supabaseClient';
+import { getSupabaseClient } from '../database/supabaseClient.js';
 
 export interface WebhookEventData {
   provider: string;

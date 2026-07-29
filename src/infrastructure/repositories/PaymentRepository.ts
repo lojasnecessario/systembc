@@ -1,5 +1,5 @@
-import type { Payment } from '../../domain/models/types';
-import { getSupabaseClient } from '../database/supabaseClient';
+import type { Payment } from '../../domain/models/types.js';
+import { getSupabaseClient } from '../database/supabaseClient.js';
 
 export class PaymentRepository {
   async create(payment: Partial<Payment>): Promise<Payment> {

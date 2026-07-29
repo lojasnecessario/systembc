@@ -1,4 +1,4 @@
-import type { Order, Product } from '../models/types';
+import type { Order, Product } from '../models/types.js';
 
 export interface CommerceProvider {
   /**

@@ -1,9 +1,9 @@
-import { CheckoutService } from '../src/application/services/CheckoutService';
-import { OrderRepository } from '../src/infrastructure/repositories/OrderRepository';
-import { ProductRepository } from '../src/infrastructure/repositories/ProductRepository';
-import { PaymentRepository } from '../src/infrastructure/repositories/PaymentRepository';
-import { WebhookEventRepository } from '../src/infrastructure/repositories/WebhookEventRepository';
-import { VegaAdapter } from '../src/infrastructure/commerce/vega/VegaAdapter';
+import { CheckoutService } from '../src/application/services/CheckoutService.js';
+import { OrderRepository } from '../src/infrastructure/repositories/OrderRepository.js';
+import { ProductRepository } from '../src/infrastructure/repositories/ProductRepository.js';
+import { PaymentRepository } from '../src/infrastructure/repositories/PaymentRepository.js';
+import { WebhookEventRepository } from '../src/infrastructure/repositories/WebhookEventRepository.js';
+import { VegaAdapter } from '../src/infrastructure/commerce/vega/VegaAdapter.js';
 
 let checkoutService: CheckoutService;
 

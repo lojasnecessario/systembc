@@ -1,10 +1,10 @@
-import { OrderRepository } from '../../infrastructure/repositories/OrderRepository';
-import { ProductRepository } from '../../infrastructure/repositories/ProductRepository';
-import { PaymentRepository } from '../../infrastructure/repositories/PaymentRepository';
-import { WebhookEventRepository } from '../../infrastructure/repositories/WebhookEventRepository';
-import type { CommerceProvider } from '../../domain/commerce/CommerceProvider';
-import { OrderStatus, PaymentStatus, PaymentMethod } from '../../domain/models/enums';
-import type { Order, OrderItem, Product } from '../../domain/models/types';
+import { OrderRepository } from '../../infrastructure/repositories/OrderRepository.js';
+import { ProductRepository } from '../../infrastructure/repositories/ProductRepository.js';
+import { PaymentRepository } from '../../infrastructure/repositories/PaymentRepository.js';
+import { WebhookEventRepository } from '../../infrastructure/repositories/WebhookEventRepository.js';
+import type { CommerceProvider } from '../../domain/commerce/CommerceProvider.js';
+import { OrderStatus, PaymentStatus, PaymentMethod } from '../../domain/models/enums.js';
+import type { Order, OrderItem, Product } from '../../domain/models/types.js';
 
 export class CheckoutService {
   private orderRepo: OrderRepository;

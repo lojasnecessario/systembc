@@ -1,4 +1,4 @@
-import { OrderStatus, PaymentStatus, PaymentMethod } from './enums';
+import { OrderStatus, PaymentStatus, PaymentMethod } from './enums.js';
 
 export interface Customer {
   id: string;

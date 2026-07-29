@@ -1,5 +1,5 @@
-import type { Order } from '../../domain/models/types';
-import { getSupabaseClient } from '../database/supabaseClient';
+import type { Order } from '../../domain/models/types.js';
+import { getSupabaseClient } from '../database/supabaseClient.js';
 
 export class OrderRepository {
   async create(order: Partial<Order>): Promise<Order> {

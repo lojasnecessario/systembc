@@ -1,8 +1,8 @@
-import type { Order, Product } from '../../../domain/models/types';
-import { PaymentStatus } from '../../../domain/models/enums';
-import type { VegaCheckoutPayload } from './types';
-import { toCents } from './utils';
-import { VEGA_STATUS_MAP } from './constants';
+import type { Order, Product } from '../../../domain/models/types.js';
+import { PaymentStatus } from '../../../domain/models/enums.js';
+import type { VegaCheckoutPayload } from './types.js';
+import { toCents } from './utils.js';
+import { VEGA_STATUS_MAP } from './constants.js';
 
 export class VegaMapper {
   static toCheckoutPayload(order: Order, products: Product[], appUrl: string): VegaCheckoutPayload {
