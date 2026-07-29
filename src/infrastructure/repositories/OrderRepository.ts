@@ -25,7 +25,8 @@ export class OrderRepository {
         order_id: orderRecord.id,
         product_id: item.product_id,
         quantity: item.quantity,
-        unit_price: item.unit_price
+        unit_price: item.unit_price,
+        total_price: item.quantity * item.unit_price
       }));
 
       const { error: itemsError } = await supabase
