@@ -77,7 +77,8 @@ export class CheckoutService {
 
     // 3. Gerar external code e atualizar
     const externalCode = `ORDER-${order.id.slice(0, 8).toUpperCase()}`;
-    order = await this.orderRepo.update(order.id, { external_code: externalCode });
+    await this.orderRepo.update(order.id, { external_code: externalCode });
+    order.external_code = externalCode;
 
     // 4. Criar Payment Record
     let payment = await this.paymentRepo.create({
