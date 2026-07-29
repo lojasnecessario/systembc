@@ -45,6 +45,6 @@ export default async function handler(req: any, res: any) {
     // Tratamento de erros específicos pode ir aqui, mapeando para 400 ou 500
     const statusCode = error.statusCode || (error.name === 'VegaCommunicationError' ? 502 : 500);
     
-    return res.status(statusCode).json({ error: error.message });
+    return res.status(statusCode).json({ error: error.message, details: error.details || error.data || 'Sem detalhes' });
   }
 }

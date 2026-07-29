@@ -18,9 +18,22 @@ export class VegaMapper {
     });
 
     return {
-      // Como não temos os dados do cliente no momento do clique em "comprar", 
-      // enviamos os dados mínimos possíveis ou omitimos. 
-      // Caso a API exija, teremos que enviar dados vazios.
+      // Adicionado mock de customer para satisfazer a API de Pix que exige dados de cliente
+      customer: {
+        name: "Cliente Loja",
+        email: "cliente@loja.com",
+        document: "00000000000",
+        phone: "+5511999999999",
+        address: {
+            street: "Rua Exemplo",
+            number: "123",
+            complement: "Apto 1",
+            district: "Centro",
+            city: "São Paulo",
+            state: "SP",
+            zipcode: "01001000"
+        }
+      },
       payment: {
         method: "pix", // O endpoint da doc é "Api de Pix", então enviamos pix
         payment_value: toCents(order.total_amount),
