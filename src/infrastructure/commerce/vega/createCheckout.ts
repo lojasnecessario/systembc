@@ -20,10 +20,16 @@ export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey
 
     clearTimeout(timeoutId);
 
-    const responseData = await response.json().catch(() => null);
+    const responseText = await response.text().catch(() => '');
+    let responseData = null;
+    try {
+      responseData = responseText ? JSON.parse(responseText) : null;
+    } catch (e) {
+      responseData = responseText;
+    }
 
     if (!response.ok) {
-      throw new VegaCommunicationError(`Erro ao comunicar com Vega: ${response.statusText}`, response.status, responseData);
+      throw new VegaCommunicationError(`Erro ao comunicar com Vega: ${response.status} - ${response.statusText}`, response.status, responseData);
     }
 
     const parsed = VegaCheckoutResponseSchema.safeParse(responseData);
