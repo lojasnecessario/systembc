@@ -45,7 +45,7 @@ export class CheckoutService {
       if (!product) {
         throw new Error(`Produto não encontrado: ${item.productId}`);
       }
-      if (!product.active) {
+      if (!product.is_active) {
         throw new Error(`Produto indisponível: ${product.name}`);
       }
       // TODO: Validar stock (product.stock >= item.quantity) se aplicável ao negócio atual

@@ -13,7 +13,7 @@ export interface Product {
   promotional_price: number | null;
   description: string;
   stock: number;
-  active: boolean;
+  is_active: boolean;
 }
 
 export interface OrderItem {
