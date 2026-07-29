@@ -82,7 +82,7 @@ export class CheckoutService {
     // 4. Criar Payment Record
     let payment = await this.paymentRepo.create({
       order_id: order.id,
-      amount: totalAmount,
+      amount: Math.round(totalAmount * 100), // Converte para centavos pois a coluna exige integer
       status: PaymentStatus.PENDING,
       payment_method: PaymentMethod.CREDIT_CARD, // Será atualizado via webhook se for diferente
       gateway: 'vega'
