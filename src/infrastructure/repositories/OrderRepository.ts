@@ -5,18 +5,39 @@ export class OrderRepository {
   async create(order: Partial<Order>): Promise<Order> {
     const supabase = getSupabaseClient();
     
-    // Supondo que a tabela seja "orders"
-    const { data, error } = await supabase
+    // Extrai os items antes de inserir na tabela orders (que não possui coluna items)
+    const { items, ...orderData } = order;
+
+    // 1. Cria o pedido na tabela orders
+    const { data: orderRecord, error: orderError } = await supabase
       .from('orders')
-      .insert([order])
+      .insert([orderData])
       .select()
       .single();
 
-    if (error) {
-      throw new Error(`Erro ao criar pedido: ${error.message}`);
+    if (orderError) {
+      throw new Error(`Erro ao criar pedido: ${orderError.message}`);
     }
 
-    return data as Order;
+    // 2. Insere os itens na tabela order_items, se existirem
+    if (items && items.length > 0) {
+      const orderItemsToInsert = items.map(item => ({
+        order_id: orderRecord.id,
+        product_id: item.product_id,
+        quantity: item.quantity,
+        unit_price: item.unit_price
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItemsToInsert);
+
+      if (itemsError) {
+        throw new Error(`Erro ao salvar itens do pedido: ${itemsError.message}`);
+      }
+    }
+
+    return { ...orderRecord, items } as Order;
   }
 
   async findByExternalCode(externalCode: string): Promise<Order | null> {
