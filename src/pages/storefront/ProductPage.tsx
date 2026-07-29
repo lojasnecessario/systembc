@@ -358,17 +358,19 @@ export const ProductPage: React.FC = () => {
                     const data = await response.json();
 
                     if (!response.ok) {
-                      throw new Error(data.error || 'Erro desconhecido ao comunicar com a API');
+                      const err: any = new Error(data.error || 'Erro desconhecido ao comunicar com a API');
+                      err.details = data.details;
+                      throw err;
                     }
 
                     if (data?.checkout_url) {
                       window.location.href = data.checkout_url;
                     } else {
-                      alert('Erro ao gerar link de pagamento. Tente novamente mais tarde.');
+                      alert(`Erro ao gerar link de pagamento. Tente novamente mais tarde. Retorno: ${JSON.stringify(data)}`);
                     }
                   } catch (err: any) {
                     console.error('Erro no checkout:', err);
-                    alert(err.message || 'Erro ao se comunicar com o sistema de pagamento.');
+                    alert(`${err.message || 'Erro ao se comunicar com o sistema de pagamento.'}${err.details ? '\nDetalhes Vega: ' + JSON.stringify(err.details) : ''}`);
                   } finally {
                     const btn = document.getElementById('buy-button');
                     if (btn) {
