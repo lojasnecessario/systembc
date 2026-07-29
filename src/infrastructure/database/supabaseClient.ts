@@ -14,7 +14,8 @@ export function getSupabaseClient(): SupabaseClient {
   };
 
   const url = getEnv('VITE_SUPABASE_URL') || getEnv('NEXT_PUBLIC_SUPABASE_URL') || getEnv('SUPABASE_URL');
-  const key = getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') || getEnv('SUPABASE_ANON_KEY');
+  // Usa a Service Role Key para bypass de RLS no backend, senão cai na Anon Key (que sofre bloqueio do RLS)
+  const key = getEnv('SUPABASE_SERVICE_ROLE_KEY') || getEnv('VITE_SUPABASE_ANON_KEY') || getEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') || getEnv('SUPABASE_ANON_KEY');
 
   if (!url || !key) {
     throw new Error('Supabase environment variables are missing');
