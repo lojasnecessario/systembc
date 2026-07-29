@@ -1,8 +1,9 @@
-import { supabase } from '../../lib/supabase.js';
+import { getSupabaseClient } from '../database/supabaseClient.js';
 import type { Customer } from '../../domain/models/types.js';
 
 export class CustomerRepository {
   async getByEmailOrCpf(email: string, cpf: string): Promise<Customer | null> {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('customers')
       .select('*')
@@ -19,6 +20,7 @@ export class CustomerRepository {
   }
 
   async create(customerData: Omit<Customer, 'id'>): Promise<Customer> {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('customers')
       .insert([customerData])
@@ -33,6 +35,7 @@ export class CustomerRepository {
   }
 
   async update(id: string, customerData: Partial<Customer>): Promise<Customer> {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('customers')
       .update(customerData)
