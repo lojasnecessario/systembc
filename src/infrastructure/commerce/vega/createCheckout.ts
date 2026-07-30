@@ -2,7 +2,7 @@ import type { VegaCheckoutPayload, VegaCheckoutResponse } from './types.js';
 import { VegaCheckoutResponseSchema } from './types.js';
 import { VegaCommunicationError } from './errors.js';
 
-export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey: string, apiUrl: string): Promise<VegaCheckoutResponse> {
+export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey: string, apiUrl: string, domain: string): Promise<VegaCheckoutResponse> {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
@@ -12,7 +12,7 @@ export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey
       headers: {
         'Content-Type': 'application/json',
         'api-key': apiKey,
-        'x-domain': 'black-core.site'
+        'x-domain': domain
       },
       body: JSON.stringify(payload),
       signal: controller.signal

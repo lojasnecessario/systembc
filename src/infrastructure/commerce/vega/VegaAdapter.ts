@@ -11,6 +11,7 @@ export class VegaAdapter implements CommerceProvider {
   private apiUrl: string;
   private appUrl: string;
   private apiKey: string;
+  private domain: string;
 
   constructor() {
     this.apiKey = process.env.VEGA_API_KEY || '';
@@ -22,6 +23,7 @@ export class VegaAdapter implements CommerceProvider {
 
     this.appUrl = process.env.APP_URL || 'https://systembc-slpc.vercel.app';
     this.apiUrl = process.env.VEGA_API_URL || 'https://checkout.black-core.site/api/checkout';
+    this.domain = process.env.VEGA_DOMAIN || 'black-core.site';
   }
 
   async createCheckout(order: Order, products: Product[], customer: Customer): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }> {
@@ -33,7 +35,7 @@ export class VegaAdapter implements CommerceProvider {
     
     while (attempt <= maxRetries) {
       try {
-        const response = await createCheckoutRequest(payload, this.apiKey, this.apiUrl);
+        const response = await createCheckoutRequest(payload, this.apiKey, this.apiUrl, this.domain);
         
         const checkoutUrl = response.checkout_url || response.order_url || response.url || response.payment_url || JSON.stringify(response);
         
