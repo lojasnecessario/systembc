@@ -46,9 +46,15 @@ export default async function handler(req: any, res: any) {
   } catch (error: any) {
     console.error("Erro no checkout:", error);
     
-    // Tratamento de erros específicos pode ir aqui, mapeando para 400 ou 500
     const statusCode = error.statusCode || (error.name === 'VegaCommunicationError' ? 502 : 500);
-    
-    return res.status(statusCode).json({ error: error.message, details: error.details || error.data || 'Sem detalhes' });
+
+    let errorMessage = error.message || 'Erro interno ao processar checkout';
+    if (error.details && error.details.message) {
+      errorMessage = `Vega: ${error.details.message}`;
+    } else if (error.statusCode === 422) {
+      errorMessage = 'Vega: 422 - Verifique se os dados e o domínio estão aprovados.';
+    }
+
+    return res.status(statusCode).json({ error: errorMessage, details: error.details || error.data || 'Sem detalhes' });
   }
 }
