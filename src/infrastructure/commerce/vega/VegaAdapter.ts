@@ -23,7 +23,11 @@ export class VegaAdapter implements CommerceProvider {
 
     this.appUrl = process.env.APP_URL || 'https://systembc-slpc.vercel.app';
     this.apiUrl = process.env.VEGA_API_URL || 'https://checkout.black-core.site/api/checkout';
-    this.domain = process.env.VEGA_DOMAIN || 'black-core.site';
+    
+    // Pega o domínio e remove http(s):// e barras no final para garantir compatibilidade
+    let rawDomain = process.env.VEGA_DOMAIN || 'black-core.site';
+    rawDomain = rawDomain.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    this.domain = rawDomain;
   }
 
   async createCheckout(order: Order, products: Product[], customer: Customer): Promise<{ checkoutUrl: string; transactionToken?: string; externalCode?: string }> {
