@@ -68,18 +68,21 @@ export class VegaAdapter implements CommerceProvider {
     // 1. Valida integridade do Webhook
     verifyWebhookSignature(payload, signature, this.webhookSecret);
 
-    const vegaPayload = payload as VegaWebhookPayload;
+    const vegaPayload = payload as any;
+    const token = vegaPayload.transaction_token || vegaPayload.tansaction_token;
+    const externalCode = vegaPayload.external_code;
+    const rawStatus = vegaPayload.payment_status || vegaPayload.status;
 
-    if (!vegaPayload.transaction_token && !vegaPayload.external_code) {
+    if (!token && !externalCode) {
       throw new VegaValidationError('Payload inválido: faltando transaction_token ou external_code');
     }
 
     // 2. Mapeia para formato interno
-    const internalStatus = VegaMapper.toInternalStatus(vegaPayload.status);
+    const internalStatus = VegaMapper.toInternalStatus(rawStatus || '');
 
     return {
-      transactionToken: vegaPayload.transaction_token,
-      externalCode: vegaPayload.external_code,
+      transactionToken: token,
+      externalCode: externalCode,
       status: internalStatus,
       rawEvent: vegaPayload
     };
