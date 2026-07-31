@@ -130,7 +130,7 @@ export class CheckoutService {
     });
     
     // Log apenas para depuração do sistema, não salvar payload no banco
-    console.log(`[Vega PIX] Pedido ${externalCode} criado. Resposta:`, JSON.stringify(vegaResponse.paymentData, null, 2));
+    console.log(`[Vega PIX] Pedido ${externalCode} criado. Resposta:`, JSON.stringify(vegaResponse.rawResponse, null, 2));
     
     if (vegaResponse.transactionToken) {
       await this.paymentRepo.update(payment.id, { transaction_id: vegaResponse.transactionToken });
