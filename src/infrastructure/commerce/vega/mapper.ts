@@ -13,7 +13,7 @@ export class VegaMapper {
         price: toCents(item.unit_price),
         is_digital: false,
         quantity: item.quantity,
-        description: product ? product.description : undefined
+        description: product && product.description ? product.description.substring(0, 190) : undefined
       };
     });
 
