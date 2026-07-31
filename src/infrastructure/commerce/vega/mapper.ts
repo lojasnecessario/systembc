@@ -12,8 +12,7 @@ export class VegaMapper {
         name: product ? product.name : `Produto ${item.product_id}`,
         price: toCents(item.unit_price),
         is_digital: false,
-        quantity: item.quantity,
-        description: product && product.description ? product.description.substring(0, 190) : undefined
+        quantity: item.quantity
       };
     });
 
