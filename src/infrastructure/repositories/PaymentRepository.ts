@@ -31,17 +31,15 @@ export class PaymentRepository {
 
   async update(id: string, updateData: Partial<Payment>): Promise<Payment> {
     const supabase = getSupabaseClient();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('payments')
       .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
+      .eq('id', id);
 
     if (error) {
       throw new Error(`Erro ao atualizar pagamento: ${error.message}`);
     }
     
-    return data as Payment;
+    return { id, ...updateData } as Payment;
   }
 }

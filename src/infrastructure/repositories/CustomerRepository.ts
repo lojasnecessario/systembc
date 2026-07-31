@@ -36,17 +36,15 @@ export class CustomerRepository {
 
   async update(id: string, customerData: Partial<Customer>): Promise<Customer> {
     const supabase = getSupabaseClient();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('customers')
       .update(customerData)
-      .eq('id', id)
-      .select()
-      .single();
+      .eq('id', id);
 
     if (error) {
       console.error('Customer update error:', error);
       throw error;
     }
-    return data as Customer;
+    return { id, ...customerData } as Customer;
   }
 }

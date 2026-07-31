@@ -67,17 +67,15 @@ export class OrderRepository {
 
   async update(id: string, updateData: Partial<Order>): Promise<Order> {
     const supabase = getSupabaseClient();
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('orders')
       .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
+      .eq('id', id);
 
     if (error) {
       throw new Error(`Erro ao atualizar pedido: ${error.message}`);
     }
     
-    return data as Order;
+    return { id, ...updateData } as Order;
   }
 }
