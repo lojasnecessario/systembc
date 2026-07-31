@@ -3,7 +3,7 @@ import type { Order, Product, Customer } from '../../../domain/models/types.js';
 import { VegaMapper } from './mapper.js';
 import { createCheckoutRequest } from './createCheckout.js';
 import { verifyWebhookSignature } from './verifyWebhook.js';
-import type { VegaWebhookPayload } from './types.js';
+
 import { VegaValidationError } from './errors.js';
 
 export class VegaAdapter implements CommerceProvider {
