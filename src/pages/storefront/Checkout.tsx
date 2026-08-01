@@ -427,9 +427,6 @@ export const Checkout: React.FC = () => {
                           <span className="text-gray-500 text-sm">Aprovação imediata</span>
                         </div>
                       </div>
-                      <div className="text-sm text-[#3483fa] font-medium hidden sm:block">
-                        {selectedPayment === 'pix' ? 'Desmarcar ⌃' : 'Selecionar 〉'}
-                      </div>
                     </div>
                   </div>
                 </div>
