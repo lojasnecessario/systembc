@@ -31,14 +31,13 @@ export const AdminLayout: React.FC = () => {
     { to: '/admin/orders', icon: <ShoppingBag size={20} />, label: 'Pedidos' },
     { to: '/admin/products', icon: <Package size={20} />, label: 'Produtos' },
     { to: '/admin/categories', icon: <Tags size={20} />, label: 'Categorias' },
-    { to: '/admin/brands', icon: <Tags size={20} />, label: 'Marcas' },
     { to: '/admin/grids', icon: <Package size={20} />, label: 'Vitrines (Grids)' },
-    { to: '/admin/banners', icon: <ImageIcon size={20} />, label: 'Banners' },
     { to: '/admin/destaques', icon: <ImageIcon size={20} />, label: 'Destaques' },
     { to: '/admin/customers', icon: <Users size={20} />, label: 'Clientes' },
     { to: '/admin/reviews', icon: <Star size={20} />, label: 'Avaliações' },
     { to: '/admin/logs', icon: <Activity size={20} />, label: 'Logs de Atividade' },
     { to: '/admin/settings', icon: <Settings size={20} />, label: 'Configurações' },
+    { to: '/admin/checkout-settings', icon: <Settings size={20} />, label: 'Config. do Checkout' },
   ];
 
   return (

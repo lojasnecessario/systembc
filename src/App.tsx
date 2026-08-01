@@ -29,6 +29,7 @@ const ProductGrids = lazy(() => import('./pages/admin/ProductGrids').then(m => (
 const Banners = lazy(() => import('./pages/admin/Banners').then(m => ({ default: m.Banners })));
 const HighlightsAdmin = lazy(() => import('./pages/admin/HighlightsAdmin').then(m => ({ default: m.HighlightsAdmin })));
 const Settings = lazy(() => import('./pages/admin/Settings').then(m => ({ default: m.Settings })));
+const CheckoutSettings = lazy(() => import('./pages/admin/CheckoutSettings').then(m => ({ default: m.CheckoutSettings })));
 const Customers = lazy(() => import('./pages/admin/Customers').then(m => ({ default: m.Customers })));
 const Orders = lazy(() => import('./pages/admin/Orders').then(m => ({ default: m.Orders })));
 const Reviews = lazy(() => import('./pages/admin/Reviews').then(m => ({ default: m.Reviews })));
@@ -56,11 +57,13 @@ function App() {
             <Route path="categorias" element={<AllCategories />} />
             <Route path="categoria/:slug" element={<CategoryPage />} />
             <Route path="produto/:slug" element={<ProductPage />} />
-            <Route path="checkout/:slug" element={<Checkout />} />
             <Route path="sobre-nos" element={<AboutUs />} />
             <Route path="depoimentos" element={<Testimonials />} />
             <Route path="legal/:slug" element={<LegalPage />} />
           </Route>
+
+          {/* Checkout sem Header/Footer */}
+          <Route path="/checkout/:slug" element={<Checkout />} />
 
           <Route path="/google" element={<GoogleReviews />} />
 
@@ -82,6 +85,7 @@ function App() {
               <Route path="reviews" element={<Reviews />} />
               <Route path="logs" element={<Logs />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="checkout-settings" element={<CheckoutSettings />} />
             </Route>
           </Route>
 
