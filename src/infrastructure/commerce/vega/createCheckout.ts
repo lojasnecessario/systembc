@@ -5,7 +5,7 @@ import { VegaCommunicationError } from './errors.js';
 export async function createCheckoutRequest(payload: VegaCheckoutPayload, apiKey: string, apiUrl: string, domain: string): Promise<VegaCheckoutResponse> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
 
     const response = await fetch(apiUrl, {
       method: 'POST',
