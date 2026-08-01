@@ -482,7 +482,10 @@ export const Checkout: React.FC = () => {
                     className="w-full bg-[#3483fa] hover:bg-[#2968c8] disabled:opacity-50 text-white font-medium py-4 rounded-md transition-colors flex items-center justify-center gap-2 shadow-sm"
                   >
                     {isSubmitting ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Gerando PIX seguro...
+                      </>
                     ) : (
                       <>
                         <Lock size={16} />
