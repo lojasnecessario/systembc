@@ -122,11 +122,17 @@ export class CheckoutService {
     // 5. Chamar a Vega (Provider) com o customer montado
     const vegaResponse = await this.commerceProvider.createCheckout(order, products, customer as Customer);
     
+    const pixCopyPaste = vegaResponse.pix_copy_paste;
+    let qrCodeUrl = vegaResponse.qr_code_url;
+    if (!qrCodeUrl && pixCopyPaste) {
+      qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixCopyPaste)}`;
+    }
+
     // 6. Atualizar Pedido e Pagamento com a resposta da Vega
     await this.orderRepo.update(order.id, { 
       transaction_token: vegaResponse.transactionToken,
-      pix_copy_paste: vegaResponse.pix_copy_paste,
-      qr_code_url: vegaResponse.qr_code_url
+      pix_copy_paste: pixCopyPaste,
+      qr_code_url: qrCodeUrl
     });
     
     // Log apenas para depuração do sistema, não salvar payload no banco
@@ -139,8 +145,8 @@ export class CheckoutService {
     return { 
       external_code: externalCode,
       transaction_token: vegaResponse.transactionToken,
-      pix_copy_paste: vegaResponse.pix_copy_paste,
-      qr_code_url: vegaResponse.qr_code_url,
+      pix_copy_paste: pixCopyPaste,
+      qr_code_url: qrCodeUrl,
       payment_status: vegaResponse.payment_status
     };
   }

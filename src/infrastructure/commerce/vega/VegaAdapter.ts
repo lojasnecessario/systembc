@@ -47,9 +47,9 @@ export class VegaAdapter implements CommerceProvider {
         
         return {
           checkoutUrl,
-          transactionToken: response.transaction_token,
+          transactionToken: response.transaction_token || (resAny.data && resAny.data.transaction_token),
           externalCode: payload.external_code,
-          paymentStatus: response.payment_status,
+          paymentStatus: response.payment_status || (resAny.data && resAny.data.payment_status),
           rawResponse: response,
           pix_copy_paste: resAny.pix_copy_paste || (resAny.data && resAny.data.pix_copy_paste),
           qr_code_url: resAny.qr_code_url || (resAny.data && resAny.data.qr_code_url)
