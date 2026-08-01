@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { supabase } from '../../lib/supabase';
-import { CreditCard, CheckCircle, Copy, QrCode, AlertCircle, Lock, ShieldCheck, Home as HomeIcon, Barcode, Star, BadgeCheck } from 'lucide-react';
+import { CheckCircle, Copy, QrCode, AlertCircle, Lock, ShieldCheck, Star, BadgeCheck } from 'lucide-react';
 
 const checkoutSchema = z.object({
   name: z.string().min(3, 'Nome completo é obrigatório'),
