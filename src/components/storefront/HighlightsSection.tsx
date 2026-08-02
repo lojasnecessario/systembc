@@ -143,8 +143,20 @@ export const HighlightsSection: React.FC = () => {
             );
 
             if (card.link) {
+              const isAbsolute = card.link.startsWith('http://') || card.link.startsWith('https://');
+              if (isAbsolute) {
+                return (
+                  <a key={index} href={card.link} className="block w-full md:w-auto">
+                    {content}
+                  </a>
+                );
+              }
+              
+              // Se for um link relativo (interno), mas não começa com barra, adiciona
+              const internalLink = card.link.startsWith('/') ? card.link : `/${card.link}`;
+              
               return (
-                <Link key={index} to={card.link} className="block w-full md:w-auto">
+                <Link key={index} to={internalLink} className="block w-full md:w-auto">
                   {content}
                 </Link>
               );
