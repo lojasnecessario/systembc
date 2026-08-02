@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, Star, StarHalf, User, CreditCard, ImageIcon } from 'lucide-react';
+import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, Star, StarHalf, User, CreditCard } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
 import { uploadImage } from '../../utils/upload';
 

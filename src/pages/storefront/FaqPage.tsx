@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, HelpCircle, Truck, RefreshCw, ShieldCheck } from 'lucide-react';
+import { ChevronDown, HelpCircle, Truck, ShieldCheck } from 'lucide-react';
 
 export const FaqPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'geral' | 'frete' | 'garantia'>('geral');
