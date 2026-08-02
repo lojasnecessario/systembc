@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, Star, StarHalf, User, CreditCard } from 'lucide-react';
+import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, Star, StarHalf, User, CreditCard, ImageIcon } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
+import { uploadImage } from '../../utils/upload';
 
 export const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -13,10 +14,12 @@ export const ProductPage: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedVariables, setSelectedVariables] = useState<Record<string, string>>({});
 
   // Avaliações
   const [reviews, setReviews] = useState<any[]>([]);
   const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, comment: '' });
+  const [reviewImageFile, setReviewImageFile] = useState<File | null>(null);
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
   const [reviewMessage, setReviewMessage] = useState('');
 
@@ -28,6 +31,7 @@ export const ProductPage: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setSelectedImage(null);
     const fetchProduct = async () => {
       try {
         setLoading(true);
@@ -155,16 +159,22 @@ export const ProductPage: React.FC = () => {
     }
     try {
       setIsSubmittingReview(true);
+      let uploadedImageUrl = null;
+      if (reviewImageFile) {
+        uploadedImageUrl = await uploadImage(reviewImageFile);
+      }
       const { error } = await supabase.from('product_reviews').insert([{
         product_id: product.id,
         reviewer_name: reviewForm.name,
         rating: reviewForm.rating,
         comment: reviewForm.comment,
+        image_url: uploadedImageUrl,
         is_approved: false // Por padrão, vai para aprovação do admin
       }]);
       if (error) throw error;
       setReviewMessage('Avaliação enviada com sucesso! Ela aparecerá após ser aprovada.');
       setReviewForm({ name: '', rating: 5, comment: '' });
+      setReviewImageFile(null);
     } catch (error) {
       console.error('Erro ao enviar avaliação:', error);
       setReviewMessage('Erro ao enviar avaliação. Tente novamente.');
@@ -326,6 +336,32 @@ export const ProductPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Variações de Produto */}
+              {product.variables && product.variables.length > 0 && (
+                <div className="mb-6 space-y-4">
+                  {product.variables.map((v: any, vIdx: number) => (
+                    <div key={vIdx}>
+                      <h4 className="text-sm font-bold text-black mb-2 uppercase">{v.name}</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {v.options.map((opt: string, optIdx: number) => (
+                          <button
+                            key={optIdx}
+                            onClick={() => setSelectedVariables({ ...selectedVariables, [v.name]: opt })}
+                            className={`px-4 py-2 border text-sm font-bold rounded-lg transition-all ${
+                              selectedVariables[v.name] === opt
+                                ? 'bg-black text-[#33e36a] border-black'
+                                : 'bg-white text-black border-neutral-300 hover:border-black'
+                            }`}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {/* Botão de Comprar Dinâmico ou Esgotado */}
               {product.stock <= 0 ? (
                 <button 
@@ -337,7 +373,17 @@ export const ProductPage: React.FC = () => {
                 </button>
               ) : (
                 <button 
-                  onClick={() => navigate(`/checkout/${slug}`)}
+                  onClick={() => {
+                    if (product.variables && product.variables.length > 0) {
+                      const missingVars = product.variables.filter((v: any) => !selectedVariables[v.name]);
+                      if (missingVars.length > 0) {
+                        alert(`Por favor, selecione: ${missingVars.map((v: any) => v.name).join(', ')}`);
+                        return;
+                      }
+                    }
+                    const query = new URLSearchParams(selectedVariables).toString();
+                    navigate(`/checkout/${slug}${query ? `?${query}` : ''}`);
+                  }}
                   id="buy-button"
                   className="w-full bg-[#33e36a] hover:bg-[#11a544] disabled:opacity-50 disabled:cursor-not-allowed text-black text-lg md:text-xl font-heading font-bold uppercase tracking-widest py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(51,227,106,0.2)] hover:shadow-[0_0_30px_rgba(51,227,106,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
                 >
@@ -521,6 +567,18 @@ export const ProductPage: React.FC = () => {
                         rows={3}
                         placeholder="O que você achou do produto?"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-[#8b977f] text-sm mb-1">Adicionar Foto (opcional)</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) setReviewImageFile(e.target.files[0]);
+                        }}
+                        className="w-full text-xs text-[#8b977f] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#1b241a] file:text-[#eef4ea] hover:file:bg-[#33e36a] hover:file:text-black cursor-pointer transition-colors"
+                      />
+                      {reviewImageFile && <p className="text-xs text-[#33e36a] mt-2">Imagem selecionada: {reviewImageFile.name}</p>}
                     </div>
                     <button
                       type="submit"

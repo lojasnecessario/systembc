@@ -37,8 +37,8 @@ export const Footer: React.FC = () => {
             <h4 className="text-white font-semibold mb-6">Navegação</h4>
             <ul className="space-y-4">
               <li><Link to="/" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Início</Link></li>
-              <li><a href="#categorias" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Categorias</a></li>
-              <li><a href="#produtos" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Produtos</a></li>
+              <li><Link to="/categorias" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Categorias</Link></li>
+              <li><Link to="/categorias" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Produtos</Link></li>
               <li><Link to="/depoimentos" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Avaliações</Link></li>
               <li><Link to="/sobre-nos" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Sobre Nós</Link></li>
             </ul>
@@ -49,8 +49,8 @@ export const Footer: React.FC = () => {
             <ul className="space-y-4">
               <li><Link to="/legal/politica-de-troca-e-devolucao" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Trocas e Devoluções</Link></li>
               <li><Link to="/legal/politica-de-reembolso" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Política de Reembolso</Link></li>
-              <li><a href="#faq" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">FAQ / Frete</a></li>
-              <li><a href="#contato" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Contato</a></li>
+              <li><Link to="/faq" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">FAQ / Frete</Link></li>
+              <li><Link to="/contato" className="text-neutral-400 hover:text-green-400 text-sm transition-colors">Contato</Link></li>
             </ul>
           </div>
 

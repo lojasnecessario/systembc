@@ -2,7 +2,7 @@ import { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 
-// Layouts e Auth
+import { ScrollToTop } from './components/ScrollToTop';
 import { AdminLayout } from './layouts/AdminLayout';
 import { StoreLayout } from './layouts/StoreLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -17,6 +17,8 @@ const Testimonials = lazy(() => import('./pages/storefront/Testimonials').then(m
 const LegalPage = lazy(() => import('./pages/storefront/LegalPage').then(m => ({ default: m.LegalPage })));
 const AllCategories = lazy(() => import('./pages/storefront/AllCategories').then(m => ({ default: m.AllCategories })));
 const AboutUs = lazy(() => import('./pages/storefront/AboutUs').then(m => ({ default: m.AboutUs })));
+const FaqPage = lazy(() => import('./pages/storefront/FaqPage').then(m => ({ default: m.FaqPage })));
+const ContactPage = lazy(() => import('./pages/storefront/ContactPage').then(m => ({ default: m.ContactPage })));
 
 // Admin Pages (Lazy)
 const Login = lazy(() => import('./pages/admin/Login').then(m => ({ default: m.Login })));
@@ -49,6 +51,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Suspense fallback={<SuspenseFallback />}>
         <Routes>
           {/* Loja Virtual */}
@@ -60,6 +63,8 @@ function App() {
             <Route path="sobre-nos" element={<AboutUs />} />
             <Route path="depoimentos" element={<Testimonials />} />
             <Route path="legal/:slug" element={<LegalPage />} />
+            <Route path="faq" element={<FaqPage />} />
+            <Route path="contato" element={<ContactPage />} />
           </Route>
 
           {/* Checkout sem Header/Footer */}

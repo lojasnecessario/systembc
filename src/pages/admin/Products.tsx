@@ -21,6 +21,7 @@ interface Product {
   is_featured: boolean;
   is_new: boolean;
   is_active: boolean;
+  variables?: { name: string; options: string[] }[];
 
   categories?: { name: string };
   brands?: { name: string };
@@ -46,7 +47,7 @@ export const Products: React.FC = () => {
     price: 0,
     stock: 0,
     images: [],
-
+    variables: [],
   });
   
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
@@ -350,7 +351,7 @@ export const Products: React.FC = () => {
         is_featured: product.is_featured,
         is_new: product.is_new,
         is_active: product.is_active,
-
+        variables: product.variables || [],
       });
     } else {
       setEditingId(null);
@@ -370,7 +371,7 @@ export const Products: React.FC = () => {
         is_featured: false,
         is_new: false,
         is_active: true,
-
+        variables: [],
       });
     }
     setMainImageFile(null);
@@ -419,7 +420,7 @@ export const Products: React.FC = () => {
         is_featured: formData.is_featured,
         is_new: formData.is_new,
         is_active: formData.is_active,
-
+        variables: formData.variables || [],
       };
 
       let savedProduct;
@@ -975,6 +976,71 @@ export const Products: React.FC = () => {
                         <p className="text-xs text-blue-600 mt-2">{galleryFiles.length} nova(s) imagem(ns) selecionada(s) para upload.</p>
                       )}
                     </div>
+                  </div>
+
+                  {/* Variáveis (Opções) */}
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-sm font-medium text-slate-700">Variáveis (Opções)</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newVars = [...(formData.variables || []), { name: '', options: [] }];
+                          setFormData({ ...formData, variables: newVars });
+                        }}
+                        className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 font-semibold transition-colors"
+                      >
+                        + Adicionar Variável
+                      </button>
+                    </div>
+                    
+                    {formData.variables?.map((v, vIdx) => (
+                      <div key={vIdx} className="p-3 border border-slate-300 rounded-lg bg-white relative group">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newVars = [...formData.variables!];
+                            newVars.splice(vIdx, 1);
+                            setFormData({ ...formData, variables: newVars });
+                          }}
+                          className="absolute top-2 right-2 text-slate-400 hover:text-red-500 transition-colors"
+                        >
+                          <X size={16} />
+                        </button>
+                        
+                        <div className="mb-3 pr-6">
+                          <label className="block text-xs font-medium text-slate-700 mb-1">Nome (ex: Tamanho)</label>
+                          <input
+                            type="text"
+                            value={v.name}
+                            onChange={(e) => {
+                              const newVars = [...formData.variables!];
+                              newVars[vIdx].name = e.target.value;
+                              setFormData({ ...formData, variables: newVars });
+                            }}
+                            className="w-full px-3 py-1.5 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-slate-900"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-xs font-medium text-slate-700 mb-1">Opções (separadas por vírgula)</label>
+                          <input
+                            type="text"
+                            value={v.options.join(', ')}
+                            onChange={(e) => {
+                              const newVars = [...formData.variables!];
+                              newVars[vIdx].options = e.target.value.split(',').map(s => s.trim()).filter(s => s);
+                              setFormData({ ...formData, variables: newVars });
+                            }}
+                            placeholder="P, M, G"
+                            className="w-full px-3 py-1.5 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm text-slate-900"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    {(!formData.variables || formData.variables.length === 0) && (
+                      <p className="text-xs text-slate-500 text-center py-2">Sem variáveis configuradas.</p>
+                    )}
                   </div>
 
                 </div>

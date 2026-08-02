@@ -114,7 +114,7 @@ export function GoogleReviews() {
             )}
           </InfoItem>
           <InfoItem icon={<Globe />} text="black-core.site" />
-          <InfoItem icon={<Phone />} text="(11) 99999-9999" />
+          <InfoItem icon={<Phone />} text="18 99137-5030" />
         </div>
 
         {/* Reviews Section */}
@@ -269,7 +269,7 @@ export function GoogleReviews() {
                   )}
                 </InfoItem>
                 <InfoItem icon={<Globe />} text="black-core.site" />
-                {activeTab === 'INFORMAÇÕES' && <InfoItem icon={<Phone />} text="(11) 99999-9999" />}
+                {activeTab === 'INFORMAÇÕES' && <InfoItem icon={<Phone />} text="18 99137-5030" />}
               </div>
             </>
           )}
