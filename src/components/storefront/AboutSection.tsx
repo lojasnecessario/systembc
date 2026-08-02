@@ -24,7 +24,7 @@ export const AboutSection: React.FC = () => {
 
             <div>
               <Link 
-                to="/#produtos"
+                to="/categorias"
                 className="inline-block bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] px-8 py-4 rounded-xl font-bold uppercase tracking-wide transition-colors"
               >
                 Confira as ofertas do dia
