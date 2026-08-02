@@ -24,10 +24,10 @@ export const ProductPage: React.FC = () => {
   const [reviewMessage, setReviewMessage] = useState('');
 
   useEffect(() => {
-    if (product?.main_image && !selectedImage) {
+    if (product?.main_image) {
       setSelectedImage(product.main_image);
     }
-  }, [product, selectedImage]);
+  }, [product]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
