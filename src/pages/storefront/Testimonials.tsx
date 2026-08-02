@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Star, CheckCircle, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Testimonial {
@@ -185,6 +185,7 @@ const testimonials: Testimonial[] = [
 ];
 
 export const Testimonials: React.FC = () => {
+  const navigate = useNavigate();
   const photoScrollRef = useRef<HTMLDivElement>(null);
 
   const scrollPhotos = (direction: 'left' | 'right') => {
@@ -347,7 +348,10 @@ export const Testimonials: React.FC = () => {
           <p className="text-neutral-400 mb-8 max-w-xl mx-auto relative z-10">
             Garanta seus produtos com a qualidade e segurança que só a Black Core oferece. Sua próxima grande experiência começa aqui.
           </p>
-          <button className="bg-green-500 hover:bg-green-400 text-black font-black uppercase tracking-wider text-sm px-8 py-4 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.6)] relative z-10">
+          <button 
+            onClick={() => navigate('/categorias')}
+            className="bg-green-500 hover:bg-green-400 text-black font-black uppercase tracking-wider text-sm px-8 py-4 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:shadow-[0_0_30px_rgba(34,197,94,0.6)] relative z-10"
+          >
             Ver Produtos
           </button>
         </div>

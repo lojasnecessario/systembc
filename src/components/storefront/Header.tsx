@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Search, X } from 'lucide-react';
+import { useSettingsStore } from '../../store/settingsStore';
 
 export const Header: React.FC = () => {
+  const { settings } = useSettingsStore();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -32,12 +35,15 @@ export const Header: React.FC = () => {
 
           {/* Logo (Centered on mobile, Left on desktop) */}
           <Link to="/" className="flex items-center lg:mr-8 group relative z-50">
-            {/* Logo placeholder imitating xgamestore logo */}
-            <div className="flex items-center">
-              <span className="text-xl md:text-2xl font-heading font-black tracking-tighter text-[#33e36a] italic">
-                BLACK<span className="text-[#eef4ea]">CORE</span>
-              </span>
-            </div>
+            {settings?.logo ? (
+              <img src={settings.logo} alt={settings?.name || "Logo"} className="h-8 md:h-10 object-contain" />
+            ) : (
+              <div className="flex items-center">
+                <span className="text-xl md:text-2xl font-heading font-black tracking-tighter text-[#33e36a] italic uppercase">
+                  BLACK<span className="text-[#eef4ea]">CORE</span>
+                </span>
+              </div>
+            )}
           </Link>
 
           {/* Desktop Search Bar */}

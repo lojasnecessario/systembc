@@ -17,6 +17,7 @@ interface StoreSettings {
   address: string;
   business_hours: string;
   footer_text: string;
+  cnpj?: string;
 }
 
 export const Settings: React.FC = () => {
@@ -267,6 +268,17 @@ export const Settings: React.FC = () => {
                   value={formData.business_hours || ''}
                   onChange={handleChange}
                   placeholder="Ex: Seg a Sex, 09h as 18h"
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="col-span-1 md:col-span-2">
+                <label className="block text-sm font-medium text-slate-700 mb-1">CNPJ</label>
+                <input
+                  type="text"
+                  name="cnpj"
+                  value={formData.cnpj || ''}
+                  onChange={handleChange}
+                  placeholder="Ex: 00.000.000/0000-00"
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

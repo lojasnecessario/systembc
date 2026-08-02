@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Shield, Award, Users, MapPin, Zap, CheckCircle2, Gamepad2, Laptop, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSettingsStore } from '../../store/settingsStore';
 
 export const AboutUs: React.FC = () => {
+  const { settings } = useSettingsStore();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -148,14 +150,16 @@ export const AboutUs: React.FC = () => {
                 >
                   Explorar Produtos
                 </Link>
-                <a 
-                  href="https://wa.me/5511999999999" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex justify-center items-center px-8 py-4 bg-transparent border-2 border-[#2c3b2a] text-white font-bold uppercase tracking-wide rounded-xl hover:border-[#33e36a] hover:text-[#33e36a] transition-colors"
-                >
-                  Fale com a Equipe
-                </a>
+                {settings?.whatsapp && (
+                  <a 
+                    href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex justify-center items-center px-8 py-4 bg-transparent border-2 border-[#2c3b2a] text-white font-bold uppercase tracking-wide rounded-xl hover:border-[#33e36a] hover:text-[#33e36a] transition-colors"
+                  >
+                    Fale com a Equipe
+                  </a>
+                )}
               </div>
             </div>
             
