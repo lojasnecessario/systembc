@@ -30,7 +30,6 @@ export const ProductPage: React.FC = () => {
   }, [product]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     setSelectedImage(null);
     const fetchProduct = async () => {
       try {
