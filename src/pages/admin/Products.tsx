@@ -148,8 +148,20 @@ export const Products: React.FC = () => {
           const categoryMap = new Map(categories.map(c => [c.name.toLowerCase(), c.id]));
           const missingCategories = new Map<string, string>(); // name -> slug
 
+          const parseNumber = (val: any) => {
+            if (!val) return null;
+            if (typeof val === 'number') return val;
+            if (typeof val === 'string') {
+              const cleaned = val.replace(',', '.').replace(/[^0-9.-]+/g, '');
+              const num = parseFloat(cleaned);
+              return isNaN(num) ? null : num;
+            }
+            return null;
+          };
+
           for (const row of rows) {
-            const rowSku = row.sku || row.handle;
+            const key = String(row.handle || row.name || '').trim();
+            if (!key) continue;
             
             // Verifica categorias
             if (row.category) {
@@ -167,11 +179,8 @@ export const Products: React.FC = () => {
               }
             }
 
-            if (!rowSku) continue;
-
-            const key = String(rowSku).trim();
             if (!groupedProducts.has(key)) {
-              groupedProducts.set(key, { ...row, all_images: [], parsed_variables: [] });
+              groupedProducts.set(key, { ...row, all_images: [], parsed_variables: [], parsed_variants: [] });
             }
             
             const group = groupedProducts.get(key);
@@ -187,6 +196,7 @@ export const Products: React.FC = () => {
             }
 
             // Coleta Variáveis (Opções) e suas Imagens
+            const currentVariantOptions: any = {};
             for (let i = 1; i <= 3; i++) {
               const optNameKey = `option${i}_name`;
               const optValKey = `option${i}_value`;
@@ -199,6 +209,8 @@ export const Products: React.FC = () => {
                 const value = String(rawValue).trim();
                 
                 if (name && value) {
+                  currentVariantOptions[`option${i}`] = value;
+
                   let varObj = group.parsed_variables.find((v: any) => v.name === name);
                   if (!varObj) {
                     varObj = { name, options: [], option_images: {} };
@@ -214,6 +226,39 @@ export const Products: React.FC = () => {
                   }
                 }
               }
+            }
+
+            // Construir variante
+            const variantSku = String(row.sku || '').trim();
+            const variantPrice = parseNumber(row.price) || parseNumber(group.price) || 0;
+            const variantPromo = parseNumber(row.promotional_price) || null;
+            const variantStock = parseInt(String(row.stock || '0').replace(/[^0-9-]/g, ''), 10) || 0;
+            const variantWeight = parseNumber(row['variant grams'] || row.weight) || 0;
+            const variantBarcode = String(row.barcode || '').trim();
+            const variantImage = String(row.variant_image || '').trim();
+
+            const isDuplicate = group.parsed_variants.some((v: any) => {
+              if (variantSku && v.sku === variantSku) return true;
+              const hasOpt1 = !!currentVariantOptions.option1;
+              if (hasOpt1 && v.option1 === currentVariantOptions.option1 && v.option2 === currentVariantOptions.option2 && v.option3 === currentVariantOptions.option3) {
+                return true;
+              }
+              return false;
+            });
+
+            if (!isDuplicate && (variantSku || currentVariantOptions.option1)) {
+              group.parsed_variants.push({
+                sku: variantSku,
+                price: variantPrice,
+                promotional_price: variantPromo,
+                stock: variantStock,
+                weight: variantWeight,
+                barcode: variantBarcode,
+                image: variantImage,
+                option1: currentVariantOptions.option1 || null,
+                option2: currentVariantOptions.option2 || null,
+                option3: currentVariantOptions.option3 || null
+              });
             }
           }
 
@@ -239,23 +284,11 @@ export const Products: React.FC = () => {
           }
 
           for (const row of groupedProducts.values()) {
-            const rowSku = row.sku || row.handle;
-            if (!rowSku) continue;
+            const rowHandle = String(row.handle || row.name || '').trim();
+            if (!rowHandle) continue;
 
-            if (!row.name && !row.sku) continue; 
-
-            const parseNumber = (val: any) => {
-              if (!val) return null;
-              if (typeof val === 'number') return val;
-              if (typeof val === 'string') {
-                const cleaned = val.replace(',', '.').replace(/[^0-9.-]+/g, '');
-                const num = parseFloat(cleaned);
-                return isNaN(num) ? null : num;
-              }
-              return null;
-            };
-
-            const finalName = String(row.name || row.handle).trim();
+            const finalName = String(row.name || row.handle || '').trim();
+            if (!finalName) continue;
             
             let categoryId = null;
             if (row.category) {
@@ -265,7 +298,7 @@ export const Products: React.FC = () => {
             const productData: any = {
               name: finalName,
               slug: generateSlug(finalName),
-              sku: String(rowSku).trim(),
+              sku: String(row.sku || row.handle || '').trim(),
               price: parseNumber(row.price) || 0,
               promotional_price: parseNumber(row.promotional_price),
               stock: parseInt(String(row.stock || '0').replace(/[^0-9-]/g, ''), 10) || 0,
@@ -273,7 +306,8 @@ export const Products: React.FC = () => {
               is_active: true,
               order_grid: 1,
               category_id: categoryId,
-              variables: row.parsed_variables && row.parsed_variables.length > 0 ? row.parsed_variables : []
+              variables: row.parsed_variables && row.parsed_variables.length > 0 ? row.parsed_variables : [],
+              variants: row.parsed_variants && row.parsed_variants.length > 0 ? row.parsed_variants : []
             };
 
             if (row.all_images && row.all_images.length > 0) {
@@ -284,12 +318,16 @@ export const Products: React.FC = () => {
               productData.images = String(row.images).split(',').map((url: string) => url.trim()).filter(Boolean);
             }
 
-            // Verifica se o produto com esse SKU já existe
-            const { data: existingProduct } = await supabase
-              .from('products')
-              .select('id')
-              .eq('sku', String(rowSku).trim())
-              .single();
+            // Verifica se o produto com esse handle ou sku já existe
+            let query = supabase.from('products').select('id');
+            if (productData.sku) {
+              query = query.eq('sku', productData.sku);
+            } else {
+              query = query.eq('name', productData.name);
+            }
+            
+            const { data: existingProducts } = await query.limit(1);
+            const existingProduct = existingProducts?.[0];
 
             if (existingProduct) {
               // Atualiza produto existente
@@ -301,7 +339,8 @@ export const Products: React.FC = () => {
                 ...(productData.category_id && { category_id: productData.category_id }),
                 ...(productData.main_image && { main_image: productData.main_image }),
                 ...(productData.images && { images: productData.images }),
-                variables: productData.variables
+                variables: productData.variables,
+                variants: productData.variants
               };
 
               await supabase
