@@ -210,16 +210,16 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
                     </div>
                   </div>
                   {review.comment && (
-                    <p className="text-[#8b977f] text-sm mt-3 leading-relaxed">
+                    <p className="text-white text-base md:text-lg mt-3 leading-relaxed">
                       "{review.comment}"
                     </p>
                   )}
                   {review.image_url && (
-                    <div className="mt-3">
+                    <div className="mt-4">
                       <img 
                         src={review.image_url} 
                         alt={`Foto da avaliação de ${review.reviewer_name}`}
-                        className="w-24 h-24 object-cover rounded-lg border border-[#1b241a] shadow-sm hover:scale-150 origin-bottom-left md:origin-center transition-transform duration-300 z-10 relative cursor-pointer"
+                        className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg border border-[#1b241a] shadow-sm hover:scale-150 origin-bottom-left md:origin-center transition-transform duration-300 z-10 relative cursor-pointer"
                       />
                     </div>
                   )}
