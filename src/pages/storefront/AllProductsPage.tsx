@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { ArrowLeft, Gamepad2 } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
@@ -18,15 +18,24 @@ export const AllProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase
+        let query = supabase
           .from('products')
           .select('id, name, slug, main_image, price, promotional_price, is_new')
           .eq('is_active', true)
           .order('created_at', { ascending: false });
+
+        if (searchQuery) {
+          query = query.ilike('name', `%${searchQuery}%`);
+        }
+
+        const { data, error } = await query;
 
         if (error) throw error;
         setProducts(data || []);
@@ -38,7 +47,7 @@ export const AllProductsPage: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#0a0d0a] text-[#eef4ea] pt-24 px-4 md:px-8 pb-20">
@@ -62,10 +71,10 @@ export const AllProductsPage: React.FC = () => {
           <div>
             <div className="mb-10 border-b border-[#1b241a] pb-6">
               <h1 className="text-3xl md:text-5xl font-heading font-bold mb-3 uppercase tracking-tight">
-                TODOS OS PRODUTOS
+                {searchQuery ? `RESULTADOS PARA "${searchQuery}"` : 'TODOS OS PRODUTOS'}
               </h1>
               <p className="text-[#8b977f] text-sm md:text-base">
-                Explore todo o nosso catálogo de games, eletrônicos e acessórios.
+                {searchQuery ? 'Confira os produtos encontrados com base na sua busca.' : 'Explore todo o nosso catálogo de games, eletrônicos e acessórios.'}
               </p>
             </div>
             

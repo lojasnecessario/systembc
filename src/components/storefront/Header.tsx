@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Search, X } from 'lucide-react';
 import { useSettingsStore } from '../../store/settingsStore';
 
@@ -8,6 +8,18 @@ export const Header: React.FC = () => {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/produtos?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsMobileSearchOpen(false);
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,30 +60,54 @@ export const Header: React.FC = () => {
 
           {/* Desktop Search Bar */}
           <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
-            <div className="flex w-full relative group">
+            <form onSubmit={handleSearch} className="flex w-full relative group">
               <input 
                 type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Qual produto você busca"
                 className="w-full bg-[#141A12] border border-[#1b241a] border-r-0 text-[#eef4ea] text-sm rounded-l-md py-3 pl-4 pr-4 focus:outline-none focus:border-[#33e36a] transition-colors placeholder:text-[#6b7563]"
               />
-              <button className="bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] px-6 font-bold flex items-center gap-2 rounded-r-md transition-colors whitespace-nowrap">
+              <button type="submit" className="bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] px-6 font-bold flex items-center gap-2 rounded-r-md transition-colors whitespace-nowrap">
                 <Search size={18} />
                 Buscar
               </button>
-            </div>
+            </form>
           </div>
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 md:gap-6">
             {/* Mobile Search Icon */}
-            <button className="lg:hidden text-[#8b977f] hover:text-[#eef4ea] p-2">
-              <Search size={22} />
+            <button 
+              className="lg:hidden text-[#8b977f] hover:text-[#eef4ea] p-2"
+              onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+            >
+              {isMobileSearchOpen ? <X size={22} /> : <Search size={22} />}
             </button>
 
 
           </div>
         </div>
       </div>
+
+      {/* Mobile Search Bar Dropdown */}
+      {isMobileSearchOpen && (
+        <div className="lg:hidden bg-[#0a0d0a] border-b border-[#1b241a] p-4 absolute w-full top-full left-0 z-40">
+          <form onSubmit={handleSearch} className="flex w-full relative">
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Qual produto você busca"
+              className="w-full bg-[#141A12] border border-[#1b241a] border-r-0 text-[#eef4ea] text-sm rounded-l-md py-3 pl-4 pr-4 focus:outline-none focus:border-[#33e36a] transition-colors placeholder:text-[#6b7563]"
+              autoFocus
+            />
+            <button type="submit" className="bg-[#33e36a] hover:bg-[#11a544] text-[#06250f] px-4 font-bold flex items-center justify-center rounded-r-md transition-colors">
+              <Search size={18} />
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Desktop Sub Navigation Row */}
       <div className="hidden lg:block border-b border-[#1b241a] bg-[#0a0d0a]">
