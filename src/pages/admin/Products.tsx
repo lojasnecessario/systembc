@@ -343,15 +343,28 @@ export const Products: React.FC = () => {
                 variants: productData.variants
               };
 
-              await supabase
+              const { error: updateError } = await supabase
                 .from('products')
                 .update(updateData)
                 .eq('id', existingProduct.id);
+                
+              if (updateError && updateError.message?.includes('variants')) {
+                // Fallback se a coluna variants não existir
+                delete updateData.variants;
+                await supabase.from('products').update(updateData).eq('id', existingProduct.id);
+              }
             } else {
               // Insere novo produto
-              await supabase
+              const { error: insertError } = await supabase
                 .from('products')
                 .insert([productData]);
+                
+              if (insertError && insertError.message?.includes('variants')) {
+                 // Fallback se a coluna variants não existir
+                 const fallbackData = { ...productData };
+                 delete fallbackData.variants;
+                 await supabase.from('products').insert([fallbackData]);
+              }
             }
             successCount++;
           }
