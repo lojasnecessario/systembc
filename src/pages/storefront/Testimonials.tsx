@@ -198,7 +198,7 @@ export const Testimonials: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-28 pb-20 overflow-x-hidden">
+    <div className="min-h-screen bg-black pt-40 md:pt-48 pb-20 overflow-x-hidden">
       
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 md:px-8 text-center mb-16 relative">
