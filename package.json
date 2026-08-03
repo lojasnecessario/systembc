@@ -44,6 +44,7 @@
     "svgo": "^4.0.2",
     "tailwindcss": "^4.3.2",
     "typescript": "~6.0.2",
+    "vercel": "^58.4.4",
     "vite": "^8.1.1",
     "vite-plugin-image-optimizer": "^2.0.3"
   }

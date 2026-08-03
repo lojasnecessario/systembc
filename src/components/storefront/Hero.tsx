@@ -16,8 +16,9 @@ export const Hero: React.FC = () => {
           autoPlay
           muted 
           playsInline
+          loop
           preload="none"
-          poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          poster="/herovideo-poster.webp"
           className="w-full h-full object-cover hidden md:block"
         >
           <source src="/herovideo.mp4" type="video/mp4" />
@@ -28,8 +29,9 @@ export const Hero: React.FC = () => {
           autoPlay
           muted 
           playsInline
+          loop
           preload="none"
-          poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          poster="/heromobile-poster.webp"
           className="w-full h-full object-cover block md:hidden"
         >
           <source src="/heromobile.mp4" type="video/mp4" />
