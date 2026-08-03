@@ -195,6 +195,7 @@ export const Dashboard: React.FC = () => {
                 />
               </AreaChart>
             </ResponsiveContainer>
+            )}
           </div>
         </div>
 
