@@ -4,11 +4,15 @@ import { Link } from 'react-router-dom';
 
 const HIGHLIGHT_BANNER_TITLE = '__DESTAQUE_PRINCIPAL__';
 
+let cachedHighlightData: any = null;
+
 export const HighlightsSection: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [highlightData, setHighlightData] = useState<any>(null);
+  const [loading, setLoading] = useState(!cachedHighlightData);
+  const [highlightData, setHighlightData] = useState<any>(cachedHighlightData);
 
   useEffect(() => {
+    if (cachedHighlightData) return;
+
     const fetchHighlight = async () => {
       try {
         const { data, error } = await supabase
@@ -38,10 +42,12 @@ export const HighlightsSection: React.FC = () => {
             // Se falhar o parse, usa os defaults
           }
 
-          setHighlightData({
+          const finalData = {
             ...data,
             config: parsedConfig
-          });
+          };
+          cachedHighlightData = finalData;
+          setHighlightData(finalData);
         }
       } catch (error) {
         console.error('Erro ao buscar destaques:', error);

@@ -9,10 +9,14 @@ import { HighlightsSection } from '../../components/storefront/HighlightsSection
 import { TestimonialsSection } from '../../components/storefront/TestimonialsSection';
 import { supabase } from '../../lib/supabase';
 
+let cachedGrids: any[] | null = null;
+
 export const Home: React.FC = () => {
-  const [grids, setGrids] = useState<any[]>([]);
+  const [grids, setGrids] = useState<any[]>(cachedGrids || []);
 
   useEffect(() => {
+    if (cachedGrids) return;
+
     const fetchGrids = async () => {
       try {
         const { data: gridsData, error } = await supabase
@@ -42,6 +46,7 @@ export const Home: React.FC = () => {
             };
           }));
           
+          cachedGrids = gridsWithItems;
           setGrids(gridsWithItems);
         }
       } catch (error) {

@@ -26,12 +26,16 @@ interface Category {
   order_grid: number;
 }
 
+let cachedCategories: Category[] | null = null;
+
 export const CategoryList: React.FC = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>(cachedCategories || []);
+  const [loading, setLoading] = useState(!cachedCategories);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (cachedCategories) return;
+
     const fetchCategories = async () => {
       try {
         const { data, error } = await supabase
@@ -41,7 +45,8 @@ export const CategoryList: React.FC = () => {
           .order('order_grid', { ascending: true });
 
         if (error) throw error;
-        setCategories(data || []);
+        cachedCategories = data || [];
+        setCategories(cachedCategories);
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       } finally {
