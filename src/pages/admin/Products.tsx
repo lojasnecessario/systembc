@@ -191,9 +191,12 @@ export const Products: React.FC = () => {
               const optNameKey = `option${i}_name`;
               const optValKey = `option${i}_value`;
               
-              if (row[optNameKey] && row[optValKey] && String(row[optNameKey]).trim().toLowerCase() !== 'title') {
-                const name = String(row[optNameKey]).trim();
-                const value = String(row[optValKey]).trim();
+              const rawName = row[optNameKey] || group[optNameKey];
+              const rawValue = row[optValKey];
+              
+              if (rawName && rawValue && String(rawName).trim().toLowerCase() !== 'title') {
+                const name = String(rawName).trim();
+                const value = String(rawValue).trim();
                 
                 if (name && value) {
                   let varObj = group.parsed_variables.find((v: any) => v.name === name);
