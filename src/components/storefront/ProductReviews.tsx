@@ -72,8 +72,17 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
               is_approved: true
             }));
 
-            // Merge and sort by date descending
-            const mergedReviews = [...dbReviews, ...csvReviews].sort((a, b) => {
+            // Merge and remove duplicates (comparing reviewer name and comment)
+            const allReviews = [...dbReviews, ...csvReviews];
+            const uniqueReviewsMap = new Map();
+            allReviews.forEach(review => {
+              const key = `${review.reviewer_name}-${review.comment}`;
+              if (!uniqueReviewsMap.has(key)) {
+                uniqueReviewsMap.set(key, review);
+              }
+            });
+
+            const mergedReviews = Array.from(uniqueReviewsMap.values()).sort((a, b) => {
               return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
             });
 
