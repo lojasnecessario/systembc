@@ -21,7 +21,7 @@ interface Product {
   is_featured: boolean;
   is_new: boolean;
   is_active: boolean;
-  variables?: { name: string; options: string[] }[];
+  variables?: { name: string; options: string[]; option_images?: Record<string, string> }[];
 
   categories?: { name: string };
   brands?: { name: string };
@@ -123,6 +123,13 @@ export const Products: React.FC = () => {
         if (header === 'image src') return 'main_image';
         if (header === 'handle') return 'handle'; // Mantém o handle para usar como fallback de SKU
         if (header === 'type' || header === 'product type' || header === 'category' || header === 'product category' || header === 'categoria' || header === 'tipo') return 'category';
+        if (header === 'option1 name') return 'option1_name';
+        if (header === 'option1 value') return 'option1_value';
+        if (header === 'option2 name') return 'option2_name';
+        if (header === 'option2 value') return 'option2_value';
+        if (header === 'option3 name') return 'option3_name';
+        if (header === 'option3 value') return 'option3_value';
+        if (header === 'variant image') return 'variant_image';
         return header;
       },
       complete: async (results: any) => {
@@ -164,7 +171,7 @@ export const Products: React.FC = () => {
 
             const key = String(rowSku).trim();
             if (!groupedProducts.has(key)) {
-              groupedProducts.set(key, { ...row, all_images: [] });
+              groupedProducts.set(key, { ...row, all_images: [], parsed_variables: [] });
             }
             
             const group = groupedProducts.get(key);
@@ -174,9 +181,36 @@ export const Products: React.FC = () => {
               Object.assign(group, row);
             }
             
-            // Coleta a imagem (Shopify usa Image Src para todas as imagens, uma por linha)
-            if (row.main_image) {
+            // Coleta a imagem principal
+            if (row.main_image && String(row.main_image).trim() !== '') {
               group.all_images.push(String(row.main_image).trim());
+            }
+
+            // Coleta Variáveis (Opções) e suas Imagens
+            for (let i = 1; i <= 3; i++) {
+              const optNameKey = `option${i}_name`;
+              const optValKey = `option${i}_value`;
+              
+              if (row[optNameKey] && row[optValKey] && String(row[optNameKey]).trim().toLowerCase() !== 'title') {
+                const name = String(row[optNameKey]).trim();
+                const value = String(row[optValKey]).trim();
+                
+                if (name && value) {
+                  let varObj = group.parsed_variables.find((v: any) => v.name === name);
+                  if (!varObj) {
+                    varObj = { name, options: [], option_images: {} };
+                    group.parsed_variables.push(varObj);
+                  }
+                  
+                  if (!varObj.options.includes(value)) {
+                    varObj.options.push(value);
+                  }
+                  
+                  if (row.variant_image && String(row.variant_image).trim() !== '') {
+                    varObj.option_images[value] = String(row.variant_image).trim();
+                  }
+                }
+              }
             }
           }
 
@@ -235,7 +269,8 @@ export const Products: React.FC = () => {
               description: row.description ? String(row.description).trim() : '',
               is_active: true,
               order_grid: 1,
-              category_id: categoryId
+              category_id: categoryId,
+              variables: row.parsed_variables && row.parsed_variables.length > 0 ? row.parsed_variables : []
             };
 
             if (row.all_images && row.all_images.length > 0) {
@@ -262,7 +297,8 @@ export const Products: React.FC = () => {
                 description: productData.description,
                 ...(productData.category_id && { category_id: productData.category_id }),
                 ...(productData.main_image && { main_image: productData.main_image }),
-                ...(productData.images && { images: productData.images })
+                ...(productData.images && { images: productData.images }),
+                variables: productData.variables
               };
 
               await supabase

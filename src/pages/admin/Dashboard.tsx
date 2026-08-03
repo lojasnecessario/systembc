@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../lib/supabase';
 import { 
   TrendingUp, 
   Users, 
@@ -16,16 +17,8 @@ import {
   Tooltip, 
   ResponsiveContainer 
 } from 'recharts';
-
-const data = [
-  { name: 'Jan', vendas: 4000 },
-  { name: 'Fev', vendas: 3000 },
-  { name: 'Mar', vendas: 2000 },
-  { name: 'Abr', vendas: 2780 },
-  { name: 'Mai', vendas: 1890 },
-  { name: 'Jun', vendas: 2390 },
-  { name: 'Jul', vendas: 3490 },
-];
+import { format, subMonths, isAfter } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const StatCard = ({ title, value, icon, trend, trendValue }: any) => (
   <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
@@ -50,6 +43,86 @@ const StatCard = ({ title, value, icon, trend, trendValue }: any) => (
 );
 
 export const Dashboard: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    revenue: 0,
+    orders: 0,
+    customers: 0,
+    products: 0
+  });
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      
+      const { data: orders, error: ordersError } = await supabase
+        .from('orders')
+        .select('total_amount, status, created_at, number, customers(name)')
+        .order('created_at', { ascending: false });
+        
+      if (ordersError) throw ordersError;
+      
+      const { count: customersCount } = await supabase
+        .from('customers')
+        .select('*', { count: 'exact', head: true });
+        
+      const { count: productsCount } = await supabase
+        .from('products')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true);
+        
+      let totalRevenue = 0;
+      let totalOrders = 0;
+      const monthlyData: Record<string, number> = {};
+      
+      for (let i = 5; i >= 0; i--) {
+        const d = subMonths(new Date(), i);
+        const monthName = format(d, 'MMM', { locale: ptBR });
+        monthlyData[monthName] = 0;
+      }
+      
+      const validOrders = orders?.filter(o => o.status !== 'canceled') || [];
+      totalOrders = validOrders.length;
+      
+      validOrders.forEach(order => {
+        totalRevenue += order.total_amount || 0;
+        
+        const orderDate = new Date(order.created_at);
+        if (isAfter(orderDate, subMonths(new Date(), 6))) {
+           const monthName = format(orderDate, 'MMM', { locale: ptBR });
+           if (monthlyData[monthName] !== undefined) {
+             monthlyData[monthName] += order.total_amount || 0;
+           }
+        }
+      });
+      
+      const formattedChartData = Object.entries(monthlyData).map(([name, vendas]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        vendas
+      }));
+      
+      setStats({
+        revenue: totalRevenue,
+        orders: totalOrders,
+        customers: customersCount || 0,
+        products: productsCount || 0
+      });
+      setChartData(formattedChartData);
+      setRecentOrders(orders?.slice(0, 5) || []);
+      
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -59,28 +132,22 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           title="Faturamento Total" 
-          value="R$ 45.231,89" 
+          value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(stats.revenue)} 
           icon={<TrendingUp size={24} />} 
-          trend="up" 
-          trendValue="+12.5%" 
         />
         <StatCard 
           title="Pedidos" 
-          value="356" 
+          value={stats.orders.toString()} 
           icon={<ShoppingBag size={24} />} 
-          trend="up" 
-          trendValue="+5.2%" 
         />
         <StatCard 
           title="Clientes" 
-          value="1,245" 
+          value={stats.customers.toString()} 
           icon={<Users size={24} />} 
-          trend="up" 
-          trendValue="+18.1%" 
         />
         <StatCard 
           title="Produtos Ativos" 
-          value="128" 
+          value={stats.products.toString()} 
           icon={<Package size={24} />} 
         />
       </div>
@@ -89,8 +156,11 @@ export const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Faturamento Mensal</h3>
           <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data}>
+            {loading ? (
+              <div className="w-full h-full flex items-center justify-center text-slate-400">Carregando gráfico...</div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorVendas" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
@@ -131,18 +201,34 @@ export const Dashboard: React.FC = () => {
         <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Últimos Pedidos</h3>
           <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">Pedido #{1000 + i}</p>
-                  <p className="text-xs text-slate-500">João Silva</p>
+            {loading ? (
+              <p className="text-sm text-slate-500 text-center py-4">Carregando...</p>
+            ) : recentOrders.length === 0 ? (
+              <p className="text-sm text-slate-500 text-center py-4">Nenhum pedido recente.</p>
+            ) : (
+              recentOrders.map((order) => (
+                <div key={order.number} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900">Pedido #{order.number}</p>
+                    <p className="text-xs text-slate-500">{order.customers?.name || 'Cliente Oculto'}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-slate-900">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(order.total_amount)}</p>
+                    <p className={`text-xs font-medium ${
+                      order.status === 'delivered' || order.status === 'paid' ? 'text-emerald-600' :
+                      order.status === 'canceled' ? 'text-red-600' : 'text-blue-600'
+                    }`}>
+                      {order.status === 'pending' ? 'Pendente' : 
+                       order.status === 'paid' ? 'Pago' : 
+                       order.status === 'processing' ? 'Processando' : 
+                       order.status === 'shipped' ? 'Enviado' : 
+                       order.status === 'delivered' ? 'Entregue' : 
+                       order.status === 'canceled' ? 'Cancelado' : order.status}
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-slate-900">R$ 299,90</p>
-                  <p className="text-xs text-emerald-600 font-medium">Pago</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>
