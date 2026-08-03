@@ -288,7 +288,7 @@ export const Products: React.FC = () => {
             const { data: existingProduct } = await supabase
               .from('products')
               .select('id')
-              .eq('sku', row.sku)
+              .eq('sku', String(rowSku).trim())
               .single();
 
             if (existingProduct) {
