@@ -348,8 +348,9 @@ export const Products: React.FC = () => {
                 .update(updateData)
                 .eq('id', existingProduct.id);
                 
-              if (updateError && updateError.message?.includes('variants')) {
-                // Fallback se a coluna variants não existir
+              if (updateError) {
+                console.warn("Falha no update com variants, tentando fallback...", updateError);
+                // Fallback incondicional se der erro (provavelmente a coluna variants não existe)
                 delete updateData.variants;
                 await supabase.from('products').update(updateData).eq('id', existingProduct.id);
               }
@@ -359,8 +360,9 @@ export const Products: React.FC = () => {
                 .from('products')
                 .insert([productData]);
                 
-              if (insertError && insertError.message?.includes('variants')) {
-                 // Fallback se a coluna variants não existir
+              if (insertError) {
+                 console.warn("Falha no insert com variants, tentando fallback...", insertError);
+                 // Fallback incondicional se der erro
                  const fallbackData = { ...productData };
                  delete fallbackData.variants;
                  await supabase.from('products').insert([fallbackData]);
