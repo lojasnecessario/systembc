@@ -211,7 +211,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
                   </div>
                   {review.comment && (
                     <p className="text-white text-base md:text-lg mt-3 leading-relaxed">
-                      "{review.comment}"
+                      {review.comment}
                     </p>
                   )}
                   {review.image_url && (
