@@ -346,7 +346,12 @@ export const ProductPage: React.FC = () => {
                         {v.options.map((opt: string, optIdx: number) => (
                           <button
                             key={optIdx}
-                            onClick={() => setSelectedVariables({ ...selectedVariables, [v.name]: opt })}
+                            onClick={() => {
+                              setSelectedVariables({ ...selectedVariables, [v.name]: opt });
+                              if (v.option_images && v.option_images[opt]) {
+                                setSelectedImage(v.option_images[opt]);
+                              }
+                            }}
                             className={`px-4 py-2 border text-sm font-bold rounded-lg transition-all ${
                               selectedVariables[v.name] === opt
                                 ? 'bg-black text-[#33e36a] border-black'
