@@ -37,6 +37,7 @@ export const AboutSection: React.FC = () => {
             <img 
               src="/sobrenos.jpeg" 
               alt="Sobre Nós" 
+              loading="lazy"
               className="w-full aspect-video md:aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
           </div>
