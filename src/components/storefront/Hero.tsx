@@ -80,7 +80,7 @@ export const Hero: React.FC = () => {
           </div>
 
           <Link 
-            to="/categorias" 
+            to="/produtos" 
             className="group inline-flex items-center justify-between border border-[#33e36a] text-[#33e36a] hover:bg-[#33e36a] hover:text-[#06250f] font-bold uppercase text-sm px-6 py-4 rounded-lg transition-all shadow-[0_0_15px_rgba(51,227,106,0.15)] hover:shadow-[0_0_25px_rgba(51,227,106,0.4)] w-[280px] animate-fade-in-up animation-delay-400"
           >
             <span>Confira as Ofertas</span>
