@@ -16,6 +16,7 @@ const GoogleReviews = lazy(() => import('./pages/storefront/GoogleReviews').then
 const Testimonials = lazy(() => import('./pages/storefront/Testimonials').then(m => ({ default: m.Testimonials })));
 const LegalPage = lazy(() => import('./pages/storefront/LegalPage').then(m => ({ default: m.LegalPage })));
 const AllCategories = lazy(() => import('./pages/storefront/AllCategories').then(m => ({ default: m.AllCategories })));
+const AllProductsPage = lazy(() => import('./pages/storefront/AllProductsPage').then(m => ({ default: m.AllProductsPage })));
 const AboutUs = lazy(() => import('./pages/storefront/AboutUs').then(m => ({ default: m.AboutUs })));
 const FaqPage = lazy(() => import('./pages/storefront/FaqPage').then(m => ({ default: m.FaqPage })));
 const ContactPage = lazy(() => import('./pages/storefront/ContactPage').then(m => ({ default: m.ContactPage })));
@@ -58,6 +59,7 @@ function App() {
           <Route path="/" element={<StoreLayout />}>
             <Route index element={<Home />} />
             <Route path="categorias" element={<AllCategories />} />
+            <Route path="produtos" element={<AllProductsPage />} />
             <Route path="categoria/:slug" element={<CategoryPage />} />
             <Route path="produto/:slug" element={<ProductPage />} />
             <Route path="sobre-nos" element={<AboutUs />} />
