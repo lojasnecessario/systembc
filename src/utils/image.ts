@@ -1,21 +1,20 @@
-export function getOptimizedImageUrl(url: string | null, width = 500): string | null {
-  if (!url) return null;
+export const getOptimizedImageUrl = (url: string | null | undefined, width: number = 400): string => {
+  if (!url) return '';
   
-  // Se for uma imagem local, base64 ou já otimizada, não fazemos nada
-  if (
-    url.startsWith('/') || 
-    url.startsWith('data:') || 
-    url.includes('wsrv.nl')
-  ) {
-    return url;
-  }
   if (url.includes('supabase.co')) {
-    // Se a URL já possui parâmetros de query, usamos '&', senão '?'
-    const separator = url.includes('?') ? '&' : '?';
-    return `${url}${separator}width=${width}&format=avif&quality=65`;
+    const cleanUrl = url.split('?')[0];
+    const ext = cleanUrl.split('.').pop()?.toLowerCase();
+    
+    // Se a imagem já foi enviada no formato correto via nossa nova pipeline de upload (webp/avif)
+    // nós apenas retornamos ela limpa, pois ela já está comprimida no Supabase e em Cache longo.
+    if (ext === 'webp' || ext === 'avif') {
+      return cleanUrl;
+    }
+    
+    // Se for uma imagem antiga, crua, em PNG/JPG, passamos pelo proxy gratuito (wsrv.nl)
+    // Isso conserta retroativamente os 10MB das imagens antigas sem precisar re-uploadar
+    return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=webp&q=70`;
   }
-
-  // Fallback para Weserv caso não seja Supabase (avif suportado)
-  const cleanUrl = url.replace(/^https?:\/\//, '');
-  return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=avif&q=65`;
-}
+  
+  return url;
+};

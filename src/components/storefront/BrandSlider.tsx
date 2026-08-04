@@ -26,7 +26,8 @@ export const BrandSlider: React.FC = () => {
                 alt={brand.name}
                 width="150"
                 height="60"
-                loading="lazy" 
+                loading="eager"
+                fetchPriority="high"
                 decoding="async"
                 className={`h-14 md:h-16 lg:h-14 w-auto object-contain ${brand.scale}`} 
               />
