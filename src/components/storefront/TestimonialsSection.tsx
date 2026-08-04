@@ -166,6 +166,8 @@ export const TestimonialsSection: React.FC = () => {
                   <img 
                     src={review.avatar} 
                     alt={review.reviewer_name} 
+                    loading="lazy"
+                    decoding="async"
                     className="w-12 h-12 rounded-full object-cover border border-white/10"
                   />
                 )}

@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy } from 'react';
 import { Hero } from '../../components/storefront/Hero';
 import { BrandSlider } from '../../components/storefront/BrandSlider';
-import { StoreAdvantages } from '../../components/storefront/StoreAdvantages';
 import { CategoryList } from '../../components/storefront/CategoryList';
-import { ProductGridSection } from '../../components/storefront/ProductGridSection';
-import { AboutSection } from '../../components/storefront/AboutSection';
-import { HighlightsSection } from '../../components/storefront/HighlightsSection';
-import { TestimonialsSection } from '../../components/storefront/TestimonialsSection';
 import { supabase } from '../../lib/supabase';
+import { LazySection } from '../../components/LazySection';
+
+// Seções abaixo da dobra carregadas via Code Splitting + IntersectionObserver
+const ProductGridSection = lazy(() => import('../../components/storefront/ProductGridSection').then(m => ({ default: m.ProductGridSection })));
+const HighlightsSection = lazy(() => import('../../components/storefront/HighlightsSection').then(m => ({ default: m.HighlightsSection })));
+const AboutSection = lazy(() => import('../../components/storefront/AboutSection').then(m => ({ default: m.AboutSection })));
+const TestimonialsSection = lazy(() => import('../../components/storefront/TestimonialsSection').then(m => ({ default: m.TestimonialsSection })));
+const StoreAdvantages = lazy(() => import('../../components/storefront/StoreAdvantages').then(m => ({ default: m.StoreAdvantages })));
 
 let cachedGrids: any[] | null = null;
 
@@ -28,7 +31,6 @@ export const Home: React.FC = () => {
         if (error) throw error;
 
         if (gridsData && gridsData.length > 0) {
-          // Para cada grid, buscar os itens
           const gridsWithItems = await Promise.all(gridsData.map(async (grid) => {
             const { data: items } = await supabase
               .from('product_grid_items')
@@ -70,31 +72,40 @@ export const Home: React.FC = () => {
       
       {/* Vitrines Dinâmicas (Grids) */}
       {grids.length > 0 && (
-        <div className="relative border-t border-b border-[#11381b]/50 mt-4 mb-4">
-          {/* Degrades de Fundo (Laterais) */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-            <div className="absolute top-0 left-0 w-[150px] md:w-[300px] h-full bg-gradient-to-r from-[#0c3116]/90 to-transparent" />
+        <LazySection height="600px">
+          <div className="relative border-t border-b border-[#11381b]/50 mt-4 mb-4">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+              <div className="absolute top-0 left-0 w-[150px] md:w-[300px] h-full bg-gradient-to-r from-[#0c3116]/90 to-transparent" />
+            </div>
+            
+            <div className="relative z-10">
+              {grids.map(grid => (
+                <ProductGridSection key={grid.id} grid={grid} />
+              ))}
+            </div>
           </div>
-          
-          <div className="relative z-10">
-            {grids.map(grid => (
-              <ProductGridSection key={grid.id} grid={grid} />
-            ))}
-          </div>
-        </div>
+        </LazySection>
       )}
       
       {/* Seção de Destaques (Promoção) */}
-      <HighlightsSection />
+      <LazySection height="400px">
+        <HighlightsSection />
+      </LazySection>
       
       {/* Seção Sobre Nós */}
-      <AboutSection />
+      <LazySection height="600px">
+        <AboutSection />
+      </LazySection>
       
       {/* Avaliações / Depoimentos */}
-      <TestimonialsSection />
+      <LazySection height="500px">
+        <TestimonialsSection />
+      </LazySection>
       
       {/* Seção de Vantagens na Última Posição */}
-      <StoreAdvantages />
+      <LazySection height="300px">
+        <StoreAdvantages />
+      </LazySection>
       
     </div>
   );

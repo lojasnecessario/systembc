@@ -219,6 +219,8 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
                       <img 
                         src={review.image_url} 
                         alt={`Foto da avaliação de ${review.reviewer_name}`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg border border-[#1b241a] shadow-sm hover:scale-150 origin-bottom-left md:origin-center transition-transform duration-300 z-10 relative cursor-pointer"
                       />
                     </div>

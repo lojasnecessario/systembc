@@ -17,15 +17,21 @@ export default defineConfig({
   ],
   build: {
     target: 'esnext',
+    sourcemap: false,
+    minify: 'esbuild',
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
+            if (id.includes('react') && !id.includes('react-router') && !id.includes('react-hook-form')) return 'vendor-react';
+            if (id.includes('react-router')) return 'vendor-router';
             if (id.includes('lucide-react')) return 'vendor-icons';
             if (id.includes('@supabase')) return 'vendor-supabase';
             if (id.includes('zod') || id.includes('react-hook-form')) return 'vendor-forms';
             if (id.includes('recharts')) return 'vendor-charts';
+            if (id.includes('zustand')) return 'vendor-zustand';
+            if (id.includes('@dnd-kit')) return 'vendor-dnd';
             return 'vendor';
           }
         }

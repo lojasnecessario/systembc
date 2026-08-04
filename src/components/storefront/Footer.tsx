@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-6">
               {settings?.logo ? (
-                <img src={settings.logo} alt={settings?.name || "Logo"} className="h-10 object-contain" />
+                <img src={settings.logo} alt={settings?.name || "Logo"} loading="lazy" decoding="async" className="h-10 object-contain" />
               ) : (
                 <>
                   <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
