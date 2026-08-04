@@ -61,19 +61,22 @@ export function GoogleReviews() {
         {/* Header Info */}
         <div className="p-5 pb-4 border-b border-neutral-100">
           <h1 className="text-2xl font-bold text-neutral-900 mb-1">Blackcore Video Games</h1>
-          <div className="flex items-center gap-2 mb-1">
+          <button 
+            onClick={() => document.getElementById('google-reviews-desktop')?.scrollIntoView({ behavior: 'smooth' })}
+            className="flex items-center gap-2 mb-1 hover:opacity-80 transition-opacity w-fit group"
+          >
             <span className="font-medium text-neutral-700">4.9</span>
-            <div className="flex text-yellow-400">
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
-              <Star className="w-4 h-4 fill-current" />
+            <div className="flex text-yellow-400 gap-0.5">
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
             </div>
-            <span className="text-sm text-blue-600 hover:underline cursor-pointer">
+            <span className="text-sm text-blue-600 group-hover:underline cursor-pointer">
               1.284 avaliações
             </span>
-          </div>
+          </button>
           <p className="text-sm text-neutral-600 mb-3">Loja de Videogames e Acessórios</p>
         </div>
 
@@ -118,7 +121,7 @@ export function GoogleReviews() {
         </div>
 
         {/* Reviews Section */}
-        <div className="flex flex-col p-4 bg-neutral-50 pb-8 border-t border-neutral-200">
+        <div id="google-reviews-desktop" className="flex flex-col p-4 bg-neutral-50 pb-8 border-t border-neutral-200">
           <h2 className="font-bold text-lg mb-4">Avaliações</h2>
           <div className="space-y-4">
             {reviewsList.map(review => (
@@ -191,16 +194,24 @@ export function GoogleReviews() {
           <div className="p-5 flex gap-4">
             <div className="flex-1">
               <h1 className="text-xl font-bold text-neutral-900 mb-1 leading-tight">Blackcore Video Games</h1>
-              <div className="flex items-center gap-1.5 mb-1.5 text-sm">
+              <button 
+                onClick={() => {
+                  setActiveTab('AVALIAÇÕES');
+                  setTimeout(() => {
+                    document.getElementById('google-reviews-mobile')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }}
+                className="flex items-center gap-1.5 mb-1.5 text-sm hover:opacity-80 transition-opacity w-fit cursor-pointer text-left"
+              >
                 <span className="font-medium text-neutral-700">4.9</span>
-                <div className="flex text-yellow-400">
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  <Star className="w-3.5 h-3.5 fill-current" />
-                  <Star className="w-3.5 h-3.5 fill-current" />
+                <div className="flex text-yellow-400 gap-0.5">
+                  <Star className="w-4 h-4 fill-current" />
+                  <Star className="w-4 h-4 fill-current" />
+                  <Star className="w-4 h-4 fill-current" />
+                  <Star className="w-4 h-4 fill-current" />
+                  <Star className="w-4 h-4 fill-current" />
                 </div>
-              </div>
+              </button>
               <p className="text-sm text-neutral-600 leading-snug">
                 Loja de Videogames • <span className={`${statusColor} font-medium`}>{isOpen ? 'Aberto' : 'Fechado'}</span>
               </p>
@@ -275,7 +286,7 @@ export function GoogleReviews() {
           )}
 
           {(activeTab === 'VISÃO GERAL' || activeTab === 'AVALIAÇÕES') && (
-            <div className="flex flex-col p-4 bg-neutral-50 pb-8 border-t border-neutral-200">
+            <div id="google-reviews-mobile" className="flex flex-col p-4 bg-neutral-50 pb-8 border-t border-neutral-200">
               <h2 className="font-bold text-lg mb-4">Avaliações</h2>
               <div className="space-y-4">
                 {reviewsList.slice(0, activeTab === 'VISÃO GERAL' ? 3 : reviewsList.length).map(review => (
@@ -337,9 +348,9 @@ function ReviewItem({ review }: { review: any }) {
         <div>
           <div className="font-bold text-sm text-neutral-900">{review.author}</div>
           <div className="flex items-center gap-1.5 text-xs text-neutral-500 mt-0.5">
-            <div className="flex text-yellow-400">
+            <div className="flex text-yellow-400 gap-0.5">
               {[...Array(review.rating)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 fill-current" />
+                <Star key={i} className="w-3.5 h-3.5 fill-current" />
               ))}
             </div>
             <span>•</span>

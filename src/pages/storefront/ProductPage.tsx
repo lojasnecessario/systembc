@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package } from 'lucide-react';
+import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, Star, StarHalf } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
 import { ProductReviews } from '../../components/storefront/ProductReviews';
 import { getOptimizedImageUrl } from '../../utils/image';
@@ -9,6 +9,7 @@ import { getOptimizedImageUrl } from '../../utils/image';
 export const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,6 +17,15 @@ export const ProductPage: React.FC = () => {
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedVariables, setSelectedVariables] = useState<Record<string, string>>({});
+  const [ratingData, setRatingData] = useState<{ average: number, count: number } | null>(null);
+
+  useEffect(() => {
+    if (!loading && location.hash === '#reviews') {
+      setTimeout(() => {
+        document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  }, [loading, location.hash]);
 
   useEffect(() => {
     if (product?.main_image) {
@@ -73,6 +83,19 @@ export const ProductPage: React.FC = () => {
         
         setRelatedProducts(relatedDataArr);
 
+        // Buscar avaliação do produto
+        const { data: reviewData } = await supabase
+          .from('product_reviews')
+          .select('rating')
+          .eq('product_id', data.id)
+          .eq('is_approved', true);
+
+        if (reviewData && reviewData.length > 0) {
+          const sum = reviewData.reduce((acc, curr) => acc + Number(curr.rating), 0);
+          const avg = sum / reviewData.length;
+          setRatingData({ average: avg, count: reviewData.length });
+        }
+
       } catch (error) {
         console.error('Erro ao buscar produto:', error);
       } finally {
@@ -101,6 +124,24 @@ export const ProductPage: React.FC = () => {
 
   const hasDiscount = product.promotional_price !== null && product.promotional_price < product.price;
   const currentPrice = hasDiscount ? product.promotional_price! : product.price;
+
+  const renderStars = (rating: number) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 !== 0;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<Star key={`full-${i}`} size={20} className="fill-[#33e36a] text-[#33e36a]" />);
+    }
+    if (hasHalfStar) {
+      stars.push(<StarHalf key="half" size={20} className="fill-[#33e36a] text-[#33e36a]" />);
+    }
+    const emptyStars = 5 - stars.length;
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<Star key={`empty-${i}`} size={20} className="text-neutral-300" />);
+    }
+    return stars;
+  };
 
   const faqs = [
     { question: 'Compra Segura', answer: 'Sua compra é processada em ambiente 100% seguro com criptografia de ponta a ponta.' },
@@ -173,6 +214,21 @@ export const ProductPage: React.FC = () => {
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-heading font-bold tracking-tight text-black leading-none mb-4 uppercase">
                 {product.name}
               </h1>
+
+              {/* Avaliação */}
+              {ratingData && (
+                <button 
+                  onClick={() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity w-fit group"
+                >
+                  <div className="flex">
+                    {renderStars(ratingData.average)}
+                  </div>
+                  <span className="text-sm text-neutral-600 font-medium group-hover:text-black group-hover:underline underline-offset-2 transition-colors">
+                    {ratingData.average.toFixed(1).replace('.', ',')} ({ratingData.count} avaliações)
+                  </span>
+                </button>
+              )}
 
               {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mb-4">

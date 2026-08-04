@@ -55,16 +55,16 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
     const hasHalfStar = rating % 1 !== 0;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} size={12} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<Star key={`full-${i}`} size={14} className="fill-[#33e36a] text-[#33e36a]" />);
     }
     
     if (hasHalfStar) {
-      stars.push(<StarHalf key="half" size={12} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<StarHalf key="half" size={14} className="fill-[#33e36a] text-[#33e36a]" />);
     }
 
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} size={12} className="text-neutral-600" />);
+      stars.push(<Star key={`empty-${i}`} size={14} className="text-neutral-600" />);
     }
 
     return stars;
@@ -126,14 +126,14 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         
         {/* Avaliação */}
         {ratingData && (
-          <div className="mb-1.5 flex items-center gap-1.5">
+          <Link to={`/produto/${product.slug}#reviews`} className="mb-1.5 flex items-center gap-1.5 group/rating hover:opacity-80 transition-opacity cursor-pointer">
             <div className="flex">
               {renderStars(ratingData.average)}
             </div>
-            <span className="text-[10px] text-neutral-400 font-medium">
+            <span className="text-[10px] text-neutral-400 font-medium group-hover/rating:text-[#33e36a] transition-colors underline-offset-2 group-hover/rating:underline">
               {ratingData.average.toFixed(1).replace('.', ',')} ({ratingData.count})
             </span>
-          </div>
+          </Link>
         )}
         
         {/* Preços */}
