@@ -8,7 +8,7 @@ export const FaqPage: React.FC = () => {
   const faqs = {
     geral: [
       { question: 'Como faço para acompanhar meu pedido?', answer: 'Você receberá o código de rastreio por e-mail assim que o pedido for despachado. Também é possível acompanhar o status na seção "Meus Pedidos" se você criou uma conta.' },
-      { question: 'Quais as formas de pagamento aceitas?', answer: 'Aceitamos PIX (com aprovação imediata) e Cartões de Crédito (Visa, Mastercard, Elo, Amex) em até 12x.' },
+      { question: 'Quais as formas de pagamento aceitas?', answer: 'Aceitamos PIX (com aprovação imediata) e Cartões de Crédito (Visa, Mastercard, Elo, Amex).' },
       { question: 'É seguro comprar na loja?', answer: 'Sim, nosso site possui certificado SSL e todos os pagamentos são processados em ambiente seguro criptografado de ponta a ponta.' }
     ],
     frete: [

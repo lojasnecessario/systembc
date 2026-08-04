@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabase';
 import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, CreditCard } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
 import { ProductReviews } from '../../components/storefront/ProductReviews';
+import { getOptimizedImageUrl } from '../../utils/image';
 
 export const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -105,7 +106,6 @@ export const ProductPage: React.FC = () => {
     { question: 'Compra Segura', answer: 'Sua compra é processada em ambiente 100% seguro com criptografia de ponta a ponta.' },
     { question: 'Como recebo meu produto?', answer: 'Após a confirmação do pagamento, seu pedido será processado e enviado. Você receberá o código de rastreio e todas as atualizações no seu e-mail e WhatsApp.' },
     { question: 'Prazos de Entrega?', answer: 'Despachamos o seu pedido rapidamente após a aprovação do pagamento via PIX ou Cartão de Crédito.' },
-    { question: 'É original e tem garantia?', answer: 'Sim! Garantia de 6 meses contra quedas e suporte especializado disponível 24/7 para te ajudar com qualquer dúvida.' },
   ];
 
   return (
@@ -121,9 +121,15 @@ export const ProductPage: React.FC = () => {
               <div className="absolute inset-0 bg-[#33e36a]/10 blur-[100px] rounded-full pointer-events-none" />
               {selectedImage || product.main_image ? (
                 <img 
-                  src={selectedImage || product.main_image} 
+                  src={getOptimizedImageUrl(selectedImage || product.main_image, 800) || ''} 
                   alt={product.name} 
-                  className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105 relative z-10"
+                  className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500 ease-out cursor-zoom-in"
+                  onClick={() => {
+                    const elem = document.documentElement;
+                    if (elem.requestFullscreen) {
+                      elem.requestFullscreen();
+                    }
+                  }}
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-neutral-600 font-heading relative z-10">
@@ -221,45 +227,10 @@ export const ProductPage: React.FC = () => {
                   </span>
                 </div>
                 
-                <div 
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-md border border-[#33e36a] text-[#33e36a] bg-[#33e36a]/10" 
-                  style={{ boxShadow: '0 0 10px rgba(51, 227, 106, 0.4), inset 0 0 5px rgba(51, 227, 106, 0.2)' }}
-                >
-                  <CreditCard size={12} className="drop-shadow-[0_0_4px_rgba(51,227,106,0.8)]" />
-                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ textShadow: '0 0 5px rgba(51, 227, 106, 0.8)' }}>
-                    Parcela em 12x
-                  </span>
-                </div>
+
               </div>
 
-              {/* Bandeiras de Cartão */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 bg-neutral-50 border border-neutral-200 rounded-xl py-2 px-4 shadow-sm">
-                <span className="text-xs text-black font-semibold uppercase tracking-wider">Pagamento Seguro:</span>
-                <div className="flex items-center gap-2">
-                  {/* Visa */}
-                  <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
-                    <rect width="38" height="24" rx="4" fill="#1434CB"/>
-                    <text x="19" y="16" fill="#fff" fontSize="10" fontStyle="italic" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">VISA</text>
-                  </svg>
-                  {/* Mastercard */}
-                  <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
-                    <rect width="38" height="24" rx="4" fill="#202020"/>
-                    <circle cx="15" cy="12" r="7" fill="#EB001B"/>
-                    <circle cx="23" cy="12" r="7" fill="#F79E1B"/>
-                    <path d="M19 17.7a7 7 0 0 0 0-11.4 7 7 0 0 0 0 11.4z" fill="#FF5F00"/>
-                  </svg>
-                  {/* Amex */}
-                  <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
-                    <rect width="38" height="24" rx="4" fill="#016FD0"/>
-                    <text x="19" y="16" fill="#fff" fontSize="9" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">AMEX</text>
-                  </svg>
-                  {/* Pix */}
-                  <svg viewBox="0 0 38 24" className="w-10 h-auto opacity-90 hover:opacity-100 transition-opacity cursor-pointer" fill="none">
-                    <rect width="38" height="24" rx="4" fill="#32BCAD"/>
-                    <text x="19" y="16" fill="#fff" fontSize="10" fontStyle="italic" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">PIX</text>
-                  </svg>
-                </div>
-              </div>
+
 
               {/* Variações de Produto */}
               {product.variables && product.variables.length > 0 && (

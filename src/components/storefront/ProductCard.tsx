@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Lock, Star, StarHalf, Truck, Package } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { getOptimizedImageUrl } from '../../utils/image';
 
 interface ProductCardProps {
   product: {
@@ -18,6 +19,7 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const hasDiscount = product.promotional_price !== null && product.promotional_price < product.price;
   const currentPrice = hasDiscount ? product.promotional_price! : product.price;
+  const optimizedImage = getOptimizedImageUrl(product.main_image, 400);
   
   const discountPercent = hasDiscount 
     ? Math.round(((product.price - currentPrice) / product.price) * 100)
@@ -77,7 +79,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Imagem Principal */}
         {product.main_image ? (
           <img 
-            src={product.main_image} 
+            src={optimizedImage || ''} 
             alt={product.name} 
             loading="lazy"
             className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500 ease-out"
@@ -157,9 +159,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           )}
           
-          <span className="text-[#8b977f] text-[10px] md:text-xs mb-1.5">
-            Parcele em até 12x
-          </span>
 
           {/* Botão Comprar */}
           <Link 
