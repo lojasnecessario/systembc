@@ -48,6 +48,9 @@ export class CheckoutService {
       if (!product.is_active) {
         throw new Error(`Produto indisponível: ${product.name}`);
       }
+      if (product.stock < item.quantity) {
+        throw new Error(`Estoque insuficiente para o produto: ${product.name}`);
+      }
 
       const currentPrice = (product.promotional_price !== null && product.promotional_price < product.price)
         ? product.promotional_price
