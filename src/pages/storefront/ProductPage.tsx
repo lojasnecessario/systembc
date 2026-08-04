@@ -432,7 +432,7 @@ export const ProductPage: React.FC = () => {
                     activeFaq === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
-                  <div className="p-5 pt-0 text-[#8b977f] text-sm leading-relaxed">
+                  <div className="p-5 bg-[#0f6834] text-white text-sm leading-relaxed font-medium border-t border-[#1b241a]">
                     {faq.answer}
                   </div>
                 </div>
