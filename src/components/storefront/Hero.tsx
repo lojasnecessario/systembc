@@ -45,7 +45,6 @@ export const Hero: React.FC = React.memo(() => {
               autoPlay
               muted 
               playsInline
-              loop
               className="absolute inset-0 w-full h-full object-cover hidden md:block"
             >
               <source src="/herovideo.mp4" type="video/mp4" />
@@ -56,7 +55,6 @@ export const Hero: React.FC = React.memo(() => {
               autoPlay
               muted 
               playsInline
-              loop
               className="absolute inset-0 w-full h-full object-cover block md:hidden"
             >
               <source src="/heromobile.mp4" type="video/mp4" />
