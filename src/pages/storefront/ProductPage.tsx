@@ -264,34 +264,24 @@ export const ProductPage: React.FC = () => {
               )}
 
               {/* Botão de Comprar Dinâmico ou Esgotado */}
-              {product.stock <= 0 ? (
-                <button 
-                  disabled 
-                  className="w-full bg-neutral-100 text-black text-lg md:text-xl font-heading font-bold uppercase tracking-widest py-4 rounded-xl flex items-center justify-center gap-3 cursor-not-allowed border border-neutral-300"
-                >
-                  <ShoppingCart size={24} />
-                  ESGOTADO
-                </button>
-              ) : (
-                <button 
-                  onClick={() => {
-                    if (product.variables && product.variables.length > 0) {
-                      const missingVars = product.variables.filter((v: any) => !selectedVariables[v.name]);
-                      if (missingVars.length > 0) {
-                        alert(`Por favor, selecione: ${missingVars.map((v: any) => v.name).join(', ')}`);
-                        return;
-                      }
+              <button 
+                onClick={() => {
+                  if (product.variables && product.variables.length > 0) {
+                    const missingVars = product.variables.filter((v: any) => !selectedVariables[v.name]);
+                    if (missingVars.length > 0) {
+                      alert(`Por favor, selecione: ${missingVars.map((v: any) => v.name).join(', ')}`);
+                      return;
                     }
-                    const query = new URLSearchParams(selectedVariables).toString();
-                    navigate(`/checkout/${slug}${query ? `?${query}` : ''}`);
-                  }}
-                  id="buy-button"
-                  className="w-full bg-[#33e36a] hover:bg-[#11a544] disabled:opacity-50 disabled:cursor-not-allowed text-black text-lg md:text-xl font-heading font-bold uppercase tracking-widest py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(51,227,106,0.2)] hover:shadow-[0_0_30px_rgba(51,227,106,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
-                >
-                  <ShoppingCart size={24} />
-                  Comprar Agora
-                </button>
-              )}
+                  }
+                  const query = new URLSearchParams(selectedVariables).toString();
+                  navigate(`/checkout/${slug}${query ? `?${query}` : ''}`);
+                }}
+                id="buy-button"
+                className="w-full bg-[#33e36a] hover:bg-[#11a544] disabled:opacity-50 disabled:cursor-not-allowed text-black text-lg md:text-xl font-heading font-bold uppercase tracking-widest py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(51,227,106,0.2)] hover:shadow-[0_0_30px_rgba(51,227,106,0.4)] hover:-translate-y-1 flex items-center justify-center gap-3"
+              >
+                <ShoppingCart size={24} />
+                Comprar Agora
+              </button>
 
               {/* Selos de Confiança */}
               <div className="grid grid-cols-3 gap-2 mt-4">

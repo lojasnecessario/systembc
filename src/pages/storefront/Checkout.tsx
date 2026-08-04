@@ -59,7 +59,7 @@ export const Checkout: React.FC = () => {
           .single();
 
         if (error || !data) throw new Error('Produto não encontrado');
-        if (!data.is_active || data.stock <= 0) throw new Error('Produto indisponível');
+        if (!data.is_active) throw new Error('Produto indisponível');
         
         setProduct(data);
 
