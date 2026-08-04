@@ -247,7 +247,7 @@ export const Checkout: React.FC = () => {
       <header className="w-full py-4 mb-2">
         <div className="max-w-[1200px] mx-auto px-4 md:px-8 flex justify-center md:justify-start">
           <img 
-            src="/logomp2.webp" 
+            src="/logomp1.avif" 
             alt="Mercado Pago" 
             className="h-12 md:h-14 object-contain" 
           />
