@@ -339,7 +339,7 @@ export const ProductPage: React.FC = () => {
               >
                 {product.description ? (
                   <div 
-                    className="p-5 pt-0 text-white text-sm md:text-base leading-relaxed"
+                    className="p-5 pt-0 text-white text-sm md:text-base leading-relaxed [&_*]:!text-white"
                     dangerouslySetInnerHTML={{ __html: product.description }}
                   />
                 ) : (
