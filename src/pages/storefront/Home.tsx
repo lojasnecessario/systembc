@@ -5,8 +5,9 @@ import { CategoryList } from '../../components/storefront/CategoryList';
 import { supabase } from '../../lib/supabase';
 import { LazySection } from '../../components/LazySection';
 
+import { ProductGridSection } from '../../components/storefront/ProductGridSection';
+
 // Seções abaixo da dobra carregadas via Code Splitting + IntersectionObserver
-const ProductGridSection = lazy(() => import('../../components/storefront/ProductGridSection').then(m => ({ default: m.ProductGridSection })));
 const HighlightsSection = lazy(() => import('../../components/storefront/HighlightsSection').then(m => ({ default: m.HighlightsSection })));
 const AboutSection = lazy(() => import('../../components/storefront/AboutSection').then(m => ({ default: m.AboutSection })));
 const TestimonialsSection = lazy(() => import('../../components/storefront/TestimonialsSection').then(m => ({ default: m.TestimonialsSection })));

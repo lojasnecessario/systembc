@@ -7,8 +7,8 @@ import { AdminLayout } from './layouts/AdminLayout';
 import { StoreLayout } from './layouts/StoreLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
+import { Home } from './pages/storefront/Home';
 // Storefront Pages (Lazy)
-const Home = lazy(() => import('./pages/storefront/Home').then(m => ({ default: m.Home })));
 const Checkout = lazy(() => import('./pages/storefront/Checkout').then(m => ({ default: m.Checkout })));
 const CategoryPage = lazy(() => import('./pages/storefront/CategoryPage').then(m => ({ default: m.CategoryPage })));
 const ProductPage = lazy(() => import('./pages/storefront/ProductPage').then(m => ({ default: m.ProductPage })));
