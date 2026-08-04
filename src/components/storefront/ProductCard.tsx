@@ -55,11 +55,11 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
     const hasHalfStar = rating % 1 !== 0;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} size={14} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<Star key={`full-${i}`} size={14} className="fill-yellow-400 text-yellow-400" />);
     }
     
     if (hasHalfStar) {
-      stars.push(<StarHalf key="half" size={14} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<StarHalf key="half" size={14} className="fill-yellow-400 text-yellow-400" />);
     }
 
     const emptyStars = 5 - stars.length;

@@ -116,10 +116,10 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
     const hasHalfStar = rating % 1 !== 0;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} size={size} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<Star key={`full-${i}`} size={size} className="fill-yellow-400 text-yellow-400" />);
     }
     if (hasHalfStar) {
-      stars.push(<StarHalf key="half" size={size} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<StarHalf key="half" size={size} className="fill-yellow-400 text-yellow-400" />);
     }
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
@@ -166,7 +166,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId, produ
     <div className="mt-8 bg-[#0f130e] border border-[#1b241a] rounded-3xl overflow-hidden shadow-lg" id="reviews">
       <div className="p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
-          <Star className="text-[#33e36a]" size={28} />
+          <Star className="text-yellow-400 fill-yellow-400" size={28} />
           <h2 className="text-2xl font-heading font-bold text-[#eef4ea] uppercase">Avaliações de Clientes</h2>
         </div>
 
