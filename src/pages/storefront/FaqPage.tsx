@@ -45,17 +45,17 @@ export const FaqPage: React.FC = () => {
         {/* Lista de FAQs */}
         <div className="space-y-4">
           {faqs[activeTab].map((faq, index) => (
-            <div key={index} className="bg-[#0f6834] border border-[#33e36a]/30 rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(51,227,106,0.15)]">
+            <div key={index} className="bg-[#141A12] border border-[#1b241a] rounded-xl overflow-hidden transition-all duration-300">
               <button 
-                className="w-full p-5 flex items-center justify-between text-left hover:bg-[#11a544] transition-colors"
+                className="w-full p-5 flex items-center justify-between text-left hover:bg-[#1b241a] transition-colors"
                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
               >
                 <span className="font-heading font-bold text-white text-base uppercase tracking-wide pr-4">{faq.question}</span>
-                <ChevronDown size={20} className={`text-white flex-shrink-0 transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`} />
+                <ChevronDown size={20} className={`text-[#33e36a] flex-shrink-0 transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`} />
               </button>
               
               <div className={`overflow-hidden transition-all duration-300 ease-in-out ${activeFaq === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}>
-                <div className="p-5 pt-0 text-white text-sm leading-relaxed font-medium">
+                <div className="p-5 pt-0 text-neutral-400 text-sm leading-relaxed">
                   {faq.answer}
                 </div>
               </div>
