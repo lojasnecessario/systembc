@@ -105,7 +105,7 @@ export const ProductPage: React.FC = () => {
   const faqs = [
     { question: 'Compra Segura', answer: 'Sua compra é processada em ambiente 100% seguro com criptografia de ponta a ponta.' },
     { question: 'Como recebo meu produto?', answer: 'Após a confirmação do pagamento, seu pedido será processado e enviado. Você receberá o código de rastreio e todas as atualizações no seu e-mail e WhatsApp.' },
-    { question: 'Prazos de Entrega?', answer: 'Despachamos o seu pedido rapidamente após a aprovação do pagamento via PIX ou Cartão de Crédito.' },
+    { question: 'Prazos de Entrega?', answer: 'Despachamos o seu pedido rapidamente após a aprovação do pagamento via PIX.' },
   ];
 
   return (
