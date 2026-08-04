@@ -533,7 +533,7 @@ export const Checkout: React.FC = () => {
                         {/* Inner White Circle */}
                         <div className="w-[46px] h-[46px] bg-white rounded-full flex flex-col items-center justify-center p-1.5 z-20 shadow-inner">
                           <img 
-                            src="/logomp2.png" 
+                            src="/logomp2.webp" 
                             alt="MP Logo" 
                             className="w-full object-contain" 
                           />
