@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package, CreditCard } from 'lucide-react';
+import { ShoppingCart, ChevronDown, ShieldCheck, Truck, Package } from 'lucide-react';
 import { ProductCard } from '../../components/storefront/ProductCard';
 import { ProductReviews } from '../../components/storefront/ProductReviews';
 import { getOptimizedImageUrl } from '../../utils/image';
@@ -368,16 +368,16 @@ export const ProductPage: React.FC = () => {
             {faqs.map((faq, index) => (
               <div 
                 key={index} 
-                className="bg-[#141A12] border border-[#1b241a] rounded-xl overflow-hidden transition-all duration-300"
+                className="bg-[#0f6834] border border-[#33e36a]/30 rounded-xl overflow-hidden transition-all duration-300 shadow-[0_0_15px_rgba(51,227,106,0.15)]"
               >
                 <button 
-                  className="w-full p-5 flex items-center justify-between text-left hover:bg-[#1b241a] transition-colors"
+                  className="w-full p-5 flex items-center justify-between text-left hover:bg-[#11a544] transition-colors"
                   onClick={() => setActiveFaq(activeFaq === index ? null : index)}
                 >
-                  <span className="font-heading font-bold text-[#eef4ea] text-sm md:text-base uppercase tracking-wide">{faq.question}</span>
+                  <span className="font-heading font-bold text-white text-sm md:text-base uppercase tracking-wide">{faq.question}</span>
                   <ChevronDown 
                     size={20} 
-                    className={`text-[#33e36a] transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`} 
+                    className={`text-white transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`} 
                   />
                 </button>
                 
@@ -386,7 +386,7 @@ export const ProductPage: React.FC = () => {
                     activeFaq === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
-                  <div className="p-5 pt-0 text-[#8b977f] text-sm leading-relaxed">
+                  <div className="p-5 pt-0 text-white text-sm leading-relaxed font-medium">
                     {faq.answer}
                   </div>
                 </div>
