@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Search, X } from 'lucide-react';
 import { useSettingsStore } from '../../store/settingsStore';
 
-export const Header: React.FC = () => {
+export const Header: React.FC = React.memo(() => {
   const { settings } = useSettingsStore();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -149,4 +149,4 @@ export const Header: React.FC = () => {
       </div>
     </header>
   );
-};
+});

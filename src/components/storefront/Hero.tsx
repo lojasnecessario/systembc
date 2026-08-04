@@ -2,15 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Truck, ShieldCheck, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export const Hero: React.FC = () => {
+export const Hero: React.FC = React.memo(() => {
   const [loadVideo, setLoadVideo] = useState(false);
 
   useEffect(() => {
-    // Atrasa o vídeo para garantir que a banda seja 100% da renderização do DOM e do LCP (Poster)
-    const timer = setTimeout(() => {
-      setLoadVideo(true);
-    }, 1500);
-    return () => clearTimeout(timer);
+    // Verificar se a conexão do usuário é lenta (Save-Data ou 2G/3G)
+    const conn = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (conn) {
+      if (conn.saveData === true || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g' || conn.effectiveType === '3g') {
+        // Bloqueia carregamento de vídeo em conexões lentas para economizar dados e preservar LCP
+        return;
+      }
+    }
+
+    const load = () => setLoadVideo(true);
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      // Aguarda o navegador estar totalmente ocioso
+      (window as any).requestIdleCallback(load, { timeout: 3000 });
+    } else {
+      // Fallback
+      const timer = setTimeout(load, 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return (
@@ -115,4 +129,4 @@ export const Hero: React.FC = () => {
       </button>
     </div>
   );
-};
+});

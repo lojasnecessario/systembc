@@ -16,7 +16,7 @@ interface ProductCardProps {
   };
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) => {
   const hasDiscount = product.promotional_price !== null && product.promotional_price < product.price;
   const currentPrice = hasDiscount ? product.promotional_price! : product.price;
   const optimizedImage = getOptimizedImageUrl(product.main_image, 400);
@@ -173,4 +173,4 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
     </div>
   );
-};
+});

@@ -27,7 +27,7 @@ interface Grid {
   items: GridItem[];
 }
 
-export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
+export const ProductGridSection: React.FC<{ grid: Grid }> = React.memo(({ grid }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [visibleItems, setVisibleItems] = useState(8);
 
@@ -132,4 +132,4 @@ export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
       </div>
     </section>
   );
-};
+});

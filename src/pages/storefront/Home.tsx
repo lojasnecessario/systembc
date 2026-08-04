@@ -72,19 +72,23 @@ export const Home: React.FC = () => {
       
       {/* Vitrines Dinâmicas (Grids) */}
       {grids.length > 0 && (
-        <LazySection height="600px">
-          <div className="relative border-t border-b border-[#11381b]/50 mt-4 mb-4">
-            <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-              <div className="absolute top-0 left-0 w-[150px] md:w-[300px] h-full bg-gradient-to-r from-[#0c3116]/90 to-transparent" />
-            </div>
-            
-            <div className="relative z-10">
-              {grids.map(grid => (
-                <ProductGridSection key={grid.id} grid={grid} />
-              ))}
-            </div>
+        <div className="relative border-t border-b border-[#11381b]/50 mt-4 mb-4">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <div className="absolute top-0 left-0 w-[150px] md:w-[300px] h-full bg-gradient-to-r from-[#0c3116]/90 to-transparent" />
           </div>
-        </LazySection>
+          
+          <div className="relative z-10">
+            {grids.map((grid, index) => (
+              index === 0 ? (
+                <ProductGridSection key={grid.id} grid={grid} />
+              ) : (
+                <LazySection key={grid.id} height="600px">
+                  <ProductGridSection grid={grid} />
+                </LazySection>
+              )
+            ))}
+          </div>
+        </div>
       )}
       
       {/* Seção de Destaques (Promoção) */}
