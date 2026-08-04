@@ -9,9 +9,13 @@ export function getOptimizedImageUrl(url: string | null, width = 500): string | 
   ) {
     return url;
   }
-  
-  // Usamos o serviço gratuito Weserv.nl para buscar a imagem original (ex: do Supabase)
-  // e retornar uma versão comprimida em WebP e redimensionada
+  if (url.includes('supabase.co')) {
+    // Se a URL já possui parâmetros de query, usamos '&', senão '?'
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}width=${width}&format=avif&quality=65`;
+  }
+
+  // Fallback para Weserv caso não seja Supabase (avif suportado)
   const cleanUrl = url.replace(/^https?:\/\//, '');
-  return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=webp&q=80`;
+  return `https://wsrv.nl/?url=${encodeURIComponent(cleanUrl)}&w=${width}&output=avif&q=65`;
 }

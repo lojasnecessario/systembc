@@ -52,7 +52,7 @@ export function GoogleReviews() {
         {/* Cover Image */}
         <div className="relative h-64 shrink-0 bg-neutral-200">
           <img 
-            src="/googlepage.jpeg" 
+            src="/googlepage.avif" 
             className="w-full h-full object-cover" 
             alt="Blackcore Video Games" 
           />
@@ -207,7 +207,7 @@ export function GoogleReviews() {
             </div>
             <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 shadow-sm border border-neutral-100">
               <img 
-                src="/googlepage.jpeg" 
+                src="/googlepage.avif" 
                 className="w-full h-full object-cover" 
                 alt="Store" 
               />
@@ -307,7 +307,7 @@ export function GoogleReviews() {
 
           {activeTab === 'FOTOS' && (
             <div className="p-4 grid grid-cols-2 gap-2 pb-8">
-              <img src="/googlepage.jpeg" alt="Foto da loja 1" className="w-full h-32 object-cover rounded-lg" />
+              <img src="/googlepage.avif" alt="Foto da loja 1" className="w-full h-32 object-cover rounded-lg" />
               <div className="w-full h-32 bg-neutral-200 rounded-lg flex items-center justify-center text-neutral-400 text-sm border border-dashed border-neutral-300">
                 Sem mais fotos
               </div>

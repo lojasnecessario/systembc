@@ -14,21 +14,21 @@ interface Testimonial {
 }
 
 const clientPhotos = [
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.11 (1).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.11.jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.12 (1).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.12.jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.13 (1).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.13 (2).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.13.jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (1).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (2).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (3).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (4).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14.jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.15 (1).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.15 (2).jpeg',
-  '/DEP/WhatsApp Image 2026-07-19 at 13.48.15.jpeg'
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.11 (1).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.11.avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.12 (1).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.12.avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.13 (1).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.13 (2).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.13.avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (1).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (2).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (3).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14 (4).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.14.avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.15 (1).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.15 (2).avif',
+  '/DEP/WhatsApp Image 2026-07-19 at 13.48.15.avif'
 ];
 
 const testimonials: Testimonial[] = [

@@ -106,7 +106,7 @@ export const AboutUs: React.FC = () => {
                 {/* Fallback pattern if image is missing */}
                 <div className="absolute inset-0 bg-[#111711] bg-[radial-gradient(#2c3b2a_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
                 <img 
-                  src="/sobrenos.jpeg" 
+                  src="/sobrenos.avif" 
                   alt="Nossa Loja" 
                   className="absolute inset-0 w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
                   onError={(e) => {

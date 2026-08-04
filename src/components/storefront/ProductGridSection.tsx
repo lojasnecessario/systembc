@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ListFilter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProductCard } from './ProductCard';
@@ -29,6 +29,7 @@ interface Grid {
 
 export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [visibleItems, setVisibleItems] = useState(8);
 
   if (!grid.items || grid.items.length === 0) return null;
 
@@ -82,11 +83,23 @@ export const ProductGridSection: React.FC<{ grid: Grid }> = ({ grid }) => {
             ref={scrollRef}
             className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x hide-scrollbar scroll-smooth"
           >
-            {grid.items.map((item) => (
+            {grid.items.slice(0, visibleItems).map((item) => (
               <div key={item.id} className="flex-shrink-0 w-[200px] md:w-[280px] snap-center">
                 <ProductCard product={item.product} />
               </div>
             ))}
+            
+            {grid.items.length > visibleItems && (
+              <div className="flex-shrink-0 w-[200px] md:w-[280px] snap-center flex items-center justify-center p-4">
+                <button
+                  onClick={() => setVisibleItems(prev => prev + 8)}
+                  className="bg-[#141A12] border border-[#1b241a] hover:border-[#33e36a] text-[#eef4ea] px-6 py-4 rounded-xl transition-colors font-bold text-sm uppercase tracking-wider w-full h-full flex items-center justify-center gap-2 group shadow-lg"
+                >
+                  <ListFilter size={20} className="group-hover:text-[#33e36a] transition-colors" />
+                  Carregar Mais
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Navegação do Slider */}

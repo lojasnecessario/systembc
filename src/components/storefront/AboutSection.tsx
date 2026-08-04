@@ -35,7 +35,7 @@ export const AboutSection: React.FC = () => {
           {/* Imagem da Seção */}
           <div className="w-full md:w-1/2 relative rounded-2xl overflow-hidden group order-1 md:order-2 shadow-2xl border border-[#1b241a]">
             <img 
-              src="/sobrenos.jpeg" 
+              src="/sobrenos.avif" 
               alt="Sobre Nós" 
               loading="lazy"
               decoding="async"

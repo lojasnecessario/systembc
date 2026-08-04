@@ -1,41 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Truck, ShieldCheck, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Hero: React.FC = () => {
+  const [loadVideo, setLoadVideo] = useState(false);
 
-
+  useEffect(() => {
+    // Atrasa o vídeo para garantir que a banda seja 100% da renderização do DOM e do LCP (Poster)
+    const timer = setTimeout(() => {
+      setLoadVideo(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="relative w-full min-h-[100svh] md:min-h-0 md:h-[700px] bg-[#0a0d0a] overflow-hidden group flex items-center pt-24 pb-36 md:pt-0 md:pb-32">
       
-      {/* Background Video (Auto-play) */}
+      {/* Background Video (Auto-play Delayed) */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
-        {/* Vídeo Desktop */}
-        <video 
-          autoPlay
-          muted 
-          playsInline
-          loop
-          preload="none"
-          poster="/herovideo-poster.webp"
-          className="w-full h-full object-cover hidden md:block"
-        >
-          <source src="/herovideo.mp4" type="video/mp4" />
-        </video>
-        
-        {/* Vídeo Mobile */}
-        <video 
-          autoPlay
-          muted 
-          playsInline
-          loop
-          preload="none"
-          poster="/heromobile-poster.webp"
-          className="w-full h-full object-cover block md:hidden"
-        >
-          <source src="/heromobile.mp4" type="video/mp4" />
-        </video>
+        {/* Posters fixos para garantir o LCP super rápido */}
+        <picture className="w-full h-full object-cover absolute inset-0">
+          <source media="(min-width: 768px)" srcSet="/herovideo-poster.webp" />
+          <img src="/heromobile-poster.webp" alt="Background" className="w-full h-full object-cover" fetchPriority="high" />
+        </picture>
+
+        {loadVideo && (
+          <>
+            {/* Vídeo Desktop */}
+            <video 
+              autoPlay
+              muted 
+              playsInline
+              loop
+              className="absolute inset-0 w-full h-full object-cover hidden md:block"
+            >
+              <source src="/herovideo.mp4" type="video/mp4" />
+            </video>
+            
+            {/* Vídeo Mobile */}
+            <video 
+              autoPlay
+              muted 
+              playsInline
+              loop
+              className="absolute inset-0 w-full h-full object-cover block md:hidden"
+            >
+              <source src="/heromobile.mp4" type="video/mp4" />
+            </video>
+          </>
+        )}
       </div>
       
       {/* Overlay Escuro para Legibilidade */}
