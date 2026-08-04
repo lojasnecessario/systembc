@@ -131,10 +131,10 @@ export const ProductPage: React.FC = () => {
     const hasHalfStar = rating % 1 !== 0;
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} size={20} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<Star key={`full-${i}`} size={20} className="fill-yellow-400 text-yellow-400" />);
     }
     if (hasHalfStar) {
-      stars.push(<StarHalf key="half" size={20} className="fill-[#33e36a] text-[#33e36a]" />);
+      stars.push(<StarHalf key="half" size={20} className="fill-yellow-400 text-yellow-400" />);
     }
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
