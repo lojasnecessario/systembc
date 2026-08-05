@@ -9,7 +9,6 @@ export const MobileBottomNav: React.FC = () => {
     { icon: <LayoutGrid size={22} />, label: 'Categorias', path: '/#categorias', isHash: true },
     { icon: <Search size={22} />, label: 'Buscar', path: '/#buscar', isHash: true },
     { icon: <Tag size={22} />, label: 'Promoções', path: '/#promocoes', isHash: true },
-    { icon: <User size={22} />, label: 'Conta', path: '/admin/login', isHash: false },
     { icon: <MessageCircle size={22} />, label: 'WhatsApp', path: 'https://wa.me/5516991484745', isExternal: true },
   ];
 

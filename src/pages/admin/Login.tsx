@@ -23,7 +23,7 @@ export const Login: React.FC = () => {
 
       if (error) throw error;
       
-      navigate('/admin');
+      navigate('/bc0035862-10');
     } catch (err: any) {
       setError(err.message || 'Erro ao realizar login. Verifique suas credenciais.');
     } finally {

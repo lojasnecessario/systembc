@@ -144,7 +144,6 @@ export const Header: React.FC = React.memo(() => {
           <Link to="/sobre-nos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Sobre Nós</Link>
           <Link to="/depoimentos" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Depoimentos</Link>
           <Link to="/google" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Confira no Google</Link>
-          <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="text-xl font-heading font-bold uppercase text-[#eef4ea] hover:text-[#33e36a] border-b border-[#1b241a] pb-4">Minha Conta</Link>
         </div>
       </div>
     </header>

@@ -23,21 +23,21 @@ export const AdminLayout: React.FC = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/admin/login');
+    navigate('/bc0035862-10/login');
   };
 
   const navItems = [
-    { to: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
-    { to: '/admin/orders', icon: <ShoppingBag size={20} />, label: 'Pedidos' },
-    { to: '/admin/products', icon: <Package size={20} />, label: 'Produtos' },
-    { to: '/admin/categories', icon: <Tags size={20} />, label: 'Categorias' },
-    { to: '/admin/grids', icon: <Package size={20} />, label: 'Vitrines (Grids)' },
-    { to: '/admin/destaques', icon: <ImageIcon size={20} />, label: 'Destaques' },
-    { to: '/admin/customers', icon: <Users size={20} />, label: 'Clientes' },
-    { to: '/admin/reviews', icon: <Star size={20} />, label: 'Avaliações' },
-    { to: '/admin/logs', icon: <Activity size={20} />, label: 'Logs de Atividade' },
-    { to: '/admin/settings', icon: <Settings size={20} />, label: 'Configurações' },
-    { to: '/admin/checkout-settings', icon: <Settings size={20} />, label: 'Config. do Checkout' },
+    { to: '/bc0035862-10', icon: <LayoutDashboard size={20} />, label: 'Dashboard', end: true },
+    { to: '/bc0035862-10/orders', icon: <ShoppingBag size={20} />, label: 'Pedidos' },
+    { to: '/bc0035862-10/products', icon: <Package size={20} />, label: 'Produtos' },
+    { to: '/bc0035862-10/categories', icon: <Tags size={20} />, label: 'Categorias' },
+    { to: '/bc0035862-10/grids', icon: <Package size={20} />, label: 'Vitrines (Grids)' },
+    { to: '/bc0035862-10/destaques', icon: <ImageIcon size={20} />, label: 'Destaques' },
+    { to: '/bc0035862-10/customers', icon: <Users size={20} />, label: 'Clientes' },
+    { to: '/bc0035862-10/reviews', icon: <Star size={20} />, label: 'Avaliações' },
+    { to: '/bc0035862-10/logs', icon: <Activity size={20} />, label: 'Logs de Atividade' },
+    { to: '/bc0035862-10/settings', icon: <Settings size={20} />, label: 'Configurações' },
+    { to: '/bc0035862-10/checkout-settings', icon: <Settings size={20} />, label: 'Config. do Checkout' },
   ];
 
   return (

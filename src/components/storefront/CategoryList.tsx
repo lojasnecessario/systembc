@@ -26,6 +26,28 @@ interface Category {
   order_grid: number;
 }
 
+const CategoryImage = ({ src, alt, priority }: { src: string; alt: string; priority: boolean }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <>
+      {!loaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1b241a] to-[#0a0d0a] animate-pulse z-20 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-[#33e36a]/20 border-t-[#33e36a]/80 rounded-full animate-spin"></div>
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-all duration-700 group-hover/card:scale-110 ${loaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'}`}
+      />
+    </>
+  );
+};
+
 let cachedCategories: Category[] | null = null;
 
 export const CategoryList: React.FC = () => {
@@ -132,7 +154,7 @@ export const CategoryList: React.FC = () => {
             ref={scrollRef}
             className="flex overflow-x-auto gap-4 md:gap-6 pb-6 pt-2 snap-x hide-scrollbar scroll-smooth"
           >
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <Link
                 key={category.id}
                 to={`/categoria/${category.slug}`}
@@ -142,15 +164,9 @@ export const CategoryList: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-[#33e36a]/5 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 
                 {/* Imagem (Top) */}
-                <div className="h-[150px] md:h-[190px] w-full relative z-10 overflow-hidden">
+                <div className="h-[150px] md:h-[190px] w-full relative z-10 overflow-hidden bg-[#111612]">
                   {category.image ? (
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110"
-                    />
+                    <CategoryImage src={category.image} alt={category.name} priority={index < 5} />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-[#111612]">
                       <ImageIcon size={40} className="text-[#1b241a]" />

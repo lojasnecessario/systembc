@@ -75,10 +75,10 @@ function App() {
           <Route path="/google" element={<GoogleReviews />} />
 
           {/* Admin Login */}
-          <Route path="/admin/login" element={<Login />} />
+          <Route path="/bc0035862-10/login" element={<Login />} />
 
           {/* Admin Rotas Protegidas */}
-          <Route path="/admin" element={<ProtectedRoute />}>
+          <Route path="/bc0035862-10" element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="orders" element={<Orders />} />

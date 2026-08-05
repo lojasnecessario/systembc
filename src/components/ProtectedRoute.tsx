@@ -14,7 +14,7 @@ export const ProtectedRoute: React.FC = () => {
   }
 
   if (!user) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/bc0035862-10/login" replace />;
   }
 
   return <Outlet />;
