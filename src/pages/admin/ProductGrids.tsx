@@ -234,6 +234,40 @@ export const ProductGrids: React.FC = () => {
     }
   };
 
+  const moveGrid = async (index: number, direction: 'up' | 'down') => {
+    if (
+      (direction === 'up' && index === 0) || 
+      (direction === 'down' && index === grids.length - 1)
+    ) return;
+
+    const newGrids = [...grids];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    // Swap the order_grid values
+    const tempOrder = newGrids[index].order_grid;
+    newGrids[index].order_grid = newGrids[targetIndex].order_grid;
+    newGrids[targetIndex].order_grid = tempOrder;
+
+    // Swap positions in the array
+    const temp = newGrids[index];
+    newGrids[index] = newGrids[targetIndex];
+    newGrids[targetIndex] = temp;
+
+    // Update state immediately for optimistic UI
+    setGrids([...newGrids]);
+
+    try {
+      // Update in Supabase
+      const { error: err1 } = await supabase.from('product_grids').update({ order_grid: newGrids[index].order_grid }).eq('id', newGrids[index].id);
+      const { error: err2 } = await supabase.from('product_grids').update({ order_grid: newGrids[targetIndex].order_grid }).eq('id', newGrids[targetIndex].id);
+      
+      if (err1 || err2) throw new Error('Failed to update grid order');
+    } catch (error) {
+      console.error('Error updating grid order:', error);
+      fetchData(); // Revert on error
+    }
+  };
+
   // Filtrar produtos para busca
   const filteredProducts = allProducts.filter(p => 
     p.name.toLowerCase().includes(productSearch.toLowerCase()) || 
@@ -283,7 +317,7 @@ export const ProductGrids: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                grids.map((grid) => (
+                grids.map((grid, index) => (
                   <tr key={grid.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4 font-medium text-slate-900">
                       {grid.title}
@@ -296,8 +330,28 @@ export const ProductGrids: React.FC = () => {
                         {grid.items?.length || 0}/6
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
-                      {grid.order_grid}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-slate-600 w-4 text-center">{grid.order_grid}</span>
+                        <div className="flex flex-col">
+                          <button 
+                            type="button" 
+                            onClick={() => moveGrid(index, 'up')} 
+                            disabled={index === 0} 
+                            className="text-slate-400 hover:text-blue-600 disabled:opacity-30"
+                          >
+                            <ArrowUp size={14} />
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => moveGrid(index, 'down')} 
+                            disabled={index === grids.length - 1} 
+                            className="text-slate-400 hover:text-blue-600 disabled:opacity-30"
+                          >
+                            <ArrowDown size={14} />
+                          </button>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
