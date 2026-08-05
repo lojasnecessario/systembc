@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { uploadImage } from '../../utils/upload';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, Check, XCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, Check, XCircle, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -167,6 +167,40 @@ export const Categories: React.FC = () => {
     }
   };
 
+  const moveCategory = async (index: number, direction: 'up' | 'down') => {
+    if (
+      (direction === 'up' && index === 0) || 
+      (direction === 'down' && index === categories.length - 1)
+    ) return;
+
+    const newCategories = [...categories];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    // Swap the order_grid values
+    const tempOrder = newCategories[index].order_grid;
+    newCategories[index].order_grid = newCategories[targetIndex].order_grid;
+    newCategories[targetIndex].order_grid = tempOrder;
+
+    // Swap positions in the array
+    const temp = newCategories[index];
+    newCategories[index] = newCategories[targetIndex];
+    newCategories[targetIndex] = temp;
+
+    // Update state immediately for optimistic UI
+    setCategories([...newCategories]);
+
+    try {
+      // Update in Supabase
+      const { error: err1 } = await supabase.from('categories').update({ order_grid: newCategories[index].order_grid }).eq('id', newCategories[index].id);
+      const { error: err2 } = await supabase.from('categories').update({ order_grid: newCategories[targetIndex].order_grid }).eq('id', newCategories[targetIndex].id);
+      
+      if (err1 || err2) throw new Error('Failed to update order');
+    } catch (error) {
+      console.error('Error updating category order:', error);
+      fetchCategories(); // Revert on error
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -209,7 +243,7 @@ export const Categories: React.FC = () => {
                   </td>
                 </tr>
               ) : (
-                categories.map((category) => (
+                categories.map((category, index) => (
                   <tr key={category.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
                       {category.image ? (
@@ -224,8 +258,28 @@ export const Categories: React.FC = () => {
                       <div className="font-medium text-slate-900">{category.name}</div>
                       <div className="text-xs text-slate-500">/{category.slug}</div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
-                      {category.order_grid}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-slate-600 w-4 text-center">{category.order_grid}</span>
+                        <div className="flex flex-col">
+                          <button 
+                            type="button" 
+                            onClick={() => moveCategory(index, 'up')} 
+                            disabled={index === 0} 
+                            className="text-slate-400 hover:text-blue-600 disabled:opacity-30"
+                          >
+                            <ArrowUp size={14} />
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => moveCategory(index, 'down')} 
+                            disabled={index === categories.length - 1} 
+                            className="text-slate-400 hover:text-blue-600 disabled:opacity-30"
+                          >
+                            <ArrowDown size={14} />
+                          </button>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <button 
